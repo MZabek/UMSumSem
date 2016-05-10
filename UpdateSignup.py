@@ -1,7 +1,6 @@
 # Program that updates the dataset
 
 import unicodecsv as csv
-import csv
 import sqlite3
 import os
 
