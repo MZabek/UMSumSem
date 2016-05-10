@@ -2,7 +2,7 @@ title: Summer seminar
 description: >
  The page for announcements about the University of 
  Michigan's summer seminar in economics.
-baseurl: "/immaculate"
+baseurl: "/MISumSem"
 url: "mzabek.github.io/MISumSem/"
 paginate:	3 # The number of posts to show per page on your homepage
 name: "Mike Zabek and Ariel Bender"
