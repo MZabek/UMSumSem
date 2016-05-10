@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mike Zabek and Ariel Bender - Articles</title>
+    <description>The page for announcements about the University of  Michigan&#39;s summer seminar in economics.
+</description>
+    <link>
+    mzabek.github.io/MISumSem/</link>
+    
+      
+      <item>
+        <title>Test Seminar</title>
+        
+          <description>&lt;p&gt;&lt;em&gt;Authors:&lt;/em&gt; Mike Zabek with Ariel Binder&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Mon, 09 May 2016 00:00:00 -0400</pubDate>
+        <link>
+        mzabek.github.io/MISumSem//test-seminar.html</link>
+        <guid isPermaLink="true">mzabek.github.io/MISumSem//test-seminar.html</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>Test Seminar</title>
+        
+          <description>&lt;p&gt;&lt;em&gt;Authors:&lt;/em&gt; Mike Zabek with Ariel Binder&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Wed, 30 Mar 2016 00:00:00 -0400</pubDate>
+        <link>
+        mzabek.github.io/MISumSem//immaculate-showcase.html</link>
+        <guid isPermaLink="true">mzabek.github.io/MISumSem//immaculate-showcase.html</guid>
+      </item>
+      
+    
+  </channel>
+</rss>

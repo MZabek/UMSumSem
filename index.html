@@ -1,18 +1,62 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta http-equiv="Content-Style-Type" content="text/css" />
-  <meta name="generator" content="pandoc" />
-  <title></title>
-  <style type="text/css">code{white-space: pre;}</style>
-</head>
-<body>
-<h2 id="important-announcements">Important announcements!</h2>
-<h4 id="submissions-are-now-live">Submissions are now live!</h4>
-<h2 id="upcoming-seminars">Upcoming seminars</h2>
-<h4 id="test-seminar-1">6/5: Test seminar 1</h4>
-<p><em>Authors:</em> Mike Zabek with Ariel Binder</p>
-<p><em>Abstract:</em> It's going to be awesome!</p>
-</body>
-</html>
+---
+layout: default
+---
+
+<main>
+
+  <section>
+      <h1>{{ site.title }}</h1>
+      <h3>{{ site.description }}</h3>
+  </section>
+
+  <div>
+    {% for post in paginator.posts %}
+      <article itemscope itemtype="http://schema.org/BlogPosting" role="article">
+
+          <header>
+            <h2 itemprop="name"><a href="{{ site.baseurl }}{{ post.url }}" itemprop="url">{{ post.title }}</a></h2>
+          </header>
+
+          <div class="post-meta">
+            <time datetime="{{ post.date | date_to_long_string }}">{{ post.date | date_to_long_string }}</time>
+          </div>
+
+          <section itemprop="description">
+            {{ post.content | markdownify }}
+          </section>
+
+      </article>
+    {% endfor %}
+  </div>
+
+  <nav role="navigation">
+    {% if paginator.total_pages > 1 %}
+    <div class="pagination">
+      {% if paginator.previous_page %}
+        <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&laquo; Prev</a>
+      {% else %}
+        <span>&laquo;</span>
+      {% endif %}
+
+      {% for page in (1..paginator.total_pages) %}
+        {% if page == paginator.page %}
+          <em>{{ page }}</em>
+        {% elsif page == 1 %}
+          <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">{{ page }}</a>
+        {% else %}
+          <a href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', page }}">{{ page }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if paginator.next_page %}
+        <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Next &raquo;</a>
+      {% else %}
+        <span>&raquo;</span>
+      {% endif %}
+    </div>
+    {% endif %}
+  </nav>
+
+</main>
+
+{% include footer.html %}
