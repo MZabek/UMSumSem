@@ -4,4 +4,4 @@ title: Contact
 permalink: /contact/
 ---
 
-File issues at [https://github.com/siawyoung/immaculate/issues](https://github.com/siawyoung/immaculate/issues)!
+The coordinators can be reached at: [UMSumSem@gmail.com](mailto:UMSumSem@gmail.com)
