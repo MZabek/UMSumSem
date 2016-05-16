@@ -87,7 +87,7 @@ c.execute('''DROP TABLE IF EXISTS Allotment''')
 c.execute('''DROP TABLE IF EXISTS WasAllotted''')
 
 # Pull of list of entries, sorted by priority (right now not really putting in a very sophisticated priority ranking)
-SignupPull =  c.execute('''SELECT Timestamp,Username,SlotType,Availability FROM Signup WHERE Username <> "" ORDER BY JobTalk DESC, SlotType ASC;''')
+SignupPull =  c.execute('''SELECT Timestamp,Username,SlotType,Availability FROM Signup WHERE Username <> "" ORDER BY JobTalk DESC, SlotType ASC, random();''')
 entries = SignupPull.fetchall()
 
 for entry in entries:
