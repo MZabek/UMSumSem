@@ -21,7 +21,7 @@ def AllocatePerson(entry,c):
     # Checking section:
     print "Checking: ",entry[1],"|",entry[0],"|Slot:",entry[2]
     Allotted = False
-    c.execute('''CREATE TABLE IF NOT EXISTS Allotment (Timestamp text PRIMARY KEY, Username text, SlotType text, Date text, Number int)''')
+    c.execute('''CREATE TABLE IF NOT EXISTS Allotment (Timestamp text PRIMARY KEY, Username text, SlotType text, Date text, CalDate text, Number int)''')
     c.execute('''CREATE TABLE IF NOT EXISTS WasAllotted (Timestamp text PRIMARY KEY, Username text, SlotType text, Allotted int)''')
 
     # First filling half slots:
@@ -40,6 +40,7 @@ def AllocatePerson(entry,c):
                 print "Half slot available: ",FreeHalfSlot
                 AllocatedDate = CheckDate
                 Allotted = True
+                Number = 2
             else :
                 print "No half slot fitting"
                 CurrPossDates.remove(CheckDate)
@@ -58,16 +59,27 @@ def AllocatePerson(entry,c):
             print "This is empty, filling it"
             AllocatedDate = CheckDate
             Allotted = True
+            Number = 1
         else:
             print "This has something in it already"
             CurrPossDates.remove(CheckDate)
             #print "Possible dates: ",CurrPossDates
 
-    # Inserting record fo what happened into the database:
+    # Inserting record of what happened into the database:
     c.execute('''INSERT INTO WasAllotted (Timestamp,Username,SlotType,Allotted) 
                 VALUES (?,?,?,?);''', (entry[0],entry[1],entry[2],Allotted))
     if Allotted == True :
-        c.execute('''INSERT INTO Allotment (Timestamp,Username,SlotType,Date) VALUES (?,?,?,?);''', (entry[0],entry[1],entry[2],AllocatedDate))
+        # Modifying the dates to SQLite dates (CalDate):
+        CalDate = re.sub("Monday |Wednesday |Friday ","2016-",AllocatedDate)
+        CalDate = re.sub("May ","05-",CalDate)
+        CalDate = re.sub("June ","06-",CalDate)
+        CalDate = re.sub("July ","07-",CalDate)
+        CalDate = re.sub("August ","08-",CalDate)
+        CalDate = re.sub("September ","09-",CalDate)
+        CalDate = re.sub("st$|th$|nd|rd$$","",CalDate)
+        CalDate = re.sub(r'-(\d)$',r'-0\1',CalDate)
+
+        c.execute('''INSERT INTO Allotment (Timestamp,Username,SlotType,Date,CalDate,Number) VALUES (?,?,?,?,?,?);''', (entry[0],entry[1],entry[2],AllocatedDate,CalDate,Number))
 
 
 
