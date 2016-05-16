@@ -1,0 +1,6 @@
+#Ignoring log, database files (to keep data from showing up online)
+*.log
+*.db
+
+#Ignoring archive folder:
+/archive/*
