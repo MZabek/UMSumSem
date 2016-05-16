@@ -4,10 +4,9 @@
 
 # Main setup
 #.PHONY : all
-#all : Zabek16LabLunch.pdf 
 
 # Updating the sign up stuff: 
-SumSemData.db : UpdateSignup.py ../Forms/SignUpForm.csv
+SumSemData.db UpdateSignup.log : UpdateSignup.py ../Forms/SignupForm\ (Responses)\ -\ Form\ Responses\ 1.csv ../Forms/Email\ signup\ (Responses)\ -\ Form\ Responses\ 1.csv
 	python UpdateSignup.py >> UpdateSignup.log
 	
 	
