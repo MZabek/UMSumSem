@@ -21,8 +21,8 @@ def AllocatePerson(entry,c):
     # Checking section:
     print "Checking: ",entry[1],"|",entry[0],"|Slot:",entry[2]
     Allotted = False
-    c.execute('''CREATE TABLE IF NOT EXISTS Allotment (Timestamp text PRIMARY KEY, Username text, SlotType text, Date text, CalDate text, Number int)''')
-    c.execute('''CREATE TABLE IF NOT EXISTS WasAllotted (Timestamp text PRIMARY KEY, Username text, SlotType text, Allotted int)''')
+    c.execute('''CREATE TABLE IF NOT EXISTS Allotment (Timestamp text NOT NULL , Username text NOT NULL, SlotType text, Date text, CalDate text, Number int, PRIMARY KEY(Timestamp,Username))''')
+    c.execute('''CREATE TABLE IF NOT EXISTS WasAllotted (Timestamp text NOT NULL, Username text NOT NULL, SlotType text, Allotted int, PRIMARY KEY(Timestamp,Username))''')
 
     # First filling half slots:
     CurrPossDates = entry[3].split(", ")
@@ -105,14 +105,45 @@ entries = SignupPull.fetchall()
 for entry in entries:
     AllocatePerson(entry,c)
 
+# Committing changes
+sqlconn.commit()
+
+# Showing results: 
 print "________________________________________________________________________________"
 print "Allocation results:"
 print "Timestamp, Username, SlotType, Allotted"
-WasAllotted = c.execute('''SELECT * FROM WasAllotted;''')
+WasAllotted = c.execute('''SELECT Timestamp, Username, SlotType, Allotted FROM WasAllotted;''')
 for Entry in WasAllotted.fetchall():
     print Entry
 
-# Committing changes
+
+# Populating (first) schedule:
+print "________________________________________________________________________________"
+print "Making up first schedule:"
+
+# This defines the table schema:
+c.execute('''DROP TABLE IF EXISTS Schedule''')
+c.execute('''CREATE TABLE Schedule (Date text NOT NULL, Number int, Title text, Presenter text, Abstract text, CoAuthors text, Room text, Comments text, Email text, SignupTime text, SlotType text, Scheduled text DEFAULT CURRENT_TIME, CheckIn text, WebPost text, Misc text, PRIMARY KEY(Date,Number))''')
+
+
+# Pulling entries
+CalEntries = c.execute('''SELECT Allotment.CalDate,Allotment.Number,Signup.Title,Signup.Presenter,Signup.Abstract,Signup.CoAuthors,Username,Timestamp,Signup.SlotType FROM Allotment JOIN Signup USING (Timestamp,Username) ORDER BY CalDate ASC, Number ASC;''')
+# Putting into schedule table:
+for CalEntry in CalEntries.fetchall() :
+    # Room entry, based on Olga's email (At a future date this should be stored externally) :
+    if CalEntry[0].decode('UTF-8')=='2016-07-18' or CalEntry[0].decode('UTF-8')=='2016-07-20' or CalEntry[0].decode('UTF-8')=='2016-07-22' :
+        Room = "Lorch 201"
+    else :
+        Room = "Lorch 301"
+
+    # Inserting:
+    c.execute('''INSERT INTO Schedule (Date,Number,Title,Presenter,Abstract,CoAuthors,Email,SignupTime,SlotType,Room) VALUES (?,?,?,?,?,?,?,?,?,?);''', (CalEntry[0],CalEntry[1],CalEntry[2],CalEntry[3],CalEntry[4],CalEntry[5],CalEntry[6],CalEntry[7],CalEntry[8],Room))
+
+
+print "Schedule completed, exiting"
+print "________________________________________________________________________________"
+
+# Committing changes to the database
 sqlconn.commit()
 # Closing connection
 sqlconn.close()
