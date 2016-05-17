@@ -1,3 +1,5 @@
+# Intro
+
 This is a series of python scripts to deal with form data, allocations of rooms and presenters, and announcements for summer seminar. It could very well be overkill for the purpose, but for me (Mike) it has made administering everything a lot easier, more effective (at times), and less time intensive. 
 
 It is somewhat customized so unfortunately won't be of a huge amount of use (unmodified) to other people. It also is written by an economist... 
