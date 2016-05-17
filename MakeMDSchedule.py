@@ -50,7 +50,7 @@ for CalEntry in CalEntries.fetchall() :
     MDSchedule.write(' - ')
     MDSchedule.write(CalEntry[2].encode('utf8'))
     # Title
-    if CalEntry[3] != 'TBD' :
+    if CalEntry[3] != 'TBD' and CalEntry[3] != 'Presentation TBD' :
         MDSchedule.write('\n\n### ')
         MDSchedule.write(CalEntry[3].encode('utf8'))
     # Co Authors
