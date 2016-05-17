@@ -13,11 +13,11 @@ c = sqlconn.cursor()
 ## Creating new table, if needed:
 #print 'Creating new table...'
 c.execute('''DROP TABLE IF EXISTS Signup;''')
-c.execute('''DROP TABLE IF EXISTS EmailSignup;''')
+c.execute('''DROP TABLE IF EXISTS EmailList;''')
 
 # Schema (important):
 c.execute('''CREATE TABLE IF NOT EXISTS Signup (Timestamp text NOT NULL, Username text NOT NULL, Title text, Presenter text, CoAuthors text, SlotType text, JobTalk text, Abstract text, Availability text, Comments text, PRIMARY KEY(Username, Timestamp))''')
-c.execute('''CREATE TABLE IF NOT EXISTS EmailSignup (Timestamp text NOT NULL, Username text NOT NULL, PRIMARY KEY(Username, Timestamp))''')
+c.execute('''CREATE TABLE IF NOT EXISTS EmailList (Timestamp text, Email text NOT NULL, PRIMARY KEY(Email))''')
 
 ########################################
 # Pulling in CSV of form responses:
@@ -36,6 +36,7 @@ with open('../Forms/SignupForm (Responses) - Form Responses 1.csv', 'rb') as fil
         else :
             # Inserting into dataset:
             c.execute('''INSERT OR REPLACE INTO Signup(Timestamp,Username,Title,CoAuthors,JobTalk,Abstract,SlotType,Availability,Comments,Presenter) VALUES (?,?,?,?,?,?,?,?,?,?)''', entry)
+            c.execute('''INSERT OR REPLACE INTO EmailList(Timestamp,Email) VALUES (?,?)''', (entry[0],entry[1]))
         entrynum += 1
 
 print 'Opening CSV email signup file...'
@@ -51,7 +52,7 @@ with open('../Forms/Email signup (Responses) - Form Responses 1.csv', 'rb') as f
             print '|'.join(entry)
         else :
             # Inserting into dataset:
-            c.execute('''INSERT OR REPLACE INTO EmailSignup(Timestamp,Username) VALUES (?,?)''', entry)
+            c.execute('''INSERT OR REPLACE INTO EmailList(Timestamp,Email) VALUES (?,?)''', entry)
         entrynum += 1
 ########################################
 # Committing and closing
