@@ -1,29 +1,47 @@
 <head>
-  <script async custom-element="amp-youtube" src="https://cdn.ampproject.org/v0/amp-youtube-0.1.js"></script>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width,minimum-scale=1">
+  <!-- Canonical link to help search engines -->
+  <link rel="canonical" href="{{ site.baseurl }}{{ page.url }}"/>
 
-  <title>{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
-  <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+  <!-- Basic meta elements -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
-  <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
-  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}">
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"/>
 
-  <script type="application/ld+json">
-  {% include metadata.json %}
-  </script>
+  <!--   Dublin Core metadata for Zotero -->  
+  <meta name="DC.title" content="{{ page.title }}" />
+  <meta name="DC.creator" content="{{ page.author }}" />
+  <meta name="DC.contributor" content="{{ page.editor }}" />
+  <meta name="DC.date" content="{{ page.publication-date }}" />
+  <meta name="DC.rights" content="{{ page.rights }}" />
+  <meta name="DC.source" content="{{ site.title }}" />
+  
+  <!-- Open Graph metadata -->
+  <meta property="og:title" content="{{ page.title }}"/>
+  <meta property="og:author" content="{{ page.author }}"/>
+  <meta property="og:book:release_date" content="{{ page.publication-date }}"/>
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="{{ site.url }}"/>
+  <meta property="og:image" content="http://elotroalex.github.io/ed/public/apple-touch-icon-precomposed.png"/>
+   
+  <title>
+    {% if page.title == "Home" %}
+      {{ site.title }}
+    {% else %}
+      {{ page.title }}
+    {% endif %}
+  </title>
 
-  <style amp-custom>
-  {% capture include_to_scssify %}
-    {% include styles.scss %}
-  {% endcapture %}
-  {{ include_to_scssify | scssify }}
-  </style>
+  <!-- CSS links -->
+  <link rel="stylesheet" href="{{ site.baseurl }}/public/css/syntax.css"/>
+  <link rel="stylesheet" href="{{ site.baseurl }}/public/css/ed.css"/>
+ 
 
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="{{ site.baseurl }}/public/apple-touch-icon-precomposed.png"/>
+  <link rel="shortcut icon" href="{{ site.baseurl }}/public/favicon.ico"/>
 
-
-  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
-
-  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ site.baseurl }}/atom.xml"/>
 </head>

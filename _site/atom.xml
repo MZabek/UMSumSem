@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+ <title>Summer Seminar</title>
+ <link href="http://mzabek.github.io/UMSumSem/atom.xml" rel="self"/>
+ <link href="http://mzabek.github.io/UMSumSem/"/>
+ <updated>2016-05-17T14:47:58-04:00</updated>
+ <id>http://mzabek.github.io</id>
+ <author>
+   <name>Mike Zabek and Ari Binder</name>
+   <email>UMSumSem@gmail.com</email>
+ </author>
+
+ 
+
+</feed>
