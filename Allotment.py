@@ -13,16 +13,15 @@ sys.stdout = codecs.getwriter('utf8')(sys.stdout)
 # Function to allocate people to the best of my ability
 # Input: entry - list with: 
 #           (In the following order) Timestamp,Username,SlotType,Availability
-#       c   - cursor to SQLite database with Allotment table
-#       Allotted values go into "Allotment" table of currently open SQL database...
+#       c   - cursor to SQLite database with TableName table
+#       Allotted values go into "TableName" table of currently open SQL database...
 #       Note SQL database must be open... 
-def AllocatePerson(entry,c):
-    print "------------------------------Allocation call:------------------------------"
+def AllocatePerson(entry,c,TableName):
+    #print "------------------------------Allocation call:------------------------------"
     # Checking section:
-    print "Checking: ",entry[1],"|",entry[0],"|Slot:",entry[2]
+    #print "Checking: ",entry[1],"|",entry[0],"|Slot:",entry[2]
     Allotted = False
-    c.execute('''CREATE TABLE IF NOT EXISTS Allotment (Timestamp text NOT NULL , Username text NOT NULL, SlotType text, Date text, CalDate text, Number int, PRIMARY KEY(Timestamp,Username))''')
-    c.execute('''CREATE TABLE IF NOT EXISTS WasAllotted (Timestamp text NOT NULL, Username text NOT NULL, SlotType text, Allotted int, PRIMARY KEY(Timestamp,Username))''')
+    c.execute('''CREATE TABLE IF NOT EXISTS %s (Timestamp text NOT NULL , Username text NOT NULL, SlotType text, Date text, CalDate text, Number int, PRIMARY KEY(Timestamp,Username))''' % (TableName))
 
     # First filling half slots:
     CurrPossDates = entry[3].split(", ")
@@ -31,43 +30,36 @@ def AllocatePerson(entry,c):
             # Date selection algorythm:
             #Candidate:
             CheckDate =  random.choice(CurrPossDates) 
-            print "Checking for previous half slot on: ",CheckDate
 
             # Checking if free half slot is acceptable:
-            PreSelectedHalves = c.execute('''SELECT COUNT(Date),Date FROM Allotment WHERE Date = (?) AND SlotType = "Half (40 minutes)";''', (CheckDate,))
+            PreSelectedHalves = c.execute('''SELECT COUNT(Date),Date FROM %s WHERE Date = (?) AND SlotType = "Half (40 minutes)";''' % (TableName) , (CheckDate,))
             FreeHalfSlot = PreSelectedHalves.fetchall()
             if (1,CheckDate) in FreeHalfSlot:
-                print "Half slot available: ",FreeHalfSlot
+                #print "Works: ",CheckDate
                 AllocatedDate = CheckDate
                 Allotted = True
                 Number = 2
             else :
-                print "No half slot fitting"
+                #print "No slot: ",CheckDate
                 CurrPossDates.remove(CheckDate)
                 Allotted = False
 
     CurrPossDates = entry[3].split(", ")
     while Allotted == False and CurrPossDates:
-        #print "------------------------------------------------------------"
-        #print "Dates to check: ", CurrPossDates
         #Candidate:
         CheckDate =  random.choice(CurrPossDates) 
-        print "Checking: ",CheckDate
         # Checking if Checkdate works and allocating if it does:
-        PreSelected =  c.execute('''SELECT Date,SlotType FROM Allotment WHERE Date = (?);''', (CheckDate,))
+        PreSelected =  c.execute('''SELECT Date,SlotType FROM %s WHERE Date = (?);'''%  (TableName), (CheckDate,))
         if not PreSelected.fetchall():
-            print "This is empty, filling it"
+            #print "Works: ",CheckDate
             AllocatedDate = CheckDate
             Allotted = True
             Number = 1
         else:
-            print "This has something in it already"
+            #print "Taken: ",CheckDate
             CurrPossDates.remove(CheckDate)
-            #print "Possible dates: ",CurrPossDates
 
     # Inserting record of what happened into the database:
-    c.execute('''INSERT INTO WasAllotted (Timestamp,Username,SlotType,Allotted) 
-                VALUES (?,?,?,?);''', (entry[0],entry[1],entry[2],Allotted))
     if Allotted == True :
         # Modifying the dates to SQLite dates (CalDate):
         CalDate = re.sub("Monday |Wednesday |Friday ","2016-",AllocatedDate)
@@ -79,44 +71,114 @@ def AllocatePerson(entry,c):
         CalDate = re.sub("st$|th$|nd|rd$$","",CalDate)
         CalDate = re.sub(r'-(\d)$',r'-0\1',CalDate)
 
-        c.execute('''INSERT INTO Allotment (Timestamp,Username,SlotType,Date,CalDate,Number) VALUES (?,?,?,?,?,?);''', (entry[0],entry[1],entry[2],AllocatedDate,CalDate,Number))
+        c.execute('''INSERT INTO %s (Timestamp,Username,SlotType,Date,CalDate,Number) VALUES (?,?,?,?,?,?);''' % (TableName), (entry[0],entry[1],entry[2],AllocatedDate,CalDate,Number))
 
 
 
 
-#####
+########################################
 # Allotment call:
 
-# Random seed:
-random.seed(20150599)
-
+####################
 #SQL Dataset connection:
 sqlconn = sqlite3.connect('SumSemData.db')
 c = sqlconn.cursor()
+TempTable = 'TempAllotment'
 
-# Cleaning up so fresh tables will be created:
-c.execute('''DROP TABLE IF EXISTS Allotment''')
-c.execute('''DROP TABLE IF EXISTS WasAllotted''')
 
-# Pull of list of entries, sorted by priority (right now not really putting in a very sophisticated priority ranking)
-SignupPull =  c.execute('''SELECT Timestamp,Username,SlotType,Availability FROM Signup WHERE Username <> "" ORDER BY JobTalk DESC, SlotType ASC, random();''')
-entries = SignupPull.fetchall()
+# Random seed:
+random.seed(20150599)
+Iterations = 10000
 
-for entry in entries:
-    AllocatePerson(entry,c)
+
+iter = 1
+MinLossFn = 10^6
+while iter in range (1,Iterations) and MinLossFn > 0 :
+    print "________________________________________________________________________________"
+    print "Iteration: ",iter," of ",Iterations,"| Min:",MinLossFn
+    # Cleaning up so fresh tables will be created:
+    c.execute('''DROP TABLE IF EXISTS %s''' % TempTable)
+
+    #########
+    # Pull of list of entries, sorted by priority
+    # First entry for each person:
+    SignupPullEntry = c.execute('''SELECT Timestamp,Username,SlotType,Availability,JobTalk
+                                        FROM Signup GROUP BY Username
+                                        ORDER BY JobTalk DESC,  SlotType ASC, random();''')
+    entries = SignupPullEntry.fetchall()
+    # Then subsequent entries:
+    SignupPullEntry = c.execute('''SELECT Timestamp,Username,SlotType,Availability,JobTalk 
+                                        FROM Signup 
+                                        WHERE Timestamp NOT IN (
+                                            SELECT Timestamp
+                                            FROM Signup
+                                            GROUP BY Username
+                                            ORDER BY JobTalk DESC, SlotType ASC, random());''')
+    entries.extend(SignupPullEntry.fetchall())
+
+    # Allocating based on the list:
+    for entry in entries:
+        AllocatePerson(entry,c,TempTable)
+
+    # Showing results (Only in terms of people's first priority seminar): 
+    # Note: The LossFn is haphazard --  Goes up with people not allocated any, with 1.01 weight to job candidates
+    #                                   Then adds in 0.0001 if not putting in additional seminars...
+    #                                   This is an inelegant way of putting in a hierarchical priority of things to accomplish
+    #                                   It has not been optimized to avoid double counting
+    Result =  c.execute('''SELECT Timestamp,Username,Signup.SlotType,CalDate,JobTalk,Availability FROM Signup 
+                                        LEFT OUTER JOIN %s USING (Timestamp,Username) 
+                                        GROUP BY Username
+                                        ORDER BY JobTalk DESC,  Signup.SlotType ASC, random();''' % (TempTable))
+    
+    # Showing result and assigning loss fn:
+    print "Allocation results:"
+
+    NumJMPNotAssigned = 0
+    NumPplNotAssigned = 0
+    for entry in Result.fetchall() :
+        if entry[3] == None :
+            print "Username: ",entry[1],"|Slots allowed: ",entry[5].count(',')+1
+            
+
+            # Number of not assigned requests (maximizing number of slots used):
+            NumPplNotAssigned = NumPplNotAssigned + 1
+            # Tiebreaker for job market presentations:
+            if entry[4] == 'Yes' :
+                NumJMPNotAssigned = NumJMPNotAssigned + 1
+    # Total slots not assigned
+    NumReqNotAssigned = len(c.execute('''SELECT Timestamp 
+                                        FROM Signup 
+                                        LEFT OUTER JOIN %s USING (Timestamp,Username) 
+                                        WHERE CalDate IS NULL;''' % (TempTable)).fetchall())
+
+    # Final algorithm:
+    LossFn = NumPplNotAssigned + 0.01*NumJMPNotAssigned + 0.0001*NumReqNotAssigned
+    print "Loss function value: ",LossFn
+
+    # Determining if this is the ``best'' allotment yet: 
+    if LossFn < MinLossFn :
+        # If so, setting as new benchmark
+        MinLossFn = LossFn
+        c.execute('''DROP TABLE IF EXISTS Allotment;''')
+        c.execute('''ALTER TABLE %s RENAME TO Allotment;''' % (TempTable))
+    c.execute('''DROP TABLE IF EXISTS %s;''' % (TempTable))
+
+    # Iterating counter:
+    iter = iter + 1
+
+print "Minimum of loss function: ",MinLossFn
 
 # Committing changes
 sqlconn.commit()
 
-# Showing results: 
-print "________________________________________________________________________________"
-print "Allocation results:"
-print "Timestamp, Username, SlotType, Allotted"
-WasAllotted = c.execute('''SELECT Timestamp, Username, SlotType, Allotted FROM WasAllotted;''')
-for Entry in WasAllotted.fetchall():
-    print Entry
+print "--------------------------------------------------------------------------------"
+print "Decided upon allocation:"
+AllottedList = c.execute('''SELECT Username,Signup.SlotType,CalDate,JobTalk,Availability FROM Signup LEFT OUTER JOIN Allotment USING (Timestamp,Username) ORDER BY DATE(CalDate);''')
+for Entry in AllottedList.fetchall() :
+    print Entry[2],"Username: ",Entry[0],"Slots listed: ",Entry[4].count(',')+1
 
 
+########################################
 # Populating (first) schedule:
 print "________________________________________________________________________________"
 print "Making up first schedule:"

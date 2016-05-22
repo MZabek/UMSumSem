@@ -25,6 +25,7 @@ MDSchedule.write('title: Full schedule\n')
 MDSchedule.write('---\n')
 
 # Getting entries from database
+print "Making full schedule with the following dates:"
 CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,Room,SlotType FROM Schedule ORDER BY Date ASC, Number ASC;''')
 for CalEntry in CalEntries.fetchall() :
 
@@ -36,6 +37,7 @@ for CalEntry in CalEntries.fetchall() :
     Date = re.sub("07-","July ",Date)
     Date = re.sub("08-","August ",Date)
     Date = re.sub("09-","September ",Date)
+    print Date
 
     # Writing text to file:
     # Date
@@ -77,24 +79,22 @@ MDSchedule.close()
 # Specific entries for upcoming events
 
 # Getting entries
-CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,Room,SlotType FROM Schedule WHERE date(Date) > CURRENT_TIME ORDER BY date(Date) ASC, Number ASC;''')
+CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,Room,SlotType FROM Schedule WHERE date(Date,'localtime') > date('now','localtime') ORDER BY date(Date,'localtime') ASC, Number ASC;''')
 EntryNum = 0
 TargetDir = '../Website/_texts/'
 
 # Removing all files in the directory:
+print "Removing the following files:"
 filelist = [ f for f in os.listdir(TargetDir) if f.endswith(".md") ]
 for f in filelist:
-    print f
     FullFile = TargetDir + f
     print FullFile
     os.remove(FullFile)
 
+print "Creating the following files: "
 for CalEntry in CalEntries.fetchall() :
     EntryNum = EntryNum + 1
-    print str(EntryNum).zfill(4)
 
-    print CalEntry
-    
     # Filename to save as: 
     SaveAs = TargetDir
     SaveAs +=str(EntryNum).zfill(4)
@@ -102,10 +102,10 @@ for CalEntry in CalEntries.fetchall() :
     print SaveAs 
 
     # Title of the page: 
-    if CalEntry[3] == 'TBD' :
+    if CalEntry[3] == 'TBD' or CalEntry[3] == 'title tk' or CalEntry[3] == 'Presentation TBD' :
         Title = CalEntry[2]
     else :
-        Title = re.sub(":","-",CalEntry[3])
+        Title = re.sub(":"," -",CalEntry[3])
 
 
     MDEntry = open(SaveAs,'w')
