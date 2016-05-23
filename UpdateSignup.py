@@ -23,7 +23,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS EmailList (Timestamp text, Email text NO
 # Pulling in CSV of form responses:
 # Note that this is dependent on the setup of the file
 print 'Opening CSV main signup file...'
-with open('../Forms/SignupForm (Responses) - Form Responses 1.csv', 'rb') as file:
+with open('../Forms/SignupForm (Responses) - Form Responses 1.csv', 'rbU') as file:
     entries = csv.reader(file, delimiter=',',quotechar='"')
 
     # Inserting rows past the first one
@@ -40,7 +40,7 @@ with open('../Forms/SignupForm (Responses) - Form Responses 1.csv', 'rb') as fil
         entrynum += 1
 
 print 'Opening CSV email signup file...'
-with open('../Forms/Email signup (Responses) - Form Responses 1.csv', 'rb') as file:
+with open('../Forms/Email signup (Responses) - Form Responses 1.csv', 'rbU') as file:
     entries = csv.reader(file, delimiter=',',quotechar='"')
 
     # Inserting rows past the first one

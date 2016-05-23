@@ -23,6 +23,7 @@
 # Note: This should only be created once, at the official allotment date
 # This was 6/22/2016 for the 2016 season
 UpdateSignup.log Allotment.log ./archive/SumSemDataAtAllotment.db : UpdateSignup.py  Allotment.py ../Forms/SignupForm\ (Responses)\ -\ Form\ Responses\ 1.csv ../Forms/Email\ signup\ (Responses)\ -\ Form\ Responses\ 1.csv
+	# Reading in from csv files:
 	python UpdateSignup.py > UpdateSignup.log
 	python Allotment.py > Allotment.log
 	cp SumSemData.db ./archive/SumSemDataAtAllotment.db
@@ -32,7 +33,7 @@ UpdateSignup.log Allotment.log ./archive/SumSemDataAtAllotment.db : UpdateSignup
 	BUNDLE_GEMFILE=../Website/Gemfile bundle exec jekyll build
 	rm -r _site/
 	GIT_DIR=../Website/.git GIT_WORK_TREE=../Website git add --all
-	GIT_DIR=../Website/.git GIT_WORK_TREE=../Website git commit -m "Intitial allocation, $(DATE)"
+	GIT_DIR=../Website/.git GIT_WORK_TREE=../Website git commit -m "Intitial allocation"
 	GIT_DIR=../Website/.git GIT_WORK_TREE=../Website git push origin gh-pages
 	# At this point you write a nice email message to the people who were not allocated slots
 	# And a general email message to everyone...
