@@ -102,10 +102,9 @@ for CalEntry in CalEntries.fetchall() :
     print SaveAs 
 
     # Title of the page: 
-    if CalEntry[3] == 'TBD' or CalEntry[3] == 'title tk' or CalEntry[3] == 'Presentation TBD' :
-        Title = CalEntry[2]
-    else :
-        Title = re.sub(":"," -",CalEntry[3])
+    Title = CalEntry[2]
+    if CalEntry[3] != 'TBD' and CalEntry[3] != 'title tk' and CalEntry[3] != 'Presentation TBD' :
+        Title = Title + " - " + re.sub(":"," -",CalEntry[3])
 
 
     MDEntry = open(SaveAs,'w')
