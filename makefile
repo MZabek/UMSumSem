@@ -6,16 +6,18 @@
 #.PHONY : all
 
 	
-# The schedule: 
+# The website/schedule: 
+# Note that git has to be configured here to work without a password 
 ../Website/schedule.md MakeMDSchedule.log : SumSemData.db MakeMDSchedule.py 
 	# Making schedule for website:
 	python MakeMDSchedule.py > MakeMDSchedule.log
 	# Posting to website
 	cd ../Website
-	bundle exec jekyll build
-	git add --all
-	git commit -m "Intitial allocation, $(DATE)"
-	git push origin gh-pages
+	BUNDLE_GEMFILE=../Website/Gemfile bundle exec jekyll build
+	rm -r _site/
+	GIT_DIR=../Website/.git GIT_WORK_TREE=../Website git add --all
+	GIT_DIR=../Website/.git GIT_WORK_TREE=../Website git commit -m "Automatic schedule update"
+	GIT_DIR=../Website/.git GIT_WORK_TREE=../Website git push origin gh-pages
 
 # The sign up and allotment: 
 # Note: This should only be created once, at the official allotment date
@@ -27,11 +29,11 @@ UpdateSignup.log Allotment.log ./archive/SumSemDataAtAllotment.db : UpdateSignup
 	# Making schedule for website:
 	python MakeMDSchedule.py > MakeMDSchedule.log
 	# Posting to website
-	cd ../Website
-	bundle exec jekyll build
-	git add --all
-	git commit -m "Intitial allocation, $(DATE)"
-	git push origin gh-pages
+	BUNDLE_GEMFILE=../Website/Gemfile bundle exec jekyll build
+	rm -r _site/
+	GIT_DIR=../Website/.git GIT_WORK_TREE=../Website git add --all
+	GIT_DIR=../Website/.git GIT_WORK_TREE=../Website git commit -m "Intitial allocation, $(DATE)"
+	GIT_DIR=../Website/.git GIT_WORK_TREE=../Website git push origin gh-pages
 	# At this point you write a nice email message to the people who were not allocated slots
 	# And a general email message to everyone...
 

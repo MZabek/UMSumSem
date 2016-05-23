@@ -101,20 +101,6 @@ for CalEntry in CalEntries.fetchall() :
     SaveAs +='.md'
     print SaveAs 
 
-    # Title of the page: 
-    Title = CalEntry[2]
-    if CalEntry[3] != 'TBD' and CalEntry[3] != 'title tk' and CalEntry[3] != 'Presentation TBD' :
-        Title = Title + " - " + re.sub(":"," -",CalEntry[3])
-
-
-    MDEntry = open(SaveAs,'w')
-    MDEntry.write('---\n')
-    MDEntry.write('layout: post\n')
-    MDEntry.write('title: ')
-    MDEntry.write(Title.encode('utf8'))
-    MDEntry.write('\n')
-
-    MDEntry.write('---\n')
 
     #Stripping out year from date:
     Date = re.sub("2016-","",CalEntry[0])
@@ -124,6 +110,22 @@ for CalEntry in CalEntries.fetchall() :
     Date = re.sub("07-","July ",Date)
     Date = re.sub("08-","August ",Date)
     Date = re.sub("09-","September ",Date)
+
+    # Title of the page: 
+    Title = CalEntry[2]
+    if CalEntry[3] != 'TBD' and CalEntry[3] != 'title tk' and CalEntry[3] != 'Presentation TBD' and CalEntry[3] != 'My JMP (title under revision)':
+        Title = Title + " - " + re.sub(":"," -",CalEntry[3])
+    Title = Title +  " (" + Date + ")"
+
+    # Opening and writing header:
+    MDEntry = open(SaveAs,'w')
+    MDEntry.write('---\n')
+    MDEntry.write('layout: post\n')
+    MDEntry.write('title: ')
+    MDEntry.write(Title.encode('utf8'))
+    MDEntry.write('\n')
+
+    MDEntry.write('---\n')
 
     # Writing text to file:
     # Date
