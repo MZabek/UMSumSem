@@ -2,7 +2,7 @@
 layout: page
 title: Full schedule
 ---
-## June 01 - Jacob Bastian
+## June 06 - Jacob Bastian
 
 ### The Rise of Working Mothers and the 1975 Earned Income Tax Credit
 
@@ -205,16 +205,6 @@ Previous research has established that students learn best from teachers with at
 
 
 
-## July 27 (Slot 2) - pieter de vlieger
-
-### title tk
-
-*Joint work with:* /
-
-*Location:* Lorch 301
-
-na
-
 ## July 29 - Alan Griffith
 
 ### My JMP (title under revision)
@@ -327,6 +317,14 @@ model of firm-hiring, and of worker decisions to study and choose occupations in
 
 
 ## August 31 - Feiya shao
+
+*Location:* Lorch 301
+
+
+
+## September 02 - Nicolas Morales
+
+### Understanding the role of employers in high skilled immigration
 
 *Location:* Lorch 301
 
