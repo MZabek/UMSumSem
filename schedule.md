@@ -20,7 +20,7 @@ When corporate taxation leads firms to reduce their output, selection by large, 
 
 ## June 08 (Slot 2) - Benjamin Glass
 
-### Ensuring Against Trade Shocks
+### Insuring Against Trade Shocks
 
 *Location:* Lorch 301
 
