@@ -62,11 +62,11 @@ for CalEntry in CalEntries.fetchall() :
         MDSchedule.write(CalEntry[4].encode('utf8'))
     # Location
     if CalEntry[6] != None : 
-        MDEntry.write('\n\n')
-        MDEntry.write('*Location:* ')
-        MDEntry.write(CalEntry[6].encode('utf8'))
+        MDSchedule.write('\n\n')
+        MDSchedule.write('*Location:* ')
+        MDSchedule.write(CalEntry[6].encode('utf8'))
         if CalEntry[6] != "Lorch 301" :
-            MDEntry.write('\n\n**Note the change in location!**')
+            MDSchedule.write('\n\n**Note the change in location!**')
     # Abstract
     if CalEntry[5] != 'TBD' :
         MDSchedule.write('\n\n')

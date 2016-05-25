@@ -12,7 +12,6 @@
 	# Making schedule for website:
 	python MakeMDSchedule.py > MakeMDSchedule.log
 	# Posting to website
-	cd ../Website
 	BUNDLE_GEMFILE=../Website/Gemfile bundle exec jekyll build
 	rm -r _site/
 	GIT_DIR=../Website/.git GIT_WORK_TREE=../Website git add --all

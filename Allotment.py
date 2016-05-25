@@ -185,7 +185,7 @@ print "Making up first schedule:"
 
 # This defines the table schema:
 c.execute('''DROP TABLE IF EXISTS Schedule''')
-c.execute('''CREATE TABLE Schedule (Date text NOT NULL, Number int, Title text, Presenter text, Abstract text, CoAuthors text, Room text, Comments text, Email text, SignupTime text, SlotType text, Scheduled text DEFAULT CURRENT_TIME, CheckIn text, WebPost text, Misc text, Link text, PRIMARY KEY(Date,Number))''')
+c.execute('''CREATE TABLE Schedule (Date text NOT NULL, Number int DEFAULT 1, Title text, Presenter text, Abstract text, CoAuthors text, Room text DEFAULT 'Lorch 301', Comments text, Email text, SignupTime text, SlotType text, Scheduled text DEFAULT CURRENT_TIMESTAMP, CheckIn text, WebPost text, Misc text, Link text, PRIMARY KEY(Date,Number))''')
 
 
 # Pulling entries
