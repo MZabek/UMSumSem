@@ -4,3 +4,7 @@
 
 #Ignoring archive folder:
 /archive/*
+
+# Dont' pick up password
+password
+client_secret.json
