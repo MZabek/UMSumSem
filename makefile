@@ -6,7 +6,7 @@
 #.PHONY : all
 
 	
-# The website/schedule: 
+# Update the website/schedule: 
 # Note that git has to be configured here to work without a password 
 ../Website/schedule.md MakeMDSchedule.log : SumSemData.db MakeMDSchedule.py 
 	# Making schedule for website:
