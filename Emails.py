@@ -175,8 +175,8 @@ Recipients = ['mzabek@gmail.com','zabek@umich.edu']
 # Outputting the next two seminars after today: 
 SQLOut = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors,Room 
                 FROM Schedule
-                WHERE date(Date) > date('now','+1 day')
-                AND date(Date) < date('now','+3 day')
+                WHERE date(Date) > date('now','localtime','+1 day')
+                AND date(Date) < date('now','localtime','+3 day')
                 AND EmailAnnouncement IS NULL
                 ORDER BY date(Date) ASC
                 Limit 2;''')
@@ -225,14 +225,20 @@ SQLToAsk = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAutho
                 AND CheckIn IS NULL;''')
 for ToAsk in SQLToAsk.fetchall():
     # Things to work with:
-    Presentation = {'Date' : ToAsk[0]}
-    Presentation['Slot'] = ToAsk[1]
-    Presentation['Title'] = ToAsk[2].encode('utf-8')
     Presentation['Presenter'] = ToAsk[3].encode('utf-8')
     Presentation['Abstract'] = ToAsk[4].encode('utf-8')
     Presentation['CoAuthors'] = ToAsk[5].encode('utf-8')
     Presentation['Email'] = ToAsk[6].encode('utf-8')
     Presentation['SlotType'] = ToAsk[7].encode('utf-8')
+    Presentation['Slot'] = ToAsk[1]
+    Presentation = {'Date' : ToAsk[0]}
+
+    # This entry corrects of an IndexError that may come up if these are set to null... 
+    try :
+      Presentation['Title'] = ToAsk[2].encode('utf-8')
+    except IndexError :
+      Presentation['Title'] = ''.encode('utf-8')
+
 
 
     Info = "Here is the info we are currently advertising on the website:"

@@ -1,4 +1,9 @@
-# Idea is to update the schedule based on the google sheet... 
+# Idea is to update the schedule and email list based on the google sheet... 
+# Mike Zabek
+# May 28, 2016
+
+# This builds on the google api python quickstart quite heavily
+# It also requires stored credentials (client_secret.json) and access to specified sheets
 
 from __future__ import print_function
 import httplib2
@@ -24,9 +29,13 @@ SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Python Schedule Updater'
 
-# Info on the specific spreadsheet
-spreadsheetId = '1GxSrtlP_2vIA5KDf38rYiQFpubAUruK42-qbcvkXosQ'
-rangeName = 'Form Responses 2!A2:J'
+# Information update spreadsheet:
+UpdateSheetID = '1GxSrtlP_2vIA5KDf38rYiQFpubAUruK42-qbcvkXosQ'
+UpdateRange = 'Form Responses 2!A2:J'
+
+# Email sign up spreadsheet:
+EmailSheetID = '1a7nFoFnyeRTC1lgVPV_q879xs0TGefAaeliissCLJXU'
+EmailRange = 'Form Responses 1!A2:B'
 
 def get_credentials():
     """Gets valid user credentials from storage.
@@ -77,14 +86,16 @@ def main():
     service = discovery.build('sheets', 'v4', http=http,
                               discoveryServiceUrl=discoveryUrl)
 
+    print('Updating info based on google sheet')
     result = service.spreadsheets().values().get(
-        spreadsheetId=spreadsheetId, range=rangeName).execute()
+        spreadsheetId=UpdateSheetID, range=UpdateRange).execute()
     values = result.get('values', [])
 
     if not values:
         print('No data found.')
     else:
         for row in values:
+            print('Updating info for: %s presentation %s' % (row[1],row[2]))
             # Saving data in a dict
             try : 
                 NewData = {'Title':row[3]}
@@ -94,7 +105,8 @@ def main():
                 NewData['Link'] = row[7]
                 NewData['Cancel'] = row[8]
             except IndexError:
-                print('Some columns in the spreadsheet are completely empty')
+                print('Note: some (right) columns in the spreadsheet are completely empty')
+                print('''This shouldn't be a problem''')
 
             # ID variables:
             # Converting month and day:
@@ -104,10 +116,12 @@ def main():
             Number = int(row[2])
 
             # Test to see if id-ing things right:
-            Entries = SQLCur.execute('''SELECT Title,Abstract FROM Schedule WHERE Date=='%s' AND Number==%d;''' % (DateString,Number))
-            # If a successful match, then updating the dataset variable by variable (where there and not an empty string) 
+            Entries = SQLCur.execute('''SELECT Title,Abstract,LastUpdated FROM Schedule WHERE Date=='%s' AND Number==%d;''' % (DateString,Number))
+            # If a successful match and not updated after spreadsheet entry, 
+            # then updating the dataset variable by variable (where there and not an empty string) 
             FetchedEntries = Entries.fetchall()
-            if len(FetchedEntries) == 1 :
+            # Testing only one match and not more up to date than old version
+            if len(FetchedEntries) == 1 and time.strptime(row[0],"%m/%d/%Y %H:%M:%S")>=time.strptime(FetchedEntries[0][2],"%Y-%m-%d %H:%M:%S") :
                 if 'Title' in NewData and NewData['Title'] != '':
                     SQLCur.execute('''UPDATE Schedule SET Title='%s',LastUpdated=datetime('now') WHERE Date=='%s' AND Number==%d;''' % (NewData['Title'],DateString,Number))
                 if 'Abstract' in NewData and NewData['Abstract'] != '':
@@ -118,9 +132,30 @@ def main():
                     SQLCur.execute('''UPDATE Schedule SET CoAuthors='%s',LastUpdated=datetime('now') WHERE Date=='%s' AND Number==%d;''' % (NewData['CoAuthors'],DateString,Number))
                 if 'Link' in NewData and NewData['Link'] != '':
                     SQLCur.execute('''UPDATE Schedule SET Link='%s',LastUpdated=datetime('now') WHERE Date=='%s' AND Number==%d;''' % (NewData['Link'],DateString,Number))
+                print('It looks like some stuff was updated')
                 SQLCon.commit()
+            elif time.strptime(row[0],"%m/%d/%Y %H:%M:%S")<time.strptime(FetchedEntries[0][2],"%Y-%m-%d %H:%M:%S") :
+                print("Database updated since response entered, not updating")
+                print('''Last update of entry: %s | Information Update: %s'''% (FetchedEntries[0][2],row[0]))
+            elif len(FetchedEntries) != 1 :
+                print("ERROR: Corresponding unique entry not found in database")
+                print("ERROR: Check this identifying information: %s Slot %s" % (row[1],row[2]))
 
 
+    # Email signup
+    print('Updating email list')
+
+    # Reading email signup values:
+    EmailResult = service.spreadsheets().values().get(
+        spreadsheetId=EmailSheetID, range=EmailRange).execute()
+    values = EmailResult.get('values', [])
+    # For each row attempting to insert, will fail if already in there
+    for row in values:
+        try :
+            with SQLCon :
+                SQLCur.execute('''INSERT INTO EmailList (Timestamp,Email) VALUES (strftime('%m/%d/%Y %H:%M:%S','now'),?);''', (row[1],))
+        except sqlite3.IntegrityError :
+            print('''Already in the email list - %s''' % (row[1],))
 
 if __name__ == '__main__':
     main()
