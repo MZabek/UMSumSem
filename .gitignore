@@ -2,8 +2,9 @@
 *.log
 *.db
 
-#Ignoring archive folder:
+#Ignoring archive folders:
 /archive/*
+/EmailDrafts/*
 
 # Dont' pick up password
 password
