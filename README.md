@@ -47,6 +47,17 @@ This is done by UpdaterScript.sh, which I run in the morning on most days, via a
 2. UpdateSchedFromCheckIns.py checks the google form online with responses from check ins and updates the database. 
    - As of 5/29 it does noting with cancelations, however. Keep this in mind.
 
+##### Dependencies
+
+I have tried to run this on a very old Ubuntu MATE laptop. I had to install: 
+
+1. pip and google-api-python-client
+2. instal bundle for ruby if you want to see the website locally (Is it possible to skip this in make file?)
+   1. gem install bundle 
+   2. bundle install in website directory (which is kinda problematic)
+
+If I were super cool this might be in Docker? Or it would just live on the cloud in AWS?
+
 ## Things that have to be done manually:
 
 We still haven't:

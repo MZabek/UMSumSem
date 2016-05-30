@@ -3,6 +3,8 @@
 # May 28, 2016
 
 # This builds on the google api python quickstart quite heavily
+# Requires the google-api-python-client
+# E.G. pip install --upgrade google-api-python-client
 # It also requires stored credentials (client_secret.json) and access to specified sheets
 
 from __future__ import print_function

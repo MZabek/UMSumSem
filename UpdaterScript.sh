@@ -3,7 +3,7 @@
 
 cd ~/Drive/admin/SummerSeminar2016/Code
 
-# Backing up dataset:
+# Backing up database:
 CURDATE=$(date +"%Y%m%d")
 cp SumSemData.db ./archive/SumSemData$CURDATE.db
 
