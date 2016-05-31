@@ -9,6 +9,7 @@
 
 from __future__ import print_function
 import httplib2
+
 import os
 import sqlite3
 import time
@@ -18,6 +19,9 @@ from apiclient import discovery
 import oauth2client
 from oauth2client import client
 from oauth2client import tools
+
+from email.mime.text import MIMEText 
+import smtplib
 
 try:
     import argparse
@@ -142,6 +146,28 @@ def main():
             elif len(FetchedEntries) != 1 :
                 print("ERROR: Corresponding unique entry not found in database")
                 print("ERROR: Check this identifying information: %s Slot %s" % (row[1],row[2]))
+            # Sending email to account if cancellation
+            # fancy if is to account for cases where no value in this column
+            if len(row) >= 8 and row[8] is not None and row[8] == 'Please cancel the presentation' :
+                print('Presentation cancellation!')
+                # Setting up email account:
+                EmailSMTP = smtplib.SMTP('smtp.gmail.com:587')
+                EmailSMTP.starttls()
+                #Reading in password from file (this is not very secure)
+                with open('password','r') as f :
+                    print("Setting up email login for UMSumSem:")
+                    EmailSMTP.login('UMSumSem',f.readline())
+
+                # Setting up message (MIME) object:
+                Msg = MIMEText('Look up the response of %s'.encode('utf-8'), 'plain', 'utf-8' % (row[0],))
+                Msg['From'] = 'UMSumSem <UMSumSem@gmail.com>'
+                Msg['To'] = 'UMSumSem <UMSumSem@gmail.com>'
+                Msg['Subject'] = 'Seminar cancellation on %s' % (row[1],)
+                # Sending
+                try : 
+                    EmailSMTP.sendmail(Msg['From'],Msg['To'],Msg.as_string())
+                except :
+                    print('ERROR: Email not sent')
 
 
     # Email signup

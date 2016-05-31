@@ -6,10 +6,8 @@
 import os
 import sqlite3
 import time
-import email.mime
 from email.mime.text import MIMEText 
 import smtplib
-import pprint
 
 ########## Functions ##########
 
