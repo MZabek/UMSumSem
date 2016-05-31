@@ -2,7 +2,7 @@
 
 This is a series of python scripts to deal with form data, allocations of rooms and presenters, and announcements for the University of Michigan summer seminar in economics. It could very well be overkill for the purpose, but for me (Mike) it has made administering everything a lot easier, more effective, and less time intensive. 
 
-It is somewhat customized so unfortunately won't be of a huge amount of use (unmodified) to other people. It also is written by an economist as an attempt to learn gheneral python programming as well as SQL through SQLite. 
+It is somewhat customized so unfortunately won't be of a huge amount of use (unmodified) to other people. It also is written by an economist as an attempt to learn general python programming as well as SQL through SQLite. 
 
 ## Main idea
 
@@ -34,7 +34,7 @@ The makefile outlines how many of these processes run (using [make](http://swcar
 
 ##### Posting the schedule online
 
-This is done via the MakeMDSchedule, whihc makes some markdown documents that are then readable by jekyll, which is what github pages uses. I have a jekyll setup that I took from someone else for the website. 
+This is done via the MakeMDSchedule, which makes some markdown documents that are then readable by jekyll, which is what github pages uses. I have a jekyll setup that I took from someone else for the website. 
 
 This is re-done periodically. When it is done, new files have to be put there and then the changes have to be committed to the gh-pages branch of the github respository. The Jekyll stuff that I do, I think, is just so that I can view it locally before it goes up. I have never done it any other way, though, and I know nothing about ruby on rails or much of Jekyll. 
 
@@ -45,7 +45,7 @@ This is done by UpdaterScript.sh, which I run in the morning on most days, via a
    - Announcements to the email list
    - Check ins to people with upcoming seminars
 2. UpdateSchedFromCheckIns.py checks the google form online with responses from check ins and updates the database. 
-   - As of 5/29 it does noting with cancelations, however. Keep this in mind.
+   - As of 5/29 it does nothing with cancelations, however. Keep this in mind.
 
 ##### Dependencies
 
@@ -54,16 +54,14 @@ I have tried to run this on a very old Ubuntu MATE laptop. I had to install:
 1. pip and google-api-python-client
 2. instal bundle for ruby if you want to see the website locally (Is it possible to skip this in make file?)
    1. gem install bundle 
-   2. bundle install in website directory (which is kinda problematic)
+   2. bundle install (in website directory, which is kinda problematic)
 
-If I were super cool this might be in Docker? Or it would just live on the cloud in AWS?
+An easy deployment somewhere else is yet to happen (and may not). 
 
 ## Things that have to be done manually:
 
 We still haven't:
 
-1. Figured out how to do cancelations quite fully. When this happens someone should ask the wait lsit for new takers.
-2. Updating the wait list and email lists... 
-   - Given the form, it might be easy to automate this in the near future... Not sure it's a huger return though. I have an orhpaned branch starting this. 
-3. Deal with special cases and discretion.
-4. Like, actually be there, etc.  
+1. Figured out how to do cancelations programmatically. When this happens someone should ask the wait list for new takers.
+2. Programmatically updated the wait list 
+   - Given the form, it might be easy to automate this in the near future... Not sure it's a huger return though. 
