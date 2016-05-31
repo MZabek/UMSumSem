@@ -223,13 +223,13 @@ SQLToAsk = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAutho
                 AND CheckIn IS NULL;''')
 for ToAsk in SQLToAsk.fetchall():
     # Things to work with:
+    Presentation = {'Date' : ToAsk[0]}
     Presentation['Presenter'] = ToAsk[3].encode('utf-8')
     Presentation['Abstract'] = ToAsk[4].encode('utf-8')
     Presentation['CoAuthors'] = ToAsk[5].encode('utf-8')
     Presentation['Email'] = ToAsk[6].encode('utf-8')
     Presentation['SlotType'] = ToAsk[7].encode('utf-8')
     Presentation['Slot'] = ToAsk[1]
-    Presentation = {'Date' : ToAsk[0]}
 
     # This entry corrects of an IndexError that may come up if these are set to null... 
     try :
@@ -251,7 +251,7 @@ for ToAsk in SQLToAsk.fetchall():
 
 
     # Assembling the email:
-    Msg = email.mime.text.MIMEText(MessageText.encode('utf-8'), 'plain', 'utf-8')
+    Msg = MIMEText(MessageText.encode('utf-8'), 'plain', 'utf-8')
     Msg['Subject'] = 'Checking up about your presentation on ' + time.strftime("%m/%d",time.strptime(Presentation['Date'], "%Y-%m-%d"))
     Msg['From'] = 'UMSumSem <UMSumSem@gmail.com>'
     Msg['To'] = Presentation['Email']

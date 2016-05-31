@@ -3,6 +3,9 @@
 
 cd ~/Drive/admin/SummerSeminar2016/Code
 
+echo 'Where python is located as called by bash:'
+type python
+
 # Backing up database:
 CURDATE=$(date +"%Y%m%d")
 cp SumSemData.db ./archive/SumSemData$CURDATE.db
