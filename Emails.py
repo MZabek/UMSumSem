@@ -168,7 +168,7 @@ for Entry in List :
 
 ##########
 # Which seminars to announce: 
-# Outputting the next two seminars after today: 
+# Outputting up to two seminars that are today or tomorrow: 
 SQLOut = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors,Room 
                 FROM Schedule
                 WHERE date(Date) >= date('now','localtime')
@@ -214,27 +214,43 @@ else :
 print "################################################################################"
 print "Asking for updated information from people (if any): "
 
+# Info for seminars that are between (inclusive) today and two weeks from now
+# and which I have not asked about yet. 
 SQLToAsk = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors,Email,SlotType,CheckIn,Link 
                 FROM Schedule
                 WHERE date(Date) >= date('now','localtime')
                 AND date(Date) <= date('now','localtime','+14 day')
                 AND CheckIn IS NULL;''')
 for ToAsk in SQLToAsk.fetchall():
+
     # Things to work with:
     Presentation = {'Date' : ToAsk[0]}
-    Presentation['Presenter'] = ToAsk[3].encode('utf-8')
-    Presentation['Abstract'] = ToAsk[4].encode('utf-8')
-    Presentation['CoAuthors'] = ToAsk[5].encode('utf-8')
-    Presentation['Email'] = ToAsk[6].encode('utf-8')
-    Presentation['SlotType'] = ToAsk[7].encode('utf-8')
     Presentation['Slot'] = ToAsk[1]
+    # Loops through filling the dict, ignoring index errors... 
+    for Field in ['Title','Presenter','Abstract','CoAuthors','Email','SlotType','Slot'] :
+      if Field=='Title' :
+        entry = 2
+      elif Field=='Presenter' :
+        entry = 3
+      elif Field=='Abstract' :
+        entry = 4
+      elif Field=='CoAuthors' :
+        entry = 5
+      elif Field=='Email' :
+        entry = 6
+      elif Field=='SlotType' :
+        entry = 7
+      else  :
+        entry = None
 
-    # This entry corrects of an IndexError that may come up if these are set to null... 
-    try :
-      Presentation['Title'] = ToAsk[2].encode('utf-8')
-    except IndexError :
-      Presentation['Title'] = ''.encode('utf-8')
-
+      # Code to put in either text or empty string if some type of empty:
+      try :
+        if ToAsk[entry] is None:
+          Presentation[Field] = ''.encode('utf-8')
+        else :
+          Presentation[Field] = ToAsk[entry].encode('utf-8')
+      except IndexError :
+        Presentation[Field] = ''.encode('utf-8')
 
 
     Info = "Here is the info we are currently advertising on the website:"
