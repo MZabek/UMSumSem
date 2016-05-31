@@ -127,7 +127,7 @@ def main():
             # then updating the dataset variable by variable (where there and not an empty string) 
             FetchedEntries = Entries.fetchall()
             # Testing only one match and not more up to date than old version
-            if len(FetchedEntries) == 1 and time.strptime(row[0],"%m/%d/%Y %H:%M:%S")>=time.strptime(FetchedEntries[0][2],"%Y-%m-%d %H:%M:%S") :
+            if len(FetchedEntries) == 1 and (FetchedEntries[0][2] is None or time.strptime(row[0],"%m/%d/%Y %H:%M:%S")>=time.strptime(FetchedEntries[0][2],"%Y-%m-%d %H:%M:%S")) :
                 if 'Title' in NewData and NewData['Title'] != '':
                     SQLCur.execute('''UPDATE Schedule SET Title='%s',LastUpdated=datetime('now') WHERE Date=='%s' AND Number==%d;''' % (NewData['Title'],DateString,Number))
                 if 'Abstract' in NewData and NewData['Abstract'] != '':
