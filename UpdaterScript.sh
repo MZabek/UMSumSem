@@ -11,7 +11,9 @@ CURDATE=$(date +"%Y%m%d")
 cp SumSemData.db ./archive/SumSemData$CURDATE.db
 
 # Periodic updates and emails:
+date >> UpdateSchedFromCheckIns.log
 python UpdateSchedFromCheckIns.py >> UpdateSchedFromCheckIns.log
+date >> Emails.log
 python Emails.py >> Emails.log
 
 # Updating the schedule on the website if there are any changes:

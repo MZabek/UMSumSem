@@ -164,8 +164,6 @@ List = SQLEmails.fetchall()
 Recipients = []
 for Entry in List :
     Recipients.append(Entry[0].encode('utf-8'))
-# For testing, making Recipients only Mike:
-Recipients = ['mzabek@gmail.com','zabek@umich.edu']
 
 
 ##########
@@ -173,8 +171,8 @@ Recipients = ['mzabek@gmail.com','zabek@umich.edu']
 # Outputting the next two seminars after today: 
 SQLOut = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors,Room 
                 FROM Schedule
-                WHERE date(Date) > date('now','localtime','+1 day')
-                AND date(Date) < date('now','localtime','+3 day')
+                WHERE date(Date) >= date('now','localtime')
+                AND date(Date) <= date('now','localtime','+1 day')
                 AND EmailAnnouncement IS NULL
                 ORDER BY date(Date) ASC
                 Limit 2;''')
@@ -218,8 +216,8 @@ print "Asking for updated information from people (if any): "
 
 SQLToAsk = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors,Email,SlotType,CheckIn,Link 
                 FROM Schedule
-                WHERE date(Date) > date('now','localtime','+1 day')
-                AND date(Date) < date('now','localtime','+14 day')
+                WHERE date(Date) >= date('now','localtime')
+                AND date(Date) <= date('now','localtime','+14 day')
                 AND CheckIn IS NULL;''')
 for ToAsk in SQLToAsk.fetchall():
     # Things to work with:
