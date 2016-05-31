@@ -3,16 +3,17 @@
 
 cd ~/Drive/admin/SummerSeminar2016/Code
 
-echo 'Where python is located as called by bash:'
-type python
-
 # Backing up database:
 CURDATE=$(date +"%Y%m%d")
 cp SumSemData.db ./archive/SumSemData$CURDATE.db
 
-# Periodic updates and emails:
+# Periodic updates:
+echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> UpdateSchedFromCheckIns.log
 date >> UpdateSchedFromCheckIns.log
 python UpdateSchedFromCheckIns.py >> UpdateSchedFromCheckIns.log
+
+# Emails:
+echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> Emails.log
 date >> Emails.log
 python Emails.py >> Emails.log
 

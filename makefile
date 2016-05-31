@@ -10,7 +10,8 @@
 # Note that git has to be configured here to work without a password 
 ../Website/schedule.md MakeMDSchedule.log : SumSemData.db MakeMDSchedule.py 
 	# Making schedule for website:
-	python MakeMDSchedule.py > MakeMDSchedule.log
+	date > MakeMDSchedule.log
+	python MakeMDSchedule.py >> MakeMDSchedule.log
 	# Posting to website
 	BUNDLE_GEMFILE=../Website/Gemfile bundle exec jekyll build
 	rm -r _site/
