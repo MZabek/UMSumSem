@@ -225,10 +225,11 @@ for ToAsk in SQLToAsk.fetchall():
 
     # Things to work with:
     Presentation = {'Date' : ToAsk[0]}
-    Presentation['Slot'] = ToAsk[1]
     # Loops through filling the dict, ignoring index errors... 
     for Field in ['Title','Presenter','Abstract','CoAuthors','Email','SlotType','Slot'] :
-      if Field=='Title' :
+      if Field=='Slot' :
+        entry = 1
+      elif Field=='Title' :
         entry = 2
       elif Field=='Presenter' :
         entry = 3
@@ -243,10 +244,12 @@ for ToAsk in SQLToAsk.fetchall():
       else  :
         entry = None
 
-      # Code to put in either text or empty string if some type of empty:
+      # Code to put in either text, number, or empty string if some type of empty:
       try :
         if ToAsk[entry] is None:
           Presentation[Field] = ''.encode('utf-8')
+        elif isinstance(ToAsk[entry],int) :
+          Presentation[Field] = str(ToAsk[entry]).encode('utf-8')
         else :
           Presentation[Field] = ToAsk[entry].encode('utf-8')
       except IndexError :
@@ -259,7 +262,7 @@ for ToAsk in SQLToAsk.fetchall():
             Info+='\r\n'
             Info+=PieceOfInfo
             Info+=': '
-            Info+=str(Presentation[PieceOfInfo])
+            Info+=Presentation[PieceOfInfo]
 
     MessageText = MakeCheckInMessage() + Info
 
