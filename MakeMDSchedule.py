@@ -44,7 +44,7 @@ for CalEntry in CalEntries.fetchall() :
     MDSchedule.write('## ')
     MDSchedule.write(Date)
     # Slot, if needed
-    if CalEntry[7] == 'Half (40 minutes)' :
+    if CalEntry[7] and CalEntry[7] == 'Half (40 minutes)' :
         MDSchedule.write(' (Slot ')
         MDSchedule.write(str(CalEntry[1]))
         MDSchedule.write(')')
@@ -52,23 +52,23 @@ for CalEntry in CalEntries.fetchall() :
     MDSchedule.write(' - ')
     MDSchedule.write(CalEntry[2].encode('utf8'))
     # Title
-    if CalEntry[3] != 'TBD' :
+    if CalEntry[3] and CalEntry[3] != 'TBD' :
         MDSchedule.write('\n\n### ')
         MDSchedule.write(CalEntry[3].encode('utf8'))
     # Co Authors
-    if CalEntry[4] != '' and CalEntry[4] != 'N/A' and CalEntry[4] != None :
+    if CalEntry[4] and CalEntry[4] != '' and CalEntry[4] != 'N/A' and CalEntry[4] != None :
         MDSchedule.write('\n\n')
         MDSchedule.write('*Joint work with:* ')
         MDSchedule.write(CalEntry[4].encode('utf8'))
     # Location
-    if CalEntry[6] != None : 
+    if CalEntry[6] : 
         MDSchedule.write('\n\n')
         MDSchedule.write('*Location:* ')
         MDSchedule.write(CalEntry[6].encode('utf8'))
         if CalEntry[6] != "Lorch 301" :
             MDSchedule.write('\n\n**Note the change in location!**')
     # Abstract
-    if CalEntry[5] != 'TBD' :
+    if CalEntry[5] and CalEntry[5] != 'TBD' :
         MDSchedule.write('\n\n')
         MDSchedule.write(CalEntry[5].encode('utf8'))
     MDSchedule.write('\n\n')
@@ -114,7 +114,7 @@ for CalEntry in CalEntries.fetchall() :
 
     # Title of the page: 
     Title = CalEntry[2]
-    if CalEntry[3] != 'TBD' and CalEntry[3] != 'title tk' and CalEntry[3] != 'Presentation TBD' and CalEntry[3] != 'My JMP (title under revision)':
+    if CalEntry[3] and CalEntry[3] != 'TBD' and CalEntry[3] != 'title tk' and CalEntry[3] != 'Presentation TBD' and CalEntry[3] != 'My JMP (title under revision)':
         Title = Title + " - " + re.sub(":"," -",CalEntry[3])
     Title = Title +  " (" + Date + ")"
 
@@ -133,27 +133,28 @@ for CalEntry in CalEntries.fetchall() :
     MDEntry.write('## ')
     MDEntry.write(Date)
     # Slot, if needed
-    if CalEntry[7] == 'Half (40 minutes)' :
+    if CalEntry[7] and CalEntry[7] == 'Half (40 minutes)' :
         MDEntry.write(' (Slot ')
         MDEntry.write(str(CalEntry[1]))
         MDEntry.write(')')
     # Presenter
     MDEntry.write(' - ')
-    MDEntry.write(CalEntry[2].encode('utf8'))
+    if CalEntry[2] :
+      MDEntry.write(CalEntry[2].encode('utf8'))
     # Co Authors
-    if CalEntry[4] != '' and CalEntry[4] != 'N/A' and CalEntry[4] != None :
+    if CalEntry[4] and CalEntry[4] != '' and CalEntry[4] != 'N/A' :
         MDEntry.write('\n\n')
         MDEntry.write('*Joint work with:* ')
         MDEntry.write(CalEntry[4].encode('utf8'))
     # Location
-    if CalEntry[6] != None : 
+    if CalEntry[6] : 
         MDEntry.write('\n\n')
         MDEntry.write('*Location:* ')
         MDEntry.write(CalEntry[6].encode('utf8'))
         if CalEntry[6] != "Lorch 301" :
             MDEntry.write('\n\n**Note the change in location!**')
     # Abstract
-    if CalEntry[5] != 'TBD' :
+    if CalEntry[5] and CalEntry[5] != 'TBD' :
         MDEntry.write('\n\n')
         MDEntry.write(CalEntry[5].encode('utf8'))
     MDEntry.write('\n\n')
