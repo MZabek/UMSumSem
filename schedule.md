@@ -34,15 +34,11 @@ I describe a two-period general equilibrium model.  Agents buy and sell forward 
 
 *Location:* Lorch 301
 
-
-
 ## June 13 - George Fenton
 
 ### On-the-job Leisure: Hours Worked vs. Hours at Work
 
 *Location:* Lorch 301
-
-
 
 ## June 15 - Evan Wright
 
@@ -65,8 +61,6 @@ Local ties lead people to stay in declining areas. Areas with a high share of lo
 ### Short-Term Disability Insurance, Maternity Leave, and the Rise of Working Mothers
 
 *Location:* Lorch 301
-
-
 
 ## June 22 - Molly Hawkins
 
@@ -93,15 +87,11 @@ Will provide when you guys need it for the announcement e-mail!
 
 *Location:* Lorch 301
 
-
-
 ## June 29 (Slot 1) - Xiaoqing Zhou
 
 ### Housing Investment and Cash-out Refinance
 
 *Location:* Lorch 301
-
-
 
 ## June 29 (Slot 2) - Laurien Gilbert
 
@@ -109,21 +99,15 @@ Will provide when you guys need it for the announcement e-mail!
 
 *Location:* Lorch 301
 
-
-
 ## July 01 - Christian Proebsting
 
 ### Are Devaluations Expansionary?
 
 *Location:* Lorch 301
 
-
-
 ## July 06 - Aristos Hudson
 
 *Location:* Lorch 301
-
-
 
 ## July 08 - Daniel Hubbard
 
@@ -141,23 +125,17 @@ Previous research has established that students learn best from teachers with at
 
 *Location:* Lorch 301
 
-
-
 ## July 13 - Yiyuan Zhang
 
 ### Market Organization and Productive Efficiency: Evidence from the Texas Electricity Market
 
 *Location:* Lorch 301
 
-
-
 ## July 15 - Ben Thompson
 
 ### Labor Supply Decisions and Pensions: Evidence from Brazil
 
 *Location:* Lorch 301
-
-
 
 ## July 18 - Steve Hou
 
@@ -167,8 +145,6 @@ Previous research has established that students learn best from teachers with at
 
 **Note the change in location!**
 
-
-
 ## July 20 - Christopher Sullivan
 
 ### The Ice Cream Split: Collusion on the Product Space Between Ben & Jerry's and Haagen-Dazs
@@ -176,8 +152,6 @@ Previous research has established that students learn best from teachers with at
 *Location:* Lorch 201
 
 **Note the change in location!**
-
-
 
 ## July 22 - Alexander Persaud
 
@@ -187,23 +161,17 @@ Previous research has established that students learn best from teachers with at
 
 **Note the change in location!**
 
-
-
 ## July 25 - Alex Russov
 
 ### Labor market opportunities and fertility
 
 *Location:* Lorch 301
 
-
-
 ## July 27 (Slot 1) - Max Risch
 
 ### Presentation TBD
 
 *Location:* Lorch 301
-
-
 
 ## July 29 - Alan Griffith
 
@@ -218,8 +186,6 @@ Previous research has established that students learn best from teachers with at
 ### Why Did Sugarcane Growers Suddenly Adopt Old Technology?
 
 *Location:* Lorch 301
-
-
 
 ## August 03 - Catalina Franco
 
@@ -237,8 +203,6 @@ This project seeks to contribute to the literature studying the causal effect of
 
 *Location:* Lorch 301
 
-
-
 ## August 08 - Morgan Henderson
 
 ### The Economic Consequences of Immigrant Disenfranchisement
@@ -246,6 +210,10 @@ This project seeks to contribute to the literature studying the causal effect of
 *Location:* Lorch 301
 
 From 1864 to 1926, twenty-three states and territories disenfranchised non-citizen immigrants, which represented a significant shock to electorates at the time. I estimate the effects of this disenfranchisement on voting outcomes, public spending, and crime. I find that it resulted in an immediate and sustained drop in mayoral and gubernatorial vote totals, with large effect sizes relative to the magnitude of the disenfranchised population. Consistent with findings from political science, the largest reductions in vote totals were concentrated in the politically uncompetitive states. I find little evidence that disenfranchisement affected partisan vote shares. States significantly reduced their spending, both in aggregate and as a share of the budget, directed toward education and social services, and there is suggestive evidence that cities significantly reduced their spending on water services. Consistent with a model of local political vote maximization with imperfect screening, I document a substantial reduction in the likelihood of a disenfranchised immigrant obtaining public employment. Finally, I present suggestive evidence that disenfranchisement led to a temporary increase in homicide rates.
+
+## August 09 - Morris Hamilton
+
+*Location:* Lorch 301
 
 ## August 10 - Giacomo Brusco
 
@@ -259,8 +227,6 @@ In this paper I present a model in which both family ties and social security po
 
 *Location:* Lorch 301
 
-
-
 ## August 15 - Michael Gelman
 
 *Location:* Lorch 301
@@ -272,8 +238,6 @@ In this paper I present a model in which both family ties and social security po
 *Joint work with:* Andrew Usher
 
 *Location:* Lorch 301
-
-
 
 ## August 19 - Nicolas Morales-Gaurav Khanna
 
@@ -290,15 +254,11 @@ model of firm-hiring, and of worker decisions to study and choose occupations in
 
 *Location:* Lorch 301
 
-
-
 ## August 24 - DongIk Kang
 
 ### The Price Elasticity of Demand and Monetary Policy Transmission
 
 *Location:* Lorch 301
-
-
 
 ## August 26 - Evan Wright
 
@@ -306,21 +266,15 @@ model of firm-hiring, and of worker decisions to study and choose occupations in
 
 *Location:* Lorch 301
 
-
-
 ## August 29 - Salma Khalid
 
 ### Image Motivation and the Willingness to Pay for Health Products 
 
 *Location:* Lorch 301
 
-
-
 ## August 31 - Feiya shao
 
 *Location:* Lorch 301
-
-
 
 ## September 02 - Nicolas Morales
 
@@ -328,21 +282,15 @@ model of firm-hiring, and of worker decisions to study and choose occupations in
 
 *Location:* Lorch 301
 
-
-
 ## September 05 - Sarah Johnston
 
 ### The effect of electricity price changes in the presence of capital adjustment costs
 
 *Location:* Lorch 301
 
-
-
 ## September 07 - Adam Dearing
 
 ### Retail Price Discrimination under Double Marginalization: A Welfare Analysis
 
 *Location:* Lorch 301
-
-
 
