@@ -153,7 +153,6 @@ with open('password','r') as f :
 ########################################
 # Seminar announcements: 
 
-print "################################################################################"
 print "Sending appropriate announcements (if any): "
 
 ##########
@@ -211,7 +210,6 @@ else :
 
 ##########################################
 ### Asking for updated information:
-print "################################################################################"
 print "Asking for updated information from people (if any): "
 
 # Info for seminars that are between (inclusive) today and two weeks from now
@@ -274,7 +272,6 @@ for ToAsk in SQLToAsk.fetchall():
     Msg['To'] = Presentation['Email']
 
 
-    print "################################################################################"
     print "Check up message: "
     print Msg.items()
     print Msg.get_payload(decode=True).decode(Msg.get_content_charset())

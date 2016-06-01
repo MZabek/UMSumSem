@@ -111,8 +111,9 @@ def main():
                 NewData['Link'] = row[7]
                 NewData['Cancel'] = row[8]
             except IndexError:
-                print('Note: some (right) columns in the spreadsheet are completely empty')
-                print('''This shouldn't be a problem''')
+                #print('Note: some (right) columns in the spreadsheet are completely empty')
+                #print('''This shouldn't be a problem''')
+                pass
 
             # ID variables:
             # Converting month and day:
@@ -141,8 +142,9 @@ def main():
                 print('It looks like some stuff was updated')
                 SQLCon.commit()
             elif time.strptime(row[0],"%m/%d/%Y %H:%M:%S")<time.strptime(FetchedEntries[0][2],"%Y-%m-%d %H:%M:%S") :
-                print("Database updated since response entered, not updating")
-                print('''Last update of entry: %s | Information Update: %s'''% (FetchedEntries[0][2],row[0]))
+                #print("Database updated since response entered, not updating")
+                #print('''Last update of entry: %s | Information Update: %s'''% (FetchedEntries[0][2],row[0]))
+                pass
             elif len(FetchedEntries) != 1 :
                 print("ERROR: Corresponding unique entry not found in database")
                 print("ERROR: Check this identifying information: %s Slot %s" % (row[1],row[2]))
@@ -183,7 +185,7 @@ def main():
             with SQLCon :
                 SQLCur.execute('''INSERT INTO EmailList (Timestamp,Email) VALUES (strftime('%m/%d/%Y %H:%M:%S','now'),?);''', (row[1],))
         except sqlite3.IntegrityError :
-            print('''Already in the email list - %s''' % (row[1],))
+            break
 
 if __name__ == '__main__':
     main()
