@@ -141,13 +141,16 @@ def main():
                     SQLCur.execute('''UPDATE Schedule SET Link='%s',LastUpdated=datetime('now') WHERE Date=='%s' AND Number==%d;''' % (NewData['Link'],DateString,Number))
                 print('It looks like some stuff was updated')
                 SQLCon.commit()
+            elif len(FetchedEntries) == 0 :
+                print("WARNING: This identifying information not found in database: %s Slot %s" % (row[1],row[2]))
+                print("This may be due to a valid cancellation")
+            elif len(FetchedEntries) > 1 :
+                print("ERROR: More than one entry found in database")
+                print("ERROR: Check this identifying information: %s Slot %s" % (row[1],row[2]))
             elif time.strptime(row[0],"%m/%d/%Y %H:%M:%S")<time.strptime(FetchedEntries[0][2],"%Y-%m-%d %H:%M:%S") :
                 #print("Database updated since response entered, not updating")
                 #print('''Last update of entry: %s | Information Update: %s'''% (FetchedEntries[0][2],row[0]))
                 pass
-            elif len(FetchedEntries) != 1 :
-                print("ERROR: Corresponding unique entry not found in database")
-                print("ERROR: Check this identifying information: %s Slot %s" % (row[1],row[2]))
             # Sending email to account if cancellation
             # fancy if is to account for cases where no value in this column
             if len(row) >= 8 and row[8] is not None and row[8] == 'Please cancel the presentation' :

@@ -15,16 +15,6 @@
 	echo "Making schedule"
 	date > MakeMDSchedule.log
 	python MakeMDSchedule.py >> MakeMDSchedule.log
-	# Posting to website
-	echo "Running Jekyll"
-	BUNDLE_GEMFILE=../Website/Gemfile bundle exec jekyll build
-	rm -r _site/
-	echo "Running git add"
-	GIT_DIR=../Website/.git GIT_WORK_TREE=../Website git add --all
-	echo "git commit statement"
-	-GIT_DIR=../Website/.git GIT_WORK_TREE=../Website git commit -m "Automatic schedule update"
-	echo "git push statement"
-	-GIT_DIR=../Website/.git GIT_WORK_TREE=../Website git push origin gh-pages
 
 # The sign up and allotment: 
 # Note: This should only be created once, at the official allotment date

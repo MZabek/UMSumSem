@@ -21,9 +21,16 @@ echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 date >> Emails.log
 python Emails.py >> Emails.log
 
-# Updating the schedule on the website if there are any changes:
-# As of May 29th this will always run because the dataset changes (trivially) with each update:
+# Updating the schedule on the website if there are any changes
+# Note: some may not be relevant to the website
 echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> ScheduleUpdater.log
 date >> ScheduleUpdater.log
 make ../Website/schedule.md >> ScheduleUpdater.log
+
+# Posting to website
+cd ../Website/ >> ~/Drive/admin/SummerSeminar2016/Code/ScheduleUpdater.log
+bundle exec jekyll build >> ~/Drive/admin/SummerSeminar2016/Code/ScheduleUpdater.log
+git add --all >> ~/Drive/admin/SummerSeminar2016/Code/ScheduleUpdater.log
+git commit -m "Automatic schedule update" >> ~/Drive/admin/SummerSeminar2016/Code/ScheduleUpdater.log
+git push origin gh-pages >> ~/Drive/admin/SummerSeminar2016/Code/ScheduleUpdater.log
 
