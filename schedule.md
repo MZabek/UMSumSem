@@ -8,7 +8,7 @@ title: Full schedule
 
 *Location:* Lorch 301
 
-When corporate taxation leads firms to reduce their output, selection by large, profitable firms into FDI for purely profit-shifting motives lowers shifting firms' tax-inclusive marginal costs. In general equilibrium with CES preferences as in Melitz (2003), if some firms do not shift profits, profit-shifting results in heterogeneous markups over real marginal cost, distorting the allocation of inputs from non-shifting to shifting firms. If the marginal producing firm does not shift, then profit-shifting raises the productivity threshold for production excessively, reducing variety and welfare. Heterogeneous, as opposed to homogeneous, profit-shifting has general equilibrium welfare effects.
+I model a distortionary corporate income tax in a setting where firms can pay a fixed cost to engage in purely 'Profit-shifting' FDI. When firms are heterogeneous, larger firms select into 'Profit-shifting' FDI that reduces the output distortion from the corporate income tax. The resulting general equilibrium price changes lower the output of non-shifting firms. When firms are heterogeneous, profit-shifting misallocates production among producing firms while a uniform but distortionary corporate income tax does not. 
 
 ## June 08 (Slot 2) - Benjamin Glass
 
