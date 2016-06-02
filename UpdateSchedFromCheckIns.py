@@ -103,13 +103,14 @@ def main():
         for row in values:
             print('Updating info for: %s presentation %s' % (row[1],row[2]))
             # Saving data in a dict
+            # re statements are sanitizing quotes in input... Should do more in the future probably?
             try : 
-                NewData = {'Title':row[3]}
-                NewData['Abstract'] = row[4]
-                NewData['Presenter'] = row[5]
-                NewData['CoAuthors'] = row[6]
-                NewData['Link'] = row[7]
-                NewData['Cancel'] = row[8]
+                NewData = {'Title':re.sub('\'','\'\'',row[3])}
+                NewData['Abstract'] = re.sub('\'','\'\'',row[4])
+                NewData['Presenter'] = re.sub('\'','\'\'',row[5])
+                NewData['CoAuthors'] = re.sub('\'','\'\'',row[6])
+                NewData['Link'] = re.sub('\'','\'\'',row[7])
+                NewData['Cancel'] = re.sub('\'','\'\'',row[8])
             except IndexError:
                 #print('Note: some (right) columns in the spreadsheet are completely empty')
                 #print('''This shouldn't be a problem''')
