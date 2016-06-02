@@ -1,7 +1,0 @@
-Configuration file: /Users/zabek/Drive/admin/SummerSeminar2016/Website/_config.yml
-            Source: /Users/zabek/Drive/admin/SummerSeminar2016/Website
-       Destination: /Users/zabek/Drive/admin/SummerSeminar2016/Website/_site
- Incremental build: disabled. Enable with --incremental
-      Generating... 
-                    done in 0.798 seconds.
- Auto-regeneration: disabled. Use --watch to enable.
