@@ -2,14 +2,6 @@
 layout: page
 title: Full schedule
 ---
-## June 06 - Jacob Bastian
-
-### The Rise of Working Mothers and the 1975 Earned Income Tax Credit
-
-*Location:* Lorch 301
-
-The rise in female employment over the twentieth century radically changed the U.S. economy and the role of women in society. Time-series data show a rapid increase in the employment of mothers beginning in the mid-1970s, relative to women without children. In the first systematic study of the 1975 introduction of the Earned Income Tax Credit (EITC), I show that this program led to a 5-percentage-point rise in the employment of all 16- to 45-year old mothers – representing over one million mothers – and conclude that the 1975 EITC can help explain why the U.S. has such a high fraction of working mothers despite little childcare subsidies or maternity leave policies. This large influx of mothers into the labor force affected social attitudes towards working women, and I show that after 1975, males living in areas with larger increases in maternal employment were less likely to report that women should not work (“stigma”). This result controls for state-specific “stigma” trends before 1975 and a rich set of covariates to distinguish changes in “stigma” from trends in other social norms. This paper shows that the 1975 EITC had a major impact on the United States.
-
 ## June 08 (Slot 1) - Will Boning
 
 ### Domestic Misallocation from 'Profit-shifting' FDI with Heterogeneous Firms
@@ -222,6 +214,10 @@ From 1864 to 1926, twenty-three states and territories disenfranchised non-citiz
 *Location:* Lorch 301
 
 In this paper I present a model in which both family ties and social security policy are endogenously determined. My model shows how family values interact with policy preferences, resulting in the prediction that countries with strong family ties tend to have more generous social security systems. I supplement my theoretical work with empirical evidence at the country level, showing that countries with stronger family ties are associated with higher public spending on pensions, and at the individual level, showing that stronger family ties are associated with stronger support for social security spending in the U.S.
+
+## August 11 - Julian Hsu
+
+*Location:* Lorch 301
 
 ## August 12 - Ari Binder
 
