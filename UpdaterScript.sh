@@ -30,7 +30,12 @@ make ../Website/schedule.md >> ScheduleUpdater.log
 # Posting to website
 cd ../Website/ >> ~/Drive/admin/SummerSeminar2016/Code/ScheduleUpdater.log
 bundle exec jekyll build >> ~/Drive/admin/SummerSeminar2016/Code/ScheduleUpdater.log
+
+# Putting all into git tracking:
 git add --all >> ~/Drive/admin/SummerSeminar2016/Code/ScheduleUpdater.log
-git commit -m "Automatic schedule update" >> ~/Drive/admin/SummerSeminar2016/Code/ScheduleUpdater.log
-git push origin gh-pages >> ~/Drive/admin/SummerSeminar2016/Code/ScheduleUpdater.log
+# If a change commiting and pushing it up:
+if ! git diff-index --quiet HEAD --; then
+  git commit -m "Automatic schedule update" >> ~/Drive/admin/SummerSeminar2016/Code/ScheduleUpdater.log
+  git push origin gh-pages >> ~/Drive/admin/SummerSeminar2016/Code/ScheduleUpdater.log  
+fi
 
