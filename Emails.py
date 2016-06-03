@@ -8,6 +8,7 @@ import sqlite3
 import time
 from email.mime.text import MIMEText 
 import smtplib
+import codecs
 
 ########## Functions ##########
 
@@ -30,11 +31,11 @@ def MakeAnnouncement(NextTwo) :
     if NextTwo[1][0] is None or NextTwo[0][0] != NextTwo[1][0] :
 
         # Things to announce:
-        Title = NextTwo[0][2].encode('utf-8')
-        Presenter = NextTwo[0][3].encode('utf-8')
-        Abstract = NextTwo[0][4].encode('utf-8')
-        CoAuthors = NextTwo[0][5].encode('utf-8')
-        Room = NextTwo[0][6].encode('utf-8')
+        Title = NextTwo[0][2]
+        Presenter = NextTwo[0][3]
+        Abstract = NextTwo[0][4]
+        CoAuthors = NextTwo[0][5]
+        Room = NextTwo[0][6]
         if Room != "Lorch 301" :
             Room.append(' (Note the room change!)')
 
@@ -245,13 +246,13 @@ for ToAsk in SQLToAsk.fetchall():
       # Code to put in either text, number, or empty string if some type of empty:
       try :
         if ToAsk[entry] is None:
-          Presentation[Field] = ''.encode('utf-8')
+          Presentation[Field] = ''
         elif isinstance(ToAsk[entry],int) :
-          Presentation[Field] = str(ToAsk[entry]).encode('utf-8')
+          Presentation[Field] = str(ToAsk[entry])
         else :
-          Presentation[Field] = ToAsk[entry].encode('utf-8')
+          Presentation[Field] = ToAsk[entry]
       except IndexError :
-        Presentation[Field] = ''.encode('utf-8')
+        Presentation[Field] = ''
 
 
     Info = "Here is the info we are currently advertising on the website:"
@@ -266,7 +267,7 @@ for ToAsk in SQLToAsk.fetchall():
 
 
     # Assembling the email:
-    Msg = MIMEText(MessageText.encode('utf-8'), 'plain', 'utf-8')
+    Msg = MIMEText(MessageText, 'plain', 'utf-8')
     Msg['Subject'] = 'Checking up about your presentation on ' + time.strftime("%m/%d",time.strptime(Presentation['Date'], "%Y-%m-%d"))
     Msg['From'] = 'UMSumSem <UMSumSem@gmail.com>'
     Msg['To'] = Presentation['Email']
@@ -274,17 +275,18 @@ for ToAsk in SQLToAsk.fetchall():
 
     print "Check up message: "
     print Msg.items()
-    print Msg.get_payload(decode=True).decode(Msg.get_content_charset())
+    print Msg.get_payload(decode=True).decode('utf-8')
 
     print "Exporting to file"
     FileOut = 'EmailDrafts/Ask' + time.strftime('%y%m%d') + '.txt'
-    with open(FileOut,'a+b') as MsgFile:
+    # Note: writing normal python decoded from utf-8 even though this theoretically can support unicode... can't get it to work
+    with codecs.open(FileOut,mode='a+b',encoding='utf-8') as MsgFile:
         MsgFile.write('\r################################################################################')
         MsgFile.write('\rCheck up message: ')
         MsgFile.write('\r')
         MsgFile.write(str(Msg.items()))
         MsgFile.write('\r')
-        MsgFile.write(str(Msg.get_payload(decode=True).decode(Msg.get_content_charset())))
+        MsgFile.write(Msg.get_payload(decode=True).decode('utf-8'))
                 
     print "Sending:"
     try: 
