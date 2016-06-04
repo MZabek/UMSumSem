@@ -154,7 +154,7 @@ def main():
                 pass
             # Sending email to account if cancellation
             # fancy if is to account for cases where no value in this column
-            if len(row) >= 8 and row[8] is not None and row[8] == 'Please cancel the presentation' :
+            if len(row) >= 9 and row[8] is not None and row[8] == 'Please cancel the presentation' :
                 print('Presentation cancellation!')
                 # Setting up email account:
                 EmailSMTP = smtplib.SMTP('smtp.gmail.com:587')
