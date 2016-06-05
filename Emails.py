@@ -114,14 +114,18 @@ def MakeCheckInMessage() :
     # Draft of message:
     MessageMainText = """Hi,
 
-This is a just a quick message to ask if you would like to add anything to your abstract for your summer seminar presentation, which is coming up. Please take a look at the below information. If there is anything you would like to update (there often is), you can go to: http://goo.gl/forms/jBEPhhOA8k41jgB03" 
+This is a just a quick message to ask if you would like to update any information for your summer seminar presentation, which should happen less than two weeks from now. Please take a look at the information below. If there is anything you would like to update, you can go do that at the following address. You can also add new information, like a link to the full paper. If you leave a field blank on that site (without spaces) then we'll stick with the old information: http://goo.gl/forms/jBEPhhOA8k41jgB03" 
 
-We're looking forward to your presentation!" 
+You should see the new information up on the website within a day or two. It will also be in the email announcement that we send. 
+
+If you know of people, like faculty, that you would like to attend, we encourage you to reach out to them. We will send one announcement the day before your seminar. It will only go to the summer seminar mailing list, though, so most faculty members won't receive it and some students might not either. Even if people get our messages we have found that personal messages are often more effective than our advertising. 
+
+In any case, we're looking forward to your presentation!" 
 
 Best,
 Mike and Ari
 
-P.S. If you would like to cancel your presentation, you can, but we would like for you to let us know sooner rather than later. Send us an email (at this address) and also fill out the form for your presentation -- there is a question with a checkbox at the bottom if you want to chancel your presentation.
+P.S. If you would like to cancel your presentation, you can, but we would like for you to let us know sooner rather than later. Send us an email (at this address).
 
 """
     return MessageMainText
@@ -225,7 +229,7 @@ for ToAsk in SQLToAsk.fetchall():
     # Things to work with:
     Presentation = {'Date' : ToAsk[0]}
     # Loops through filling the dict, ignoring index errors... 
-    for Field in ['Title','Presenter','Abstract','CoAuthors','Email','SlotType','Slot'] :
+    for Field in ['Title','Presenter','Abstract','CoAuthors','Email','SlotType','Slot','Link'] :
       if Field=='Slot' :
         entry = 1
       elif Field=='Title' :
@@ -240,6 +244,8 @@ for ToAsk in SQLToAsk.fetchall():
         entry = 6
       elif Field=='SlotType' :
         entry = 7
+      elif Field=='Link' :
+        entry = 8
       else  :
         entry = None
 

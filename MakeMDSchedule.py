@@ -26,7 +26,7 @@ MDSchedule.write('---\n')
 
 # Getting entries from database
 print "Making full schedule with the following dates:"
-CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,Room,SlotType FROM Schedule ORDER BY Date ASC, Number ASC;''')
+CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,Room,SlotType,Link FROM Schedule ORDER BY Date ASC, Number ASC;''')
 for CalEntry in CalEntries.fetchall() :
 
     #Stripping out year from date:
@@ -71,6 +71,10 @@ for CalEntry in CalEntries.fetchall() :
     if CalEntry[5] and CalEntry[5] != 'TBD' :
         MDSchedule.write('\n\n')
         MDSchedule.write(CalEntry[5].encode('utf8'))
+    # Link
+    if CalEntry[8] and CalEntry[8] != 'TBD' :
+        MDSchedule.write('\n\n')
+        MDSchedule.write('[More information]('+CalEntry[8].encode('utf8')+')')
     MDSchedule.write('\n\n')
 
 # Closing and saving:
@@ -80,7 +84,7 @@ MDSchedule.close()
 # Specific entries for upcoming events
 
 # Getting entries
-CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,Room,SlotType FROM Schedule WHERE date(Date,'localtime') > date('now','localtime') ORDER BY date(Date,'localtime') ASC, Number ASC;''')
+CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,Room,SlotType,Link FROM Schedule WHERE date(Date,'localtime') > date('now','localtime') AND date(Date) <= date('now','localtime','+14 days') ORDER BY date(Date,'localtime') ASC, Number ASC;''')
 EntryNum = 0
 TargetDir = '../Website/_texts/'
 
@@ -157,6 +161,12 @@ for CalEntry in CalEntries.fetchall() :
     if CalEntry[5] and CalEntry[5] != 'TBD' :
         MDEntry.write('\n\n')
         MDEntry.write(CalEntry[5].encode('utf8'))
+    # Link
+    if CalEntry[8] and CalEntry[8] != 'TBD' :
+        MDEntry.write('\n\n')
+        MDEntry.write('[More information](')
+        MDEntry.write(CalEntry[8].encode('utf8'))
+        MDEntry.write(')')
     MDEntry.write('\n\n')
     
     # Closing and saving
