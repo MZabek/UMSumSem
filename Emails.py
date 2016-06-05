@@ -114,7 +114,7 @@ def MakeCheckInMessage() :
     # Draft of message:
     MessageMainText = """Hi,
 
-This is a just a quick message to ask if you would like to update any information for your summer seminar presentation, which should happen less than two weeks from now. Please take a look at the information below. If there is anything you would like to update, you can go do that at the following address. You can also add new information, like a link to the full paper. If you leave a field blank on that site (without spaces) then we'll stick with the old information: http://goo.gl/forms/jBEPhhOA8k41jgB03" 
+This is a just a quick message to ask if you would like to update any information for your summer seminar presentation, which is scheduled for less than two weeks from now. Please take a look at the information below. If there is anything you would like to update, you can go do that at the following address. You can also add new information, like a link to the full paper. If you leave a field blank on that site (without spaces) then we'll stick with the old information: http://goo.gl/forms/VVKiGwkBlbz3NObV2" 
 
 You should see the new information up on the website within a day or two. It will also be in the email announcement that we send. 
 

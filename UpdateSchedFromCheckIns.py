@@ -35,9 +35,11 @@ SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Python Schedule Updater'
 
-# Information update spreadsheet:
-UpdateSheetID = '1GxSrtlP_2vIA5KDf38rYiQFpubAUruK42-qbcvkXosQ'
-UpdateRange = 'Form Responses 2!A2:J'
+# Information update spreadsheets:
+UpdateOrigSheetID = '1GxSrtlP_2vIA5KDf38rYiQFpubAUruK42-qbcvkXosQ'
+UpdateOrigRange = 'Form Responses 2!A2:J'
+UpdateV2SheetID = '1XjpdZIvFDq03eDydJe9S2l7OGGrDv6aelngUU9eTZiM'
+UpdateV2Range = 'Form Responses 1!A2:H'
 
 # Email sign up spreadsheet:
 EmailSheetID = '1a7nFoFnyeRTC1lgVPV_q879xs0TGefAaeliissCLJXU'
@@ -92,9 +94,12 @@ def main():
     service = discovery.build('sheets', 'v4', http=http,
                               discoveryServiceUrl=discoveryUrl)
 
-    print('Updating info based on google sheet')
+    ########################################
+    # Updating information based on original Google sheet:
+    # LEGACY/DEPRECIATED:
+    print('Updating info based on original google sheet')
     result = service.spreadsheets().values().get(
-        spreadsheetId=UpdateSheetID, range=UpdateRange).execute()
+        spreadsheetId=UpdateOrigSheetID, range=UpdateOrigRange).execute()
     values = result.get('values', [])
 
     if not values:
@@ -175,7 +180,70 @@ def main():
                 except :
                     print('ERROR: Email not sent')
 
+    ########################################
+    # Updating information based on original Google sheet:
+    # LEGACY/DEPRECIATED:
+    print('Updating info based on google sheet version 2.0')
+    result = service.spreadsheets().values().get(
+        spreadsheetId=UpdateV2SheetID, range=UpdateV2Range).execute()
+    values = result.get('values', [])
+    valuelabels = ('Timestamp','Email','Date','Title','Abstract','Presenter','CoAuthors','Link')
 
+    if not values:
+        print('No data found.')
+    else:
+        for row in values:
+            print('Updating info for: %s on %s' % (row[1],row[2]))
+
+            # Saving data in a dict
+            NewData = {'Timestamp': row[0]}
+            FieldNum = 0
+            for Field in row :
+                # re statements are sanitizing quotes in input... Should do more in the future probably?
+                NewData[valuelabels[FieldNum]]=re.sub('\'','\'\'',Field)
+                FieldNum= FieldNum + 1
+
+            # ID variables:
+            # Converting month and day:
+            MonthAndDay = NewData['Date'].split('/')
+            DateString = '''2016-%02d-%02d''' % (int(MonthAndDay[0]),int(MonthAndDay[1]))
+
+            # Id-ing one seminar and saving its info in Entries
+            SQLCur.execute('''SELECT Date,Number,LastUpdated FROM Schedule WHERE Email=='%s';''' % (NewData['Email'],))
+            Entries = SQLCur.fetchall();
+            if len(Entries) == 1 :
+                print('    Updating based on email only...')
+            elif len(Entries) > 1 :
+                print('    More than one match based on email, matching on date as well')
+                SQLCur.execute('''SELECT Date,Number,LastUpdated FROM Schedule WHERE Email=='%s' AND Date=='%s';''' % (NewData['Email'],DateString))
+                Entries = SQLCur.fetchall();
+                assert Entries <= 1
+            elif len(Entries) == 0 :
+                print('    ERROR: No seminar assigned to this email address')
+
+            if len(Entries) == 1 :
+                # Updating the entry with the information in NewData
+                MatchedDate = Entries[0][0]
+                MatchedNumber = Entries[0][1]
+                MatchedLastUpdated = Entries[0][2]
+                # Updating if info from google sheets is more recent
+                if  time.strptime(NewData['Timestamp'],"%m/%d/%Y %H:%M:%S")>=time.strptime(MatchedLastUpdated,"%Y-%m-%d %H:%M:%S") :
+                    # Looking through all fields and updating if relevant new info:
+                    for Field in NewData :
+                        if NewData[Field] != '' and Field != 'Timestamp' and Field != 'Date' :
+                            SQLCur.execute('''UPDATE Schedule SET %s='%s',LastUpdated=datetime('now') WHERE Date=='%s' AND Number==%d;''' % (Field,NewData[Field],MatchedDate,MatchedNumber))
+                            print('        Updated: ',Field)
+                    SQLCon.commit()
+                    print('    New data committed')
+                else :
+                    print('    Database info is more up to date')
+            elif len(Entries) == 0 :
+                print('    WARNING: This identifying information not found in database: %s Slot %s' % (row[1],row[2]))
+                print('    This may be due to a valid cancellation')
+            else :
+                print('    ERROR: Could not find unique match for this info')
+
+    ########################################
     # Email signup
     print('Updating email list')
 
