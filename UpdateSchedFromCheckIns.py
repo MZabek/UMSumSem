@@ -40,6 +40,7 @@ UpdateOrigSheetID = '1GxSrtlP_2vIA5KDf38rYiQFpubAUruK42-qbcvkXosQ'
 UpdateOrigRange = 'Form Responses 2!A2:J'
 UpdateV2SheetID = '1XjpdZIvFDq03eDydJe9S2l7OGGrDv6aelngUU9eTZiM'
 UpdateV2Range = 'Form Responses 1!A2:H'
+Cancellations = {'Sheet':'1_p6Uq7p5M0SKnGo52rl-xPAMBdXMeEhyKlx21wHOz9o','Range':'Form Responses 1!A2:J'}
 
 # Email sign up spreadsheet:
 EmailSheetID = '1a7nFoFnyeRTC1lgVPV_q879xs0TGefAaeliissCLJXU'
@@ -74,12 +75,6 @@ def get_credentials():
     return credentials
 
 def main():
-    """Updates schedule based on table and says so in the table...
-
-    Creates a Sheets API service object and prints the names and majors of
-    """
-
-
     ########################################
     # Setting up connections to SQL and Google Sheets:
 
@@ -181,8 +176,7 @@ def main():
                     print('ERROR: Email not sent')
 
     ########################################
-    # Updating information based on original Google sheet:
-    # LEGACY/DEPRECIATED:
+    # Updating information based on Google sheet:
     print('Updating info based on google sheet version 2.0')
     result = service.spreadsheets().values().get(
         spreadsheetId=UpdateV2SheetID, range=UpdateV2Range).execute()
@@ -210,7 +204,7 @@ def main():
 
             # Id-ing one seminar and saving its info in Entries
             SQLCur.execute('''SELECT Date,Number,LastUpdated FROM Schedule WHERE Email=='%s';''' % (NewData['Email'],))
-            Entries = SQLCur.fetchall();
+            Entries = SQLCur.fetchall()
             if len(Entries) == 1 :
                 print('    Updating based on email only...')
             elif len(Entries) > 1 :
@@ -244,6 +238,69 @@ def main():
                 print('    ERROR: Could not find unique match for this info')
 
     ########################################
+    # Cancellations
+    print('Updating info from cancellations listing')
+    result = service.spreadsheets().values().get(
+        spreadsheetId=Cancellations['Sheet'], range=Cancellations['Range']).execute()
+
+    values = result.get('values', [])
+    valuelabels = ('Timestamp','Username','Email','Date','Slot','Comments','Re-allocation','NewEmail','NewComments','NewPresenter')
+
+
+    if not values:
+        print('No data found.')
+    else:
+        for row in values:
+            print('Canceling seminar: %s on %s' % (row[2],row[3]))
+
+            # Saving data in a dict
+            ToEnter = {'Timestamp': row[0]}
+            FieldNum = 0
+            for Field in row :
+                # re statements are sanitizing quotes in input... Should do more in the future probably?
+                if valuelabels[FieldNum] == 'Slot' :
+                    ToEnter[valuelabels[FieldNum]]=int(Field)
+                else :
+                    ToEnter[valuelabels[FieldNum]]=re.sub('\'','\'\'',Field)
+                FieldNum= FieldNum + 1
+
+            # ID variables:
+            # Converting month and day:
+            MonthAndDay = ToEnter['Date'].split('/')
+            DateString = '''2016-%02d-%02d''' % (int(MonthAndDay[0]),int(MonthAndDay[1]))
+            Number = ToEnter['Slot']
+
+            # Finding the Entry
+            SQLCur.execute('''SELECT Email,Date,Number,Cancellation,LastEmail FROM Schedule WHERE Email=='%s' AND Date=='%s' AND Number==%d;''' % (ToEnter['Email'],DateString,ToEnter['Slot']))
+            Entries = SQLCur.fetchall()
+
+
+            # Updating if not already updated and checking for errors in SQL
+            if len(Entries) == 1 and Entries[0][3] is not None and time.strptime(ToEnter['Timestamp'],"%m/%d/%Y %H:%M:%S") < time.strptime(Entries[0][3],"%Y-%m-%d %H:%M:%S"):
+                print('Timestamp is too old')
+            elif len(Entries) == 0 :
+                print('Entry not found, probably already cancelled')
+            elif len(Entries) == 1 and ToEnter['Re-allocation'] == 'Assign to a new email' :
+                SQLCur.execute('''UPDATE Schedule SET Email='%s',Presenter='%s',Title='',Abstract='',Link=NULL,CoAuthors='',Cancellation=datetime('now'),LastEmail=Email,LastUpdated=datetime('now'),EmailAnnouncement=NULL,CheckIn=NULL,Misc=NULL,WebPost=NULL WHERE Email=='%s' AND Date=='%s' AND Number==%d;''' % (ToEnter['NewEmail'],ToEnter['NewPresenter'],ToEnter['Email'],DateString,Number))
+                SQLCon.commit()
+                print('Entry switched to new presenter, %s' % (ToEnter['NewEmail'],))
+            elif len(Entries) == 1 and ToEnter['Re-allocation'] == 'Post as open' :
+                SQLCur.execute('''UPDATE Schedule SET Email=NULL,Presenter='Open',Title='',Abstract='',Link=NULL,CoAuthors='',Cancellation=datetime('now'),LastEmail=Email,LastUpdated=datetime('now'),EmailAnnouncement=NULL,CheckIn=NULL,Misc=NULL,WebPost=NULL WHERE Email=='%s' AND Date=='%s' AND Number==%d;''' % (ToEnter['Email'],DateString,Number)) 
+                SQLCon.commit()
+                print('Entry switched to open')
+            elif len(Entries) == 1 and ToEnter['Re-allocation'] == 'Delete the entry' :
+                SQLCur.execute('''DELETE FROM Schedule WHERE Email=='%s' AND Date=='%s' AND Number==%s;''' % (ToEnter['Email'],DateString,Number)) 
+                SQLCon.commit()
+                print('Entry deleted')
+            elif len(Entries) > 1 :
+                print('ERROR: Multiple entries found')
+            else :
+                print('ERROR: Something went wrong in the logic of the cancellation update!')
+                
+
+
+
+    ########################################
     # Email signup
     print('Updating email list')
 
@@ -258,6 +315,7 @@ def main():
                 SQLCur.execute('''INSERT INTO EmailList (Timestamp,Email) VALUES (strftime('%m/%d/%Y %H:%M:%S','now'),?);''', (row[1],))
         except sqlite3.IntegrityError :
             break
+    #SQLCon.commit()
 
 if __name__ == '__main__':
     main()
