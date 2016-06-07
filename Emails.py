@@ -191,7 +191,8 @@ if len(NextTwo) > 0:
     # Setting up message (MIME) object:
     Msg = MIMEText(EmailSubstance[1].encode('utf-8'), 'plain', 'utf-8')
     Msg['From'] = 'UMSumSem <UMSumSem@gmail.com>'
-    Msg['To'] = ", ".join(Recipients)
+#    Msg['To'] = ', '.join(Recipients)
+    Msg['To'] = 'zabek@umich.edu'
     Msg['Subject'] = EmailSubstance[0]
 
 
@@ -204,10 +205,14 @@ if len(NextTwo) > 0:
     ######################
     ### Sending message via UMSumSem email:
     try :
-        EmailSMTP.sendmail('UMSumSem@gmail.com',Recipients,Msg.as_string())
         # Updating SQL based on successful sending of the email
-        SQLCur.execute('''UPDATE Schedule SET EmailAnnouncement = datetime('now','localtime') WHERE Date == %s;''' % (NextTwo[0][0]))
-        print "Announcement sent and SQL setup updated!"
+        SQLCur.execute('''UPDATE Schedule SET EmailAnnouncement = datetime('now') WHERE Date == '%s';''' % (NextTwo[0][0],))
+        SQLCon.commit()
+        SQLCur.execute('''SELECT Date,EmailAnnouncement FROM Schedule WHERE Date == '%s';''' % (NextTwo[0][0],))
+        print(SQLCur.fetchall())
+        # Sending the email
+        EmailSMTP.sendmail('UMSumSem@gmail.com',Msg['To'],Msg.as_string())
+        print "Announcement sent and SQL updated!"
     except : 
         print "ERROR! Ether email not sent or SQL not updated!"
 else : 

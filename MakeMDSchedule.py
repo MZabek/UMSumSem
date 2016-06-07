@@ -84,7 +84,7 @@ MDSchedule.close()
 # Specific entries for upcoming events
 
 # Getting entries
-CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,Room,SlotType,Link FROM Schedule WHERE date(Date,'localtime') > date('now','localtime') AND date(Date) <= date('now','localtime','+14 days') ORDER BY date(Date,'localtime') ASC, Number ASC;''')
+CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,Room,SlotType,Link FROM Schedule WHERE date(Date) >= date('now','localtime') AND date(Date) <= date('now','localtime','+14 days') ORDER BY date(Date,'localtime') ASC, Number ASC;''')
 EntryNum = 0
 TargetDir = '../Website/_texts/'
 
