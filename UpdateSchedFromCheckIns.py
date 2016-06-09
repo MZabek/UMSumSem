@@ -275,6 +275,7 @@ def main():
             Entries = SQLCur.fetchall()
 
 
+
             # Updating if not already updated and checking for errors in SQL
             if len(Entries) == 1 and Entries[0][3] is not None and time.strptime(ToEnter['Timestamp'],"%m/%d/%Y %H:%M:%S") < time.strptime(Entries[0][3],"%Y-%m-%d %H:%M:%S"):
                 print('Timestamp is too old')
@@ -285,7 +286,7 @@ def main():
                 SQLCon.commit()
                 print('Entry switched to new presenter, %s' % (ToEnter['NewEmail'],))
             elif len(Entries) == 1 and ToEnter['Re-allocation'] == 'Post as open' :
-                SQLCur.execute('''UPDATE Schedule SET Email=NULL,Presenter='Open',Title='',Abstract='',Link=NULL,CoAuthors='',Cancellation=datetime('now'),LastEmail=Email,LastUpdated=datetime('now'),EmailAnnouncement=NULL,CheckIn=NULL,Misc=NULL,WebPost=NULL WHERE Email=='%s' AND Date=='%s' AND Number==%d;''' % (ToEnter['Email'],DateString,Number)) 
+                SQLCur.execute('''UPDATE Schedule SET Email='',Presenter='Open',Title='',Abstract='',Link=NULL,CoAuthors='',Cancellation=datetime('now'),LastEmail=Email,LastUpdated=datetime('now'),EmailAnnouncement=NULL,CheckIn=NULL,Misc=NULL,WebPost=NULL WHERE Email=='%s' AND Date=='%s' AND Number==%d;''' % (ToEnter['Email'],DateString,Number)) 
                 SQLCon.commit()
                 print('Entry switched to open')
             elif len(Entries) == 1 and ToEnter['Re-allocation'] == 'Delete the entry' :
