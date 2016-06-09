@@ -28,7 +28,7 @@ def MakeAnnouncement(NextTwo) :
 
     ##########
     # If a sole seminar:
-    if NextTwo[1][0] is None or NextTwo[0][0] != NextTwo[1][0] :
+    if len(NextTwo)== 1 or NextTwo[0][0] != NextTwo[1][0] :
 
         # Things to announce:
         Title = NextTwo[0][2]
@@ -46,7 +46,7 @@ def MakeAnnouncement(NextTwo) :
         Paragraph1 = "Please join us this " + time.strftime("%A",NextDate) + ", " + time.strftime("%B",NextDate) + " " + time.strftime("%d",NextDate) + " to see " + Presenter + " present: " + Title 
         # Clause if joint authored
         if CoAuthors != "" :
-            JointClause = "This is joint work with " + CoAuthors + " ."
+            JointClause = "This is joint work with " + CoAuthors + "."
         else :
             JointClause = ""
         Paragraph1 = Paragraph1 + JointClause
@@ -77,11 +77,11 @@ def MakeAnnouncement(NextTwo) :
 
         # Clause if joint authored
         if CoAuthors1 != "" and CoAuthors2 == "" :
-            JointClause = "Note that the first presentation is joint work with " + CoAuthors1 + " ."
+            JointClause = "Note that the first presentation is joint work with " + CoAuthors1 + "."
         elif CoAuthors1 != "" and CoAuthors2 == "" :
-            JointClause = "Note that the second presentation is joint work with " + CoAuthors2 + " ."
+            JointClause = "Note that the second presentation is joint work with " + CoAuthors2 + "."
         elif CoAuthors1 != "" and CoAuthors2 != "" :
-            JointClause = "Note that the first presentation is joint work with " + CoAuthors1 + " and the second is joint with " + CoAuthors2 + " ."
+            JointClause = "Note that the first presentation is joint work with " + CoAuthors1 + " and the second is joint with " + CoAuthors2 + "."
         else :
             JointClause = ""
 
@@ -102,7 +102,7 @@ def MakeAnnouncement(NextTwo) :
 
     ##########
     # Assembling message text: 
-    MessageText = Paragraph1 +  JointClause + "\n\r" + Paragraph2 + "\n\r" + "Best,\rMike and Ari\n\r" + Abstract 
+    MessageText = Paragraph1 + "\n\r" + Paragraph2 + "\n\r" + "Best,\rMike and Ari\n\r" + Abstract 
 
 
     return (Subject,MessageText)
@@ -114,7 +114,7 @@ def MakeCheckInMessage() :
     # Draft of message:
     MessageMainText = """Hi,
 
-This is a just a quick message to ask if you would like to update any information for your summer seminar presentation, which is scheduled for less than two weeks from now. Please take a look at the information below. If there is anything you would like to update, you can go do that at the following address. You can also add new information, like a link to the full paper. If you leave a field blank on that site (without spaces) then we'll stick with the old information: http://goo.gl/forms/VVKiGwkBlbz3NObV2" 
+This is a just a quick message to ask if you would like to update any information for your summer seminar presentation, which is scheduled for less than two weeks from now. Please take a look at the information below. If there is anything you would like to update, you can go do that at the following address. You can also add new information, like a link to the full paper. If you leave a field blank on that site (without spaces) then we'll stick with the old information. Note that you will have to be logged into google via your @umich.edu account for this to work. http://goo.gl/forms/VVKiGwkBlbz3NObV2" 
 
 You should see the new information up on the website within a day or two. It will also be in the email announcement that we send. 
 
@@ -191,8 +191,8 @@ if len(NextTwo) > 0:
     # Setting up message (MIME) object:
     Msg = MIMEText(EmailSubstance[1].encode('utf-8'), 'plain', 'utf-8')
     Msg['From'] = 'UMSumSem <UMSumSem@gmail.com>'
-#    Msg['To'] = ', '.join(Recipients)
-    Msg['To'] = 'zabek@umich.edu'
+    Msg['To'] = ', '.join(Recipients)
+#Testing:Msg['To'] = 'zabek@umich.edu'
     Msg['Subject'] = EmailSubstance[0]
 
 

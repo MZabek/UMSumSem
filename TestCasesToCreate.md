@@ -8,3 +8,5 @@ These are things it would be good to check for in debugging new code (and why it
    2. Forms
 3. Null entries in particular columns of the dataset
 4. Sheets only containing up to X row responses
+5. Sending of emails, etc. logging
+6. Email test with joint authors, etc... 
