@@ -32,6 +32,8 @@ I describe a two-period general equilibrium model.  Agents buy and sell forward 
 
 *Location:* Lorch 301
 
+Americans have substantial leisure time at work, reporting on average about an hour a day.  Using Gallup survey data, I show how on-the-job leisure varies across demographic groups, and I find that workers are less likely to report on-the-job leisure the higher is the state unemployment rate, consistent with the Shapiro-Stiglitz theory of unemployment as a discipline device.  The Gallup poll also includes measures of job satisfaction, information I aim to use to characterize preferences for on-the-job leisure.  Non-work time at work and job satisfaction are negatively correlated: People with more on-the-job leisure report lower job satisfaction, suggesting people may prefer more engaging work to boredom.  This project is preliminary and I welcome feedback. 
+
 ## June 15 - Evan Wright
 
 ### Consumer behavior in crowdfunding markets
