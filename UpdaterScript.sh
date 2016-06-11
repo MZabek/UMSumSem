@@ -25,7 +25,7 @@ python Emails.py >> Emails.log
 # Note: some may not be relevant to the website
 echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> ScheduleUpdater.log
 date >> ScheduleUpdater.log
-make ../Website/schedule.md >> ScheduleUpdater.log
+python MakeMDSchedule.py >> ScheduleUpdater.log
 
 # Posting to website
 cd ../Website/ >> ~/Drive/admin/SummerSeminar2016/Code/ScheduleUpdater.log
