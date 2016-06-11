@@ -180,6 +180,7 @@ SQLOut = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors
                 AND EmailAnnouncement IS NULL
                 AND Presenter != 'Open'
                 AND Email != ''
+                AND Email IS NOT NULL
                 ORDER BY date(Date) ASC
                 Limit 2;''')
 NextTwo =  SQLOut.fetchall()
