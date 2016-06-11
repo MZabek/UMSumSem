@@ -229,7 +229,7 @@ print "Asking for updated information from people (if any): "
 SQLToAsk = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors,Email,SlotType,CheckIn,Link 
                 FROM Schedule
                 WHERE date(Date) >= date('now','localtime')
-                AND date(Date) <= date('now','localtime','+14 day')
+                AND date(Date) <= date('now','localtime','+7 day')
                 AND Email != ''
                 AND Email IS NOT NULL
                 AND CheckIn IS NULL;''')
