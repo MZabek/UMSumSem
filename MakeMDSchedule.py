@@ -133,18 +133,12 @@ for CalEntry in CalEntries.fetchall() :
     MDEntry.write('---\n')
 
     # Writing text to file:
-    # Date
-    MDEntry.write('## ')
-    MDEntry.write(Date)
     # Slot, if needed
     if CalEntry[7] and CalEntry[7] == 'Half (40 minutes)' :
+        MDEntry.write('## ')
         MDEntry.write(' (Slot ')
         MDEntry.write(str(CalEntry[1]))
         MDEntry.write(')')
-    # Presenter
-    MDEntry.write(' - ')
-    if CalEntry[2] :
-      MDEntry.write(CalEntry[2].encode('utf8'))
     # Co Authors
     if CalEntry[4] and CalEntry[4] != '' and CalEntry[4] != 'N/A' :
         MDEntry.write('\n\n')
