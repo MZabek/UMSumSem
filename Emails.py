@@ -178,6 +178,8 @@ SQLOut = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors
                 WHERE date(Date) >= date('now','localtime')
                 AND date(Date) <= date('now','localtime','+1 day')
                 AND EmailAnnouncement IS NULL
+                AND Presenter != 'Open'
+                AND Email != ''
                 ORDER BY date(Date) ASC
                 Limit 2;''')
 NextTwo =  SQLOut.fetchall()
@@ -228,6 +230,8 @@ SQLToAsk = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAutho
                 FROM Schedule
                 WHERE date(Date) >= date('now','localtime')
                 AND date(Date) <= date('now','localtime','+14 day')
+                AND Email != ''
+                AND Email IS NOT NULL
                 AND CheckIn IS NULL;''')
 for ToAsk in SQLToAsk.fetchall():
 
