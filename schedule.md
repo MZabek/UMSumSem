@@ -52,13 +52,11 @@ Local ties lead people to stay in declining areas. Using the proportion of peopl
 
 [More information](https://drive.google.com/file/d/0B3cI9G3dTMW4Z2U5em56M1J1cGM/view)
 
-## June 20 (Slot 1) - Brenden Timpe
-
-### Short-Term Disability Insurance, Maternity Leave, and the Rise of Working Mothers
+## June 20 (Slot 1) - Open
 
 *Location:* Lorch 301
 
-## June 22 - Open
+## June 22 - Brenden Timpe
 
 *Location:* Lorch 301
 
