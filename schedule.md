@@ -59,7 +59,11 @@ Local ties lead people to stay in declining areas. Using the share of an area's 
 
 ## June 22 - Brenden Timpe
 
+### Short-Term Disability Insurance, Maternity Leave, and the Rise of Working Mothers
+
 *Location:* Lorch 301
+
+In 1978, the U.S. Congress passed the Pregnancy Discrimination Act, a law 		that updated the Civil Rights Act to outlaw discrimination against women in 	the provision of employment benefits. In three large states that had long 		mandated or provided short-term disability insurance for virtually all workers, one consequence of this law was the de facto creation of a paid maternity leave benefit. I use the creation of this benefit, and its interaction with the Family and Medical Leave Act 15 years later, to study how women make labor supply and maternity-leave decisions, as well as the possible consequences of proposals to create a nationwide paid maternity leave benefit. I find that women in states with near-universal disability insurance coverage took more maternity leave after passage of the Pregnancy Discrimination Act, with increases concentrated among lower-educated workers. Passage of the FMLA led to more leave-taking and greater labor-force participation for relatively advantaged women, though women did not appear to respond in states where they already had access to paid leave benefits through their disability insurance programs.
 
 ## June 24 - Daniela Morar
 
