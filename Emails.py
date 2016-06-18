@@ -195,7 +195,6 @@ if len(NextTwo) > 0:
     Msg = MIMEText(EmailSubstance[1].encode('utf-8'), 'plain', 'utf-8')
     Msg['From'] = 'UMSumSem <UMSumSem@gmail.com>'
     Msg['To'] = ', '.join(Recipients)
-#Testing:Msg['To'] = 'zabek@umich.edu'
     Msg['Subject'] = EmailSubstance[0]
 
 
@@ -214,7 +213,9 @@ if len(NextTwo) > 0:
         SQLCur.execute('''SELECT Date,EmailAnnouncement FROM Schedule WHERE Date == '%s';''' % (NextTwo[0][0],))
         print(SQLCur.fetchall())
         # Sending the email
-        EmailSMTP.sendmail('UMSumSem@gmail.com',Msg['To'],Msg.as_string())
+        print "Whom the message should be sent to:"
+        print Msg['To']
+        EmailSMTP.sendmail('UMSumSem@gmail.com',Recipients,Msg.as_string())
         print "Announcement sent and SQL updated!"
     except : 
         print "ERROR! Ether email not sent or SQL not updated!"
