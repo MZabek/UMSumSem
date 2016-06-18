@@ -16,11 +16,6 @@ echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 date >> UpdateSchedFromCheckIns.log
 python UpdateSchedFromCheckIns.py >> UpdateSchedFromCheckIns.log
 
-# Emails:
-echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> Emails.log
-date >> Emails.log
-python Emails.py >> Emails.log
-
 # Updating the schedule on the website if there are any changes
 # Note: some may not be relevant to the website
 echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> ScheduleUpdater.log

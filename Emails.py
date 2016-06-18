@@ -173,6 +173,8 @@ for Entry in List :
 ##########
 # Which seminars to announce: 
 # Outputting up to two seminars that are today or tomorrow: 
+# Note that they need to be assigned to an email address and the 
+# presented cannot be "Open"
 SQLOut = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors,Room 
                 FROM Schedule
                 WHERE date(Date) >= date('now','localtime')
