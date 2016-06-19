@@ -20,11 +20,11 @@ python UpdateSchedFromCheckIns.py >> UpdateSchedFromCheckIns.log
 # Note: some may not be relevant to the website
 echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> ScheduleUpdater.log
 date >> ScheduleUpdater.log
-python MakeMDSchedule.py >> ScheduleUpdater.log
+python MakeMDSchedule.py >> /dev/null
 
-# Posting to website
+# Building website (optional)
 cd ../Website/ >> ~/Drive/admin/SummerSeminar2016/Code/ScheduleUpdater.log
-bundle exec jekyll build >> ~/Drive/admin/SummerSeminar2016/Code/ScheduleUpdater.log
+bundle exec jekyll build >> /dev/null
 
 # Putting all into git tracking:
 git add --all >> ~/Drive/admin/SummerSeminar2016/Code/ScheduleUpdater.log
