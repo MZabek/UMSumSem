@@ -114,18 +114,21 @@ def MakeCheckInMessage() :
     # Draft of message:
     MessageMainText = """Hi,
 
-This is a just a quick message to ask if you would like to update any information for your summer seminar presentation, which is scheduled for less than two weeks from now. Please take a look at the information below. If there is anything you would like to update, you can go do that at the following address. You can also add new information, like a link to the full paper. If you leave a field blank on that site (without spaces) then we'll stick with the old information. Note that you will have to be logged into google via your @umich.edu account for this to work. http://goo.gl/forms/VVKiGwkBlbz3NObV2" 
+This is a just a quick message to ask if you would like to update any information for your summer seminar presentation. Please take a look at the information below. If there is anything you would like to update, you can go do that at the following address. You can also add new information, like a link to the full paper. If you leave a field blank on that site (without spaces) then we'll stick with the old information. Note that you will have to be logged into google (possibly in a separate browser window) via your @umich.edu account for this to work. 
+
+http://goo.gl/forms/VVKiGwkBlbz3NObV2" 
 
 You should see the new information up on the website within a day or two. It will also be in the email announcement that we send. 
 
 If you know of people, like faculty, that you would like to attend, we encourage you to reach out to them. We will send one announcement the day before your seminar. It will only go to the summer seminar mailing list, though, so most faculty members won't receive it and some students might not either. Even if people get our messages we have found that personal messages are often more effective than our advertising. 
 
-In any case, we're looking forward to your presentation!" 
+In any case, we're looking forward to your presentation!
 
 Best,
 Mike and Ari
 
 P.S. If you would like to cancel your presentation, you can, but we would like for you to let us know sooner rather than later. Send us an email (at this address).
+P.S.S. If you are having trouble with the form, you can use the old, slightly less reliable, version that doesn't require you be logged in via your umich email: http://goo.gl/forms/QLBVCSh4BQmkf3p62
 
 """
     return MessageMainText
