@@ -211,7 +211,7 @@ def main():
                 print('    More than one match based on email, matching on date as well')
                 SQLCur.execute('''SELECT Date,Number,LastUpdated FROM Schedule WHERE Email=='%s' AND Date=='%s';''' % (NewData['Email'],DateString))
                 Entries = SQLCur.fetchall();
-                assert Entries <= 1
+                assert len(Entries) <= 1
             elif len(Entries) == 0 :
                 print('    ERROR: No seminar assigned to this email address')
 
@@ -221,7 +221,7 @@ def main():
                 MatchedNumber = Entries[0][1]
                 MatchedLastUpdated = Entries[0][2]
                 # Updating if info from google sheets is more recent
-                if  time.strptime(NewData['Timestamp'],"%m/%d/%Y %H:%M:%S")>=time.strptime(MatchedLastUpdated,"%Y-%m-%d %H:%M:%S") :
+                if  MatchedLastUpdated is None or time.strptime(NewData['Timestamp'],"%m/%d/%Y %H:%M:%S")>=time.strptime(MatchedLastUpdated,"%Y-%m-%d %H:%M:%S") :
                     # Looking through all fields and updating if relevant new info:
                     for Field in NewData :
                         if NewData[Field] != '' and Field != 'Timestamp' and Field != 'Date' :
