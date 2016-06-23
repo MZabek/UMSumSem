@@ -65,10 +65,6 @@ Local ties lead people to stay in declining areas. Using the share of an area's 
 
 In 1978, the U.S. Congress passed the Pregnancy Discrimination Act, a law 		that updated the Civil Rights Act to outlaw discrimination against women in 	the provision of employment benefits. In three large states that had long 		mandated or provided short-term disability insurance for virtually all workers, one consequence of this law was the de facto creation of a paid maternity leave benefit. I use the creation of this benefit, and its interaction with the Family and Medical Leave Act 15 years later, to study how women make labor supply and maternity-leave decisions, as well as the possible consequences of proposals to create a nationwide paid maternity leave benefit. I find that women in states with near-universal disability insurance coverage took more maternity leave after passage of the Pregnancy Discrimination Act, with increases concentrated among lower-educated workers. Passage of the FMLA led to more leave-taking and greater labor-force participation for relatively advantaged women, though women did not appear to respond in states where they already had access to paid leave benefits through their disability insurance programs.
 
-## June 24 - Daniela Morar
-
-*Location:* Lorch 301
-
 ## June 27 - Julian Hsu
 
 ### What is it Good For? Measuring College Major Investment with Courses
@@ -83,12 +79,6 @@ There is a presentation of preliminary work - I am trying to weave together a na
 ## June 29 (Slot 1) - Xiaoqing Zhou
 
 ### Housing Investment and Cash-out Refinance
-
-*Location:* Lorch 301
-
-## June 29 (Slot 2) - Laurien Gilbert
-
-### Spatial Variation in Product Exit over the Business Cycle
 
 *Location:* Lorch 301
 
