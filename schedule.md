@@ -90,7 +90,7 @@ This paper studies how home equity extraction changes consumption and housing in
 
 *Location:* Lorch 301
 
-## July 06 - Aristos Hudson
+## July 06 - Open
 
 *Location:* Lorch 301
 
