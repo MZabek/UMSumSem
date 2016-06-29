@@ -158,7 +158,7 @@ Previous research has established that students learn best from teachers with at
 
 *Location:* Lorch 301
 
-## July 27 (Slot 2) - Open
+## July 27 (Slot 2) - Laurien Gilbert
 
 *Location:* Lorch 301
 
