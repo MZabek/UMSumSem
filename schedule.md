@@ -86,9 +86,15 @@ This paper studies how home equity extraction changes consumption and housing in
 
 ## July 01 - Christian Proebsting
 
-### Are Devaluations Expansionary?
+### Survival of the Fittest: Corporate Control and the Cleansing Effect of Financial Crises
+
+*Joint work with:* Rahul Mukherjee (Graduate Institute, Geneva)
 
 *Location:* Lorch 301
+
+We develop a tractable model to study the effects of financial crises on M\&As. Acquisitions by financially constrained acquirers during crises involve higher average productivity, ownership stakes, and post-acquisition survival rates compared to unconstrained acquirers. These differences result from the interplay of fixed costs and financial constraints, leaving low-productivity acquisitions particularly vulnerable to financial shocks. Our model implies that M\&As lead to cleansing effects of financial crises because high-productivity firms are saved from bankruptcy, but these effects decline when acquirers are constrained. We provide novel evidence for the differential impact of financial crises on acquisitions by constrained and unconstrained firms. 
+
+[More information](https://ideas.repec.org/p/gii/giihei/heidwp20-2015.html)
 
 ## July 06 - Open
 
