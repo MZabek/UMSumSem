@@ -314,9 +314,12 @@ def main():
         try :
             with SQLCon :
                 SQLCur.execute('''INSERT INTO EmailList (Timestamp,Email) VALUES (strftime('%m/%d/%Y %H:%M:%S','now'),?);''', (row[1],))
+                SQLCon.commit()
+                print('Added entry')
+                print(row)
         except sqlite3.IntegrityError :
-            break
-    #SQLCon.commit()
+            pass
+            #print('Already there')
 
 if __name__ == '__main__':
     main()

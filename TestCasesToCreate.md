@@ -10,4 +10,5 @@ These are things it would be good to check for in debugging new code (and why it
 4. Sheets only containing up to X row responses
 5. Sending of emails, etc. logging
 6. Email test with joint authors, etc... 
-7. Null email...
+7. Null emails in database
+8. Adding emails after first populating email list
