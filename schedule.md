@@ -130,9 +130,7 @@ This paper examines the impact of market organization on market efficiency and s
 
 *Location:* Lorch 301
 
-## July 18 - Steve Hou
-
-### How to manage a $13 Trillion portfolio?
+## July 18 - Open
 
 *Location:* Lorch 201
 
