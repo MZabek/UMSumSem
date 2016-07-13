@@ -116,7 +116,7 @@ def MakeCheckInMessage() :
 
 This is a just a quick message to ask if you would like to update any information for your summer seminar presentation. Please take a look at the information below. If there is anything you would like to update, you can go do that at the following address. You can also add new information, like a link to the full paper. If you leave a field blank on that site (without spaces) then we'll stick with the old information. Note that you will have to be logged into google (possibly in a separate browser window) via your @umich.edu account for this to work. 
 
-http://goo.gl/forms/VVKiGwkBlbz3NObV2" 
+http://goo.gl/forms/VVKiGwkBlbz3NObV2 
 
 You should see the new information up on the website within a day or two. It will also be in the email announcement that we send. 
 
