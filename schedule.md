@@ -132,7 +132,7 @@ This paper examines the impact of market organization on market efficiency and s
 
 Elderly workers in developing countries face certain concerns in their retirement decisions that may not be as common among their counterparts in the developed world. In this study, I firstly show that elderly workers in Brazil react contemporaneously to pension eligibility by reducing their labor supply. I argue that this is due to an income effect rather than a substitution effect, and as such, workers should not react contemporaneously unless optimization frictions, such as credit constraints, are at work. Secondly, I show that the kinds of workers driving the effect are more likely to be credit constrained. Finally, I develop a simple model of retirement decisions to estimate bounds for the welfare costs these credit constraints may be incurring through the disutility of labor.
 
-## July 18 - Open
+## July 18 - Evan Wright
 
 *Location:* Lorch 201
 
