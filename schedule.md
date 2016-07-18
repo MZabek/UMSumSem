@@ -138,9 +138,7 @@ Elderly workers in developing countries face certain concerns in their retiremen
 
 **Note the change in location!**
 
-## July 20 - Christopher Sullivan
-
-### The Ice Cream Split: Collusion on the Product Space Between Ben & Jerry's and Haagen-Dazs
+## July 20 - Open
 
 *Location:* Lorch 201
 
