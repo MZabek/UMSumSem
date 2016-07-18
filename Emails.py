@@ -37,7 +37,7 @@ def MakeAnnouncement(NextTwo) :
         CoAuthors = NextTwo[0][5]
         Room = NextTwo[0][6]
         if Room != "Lorch 301" :
-            Room.append(' (Note the room change!)')
+            Room = Room + ' (Note the room change!)'
 
         # Subject
         Subject = "Summer seminar this " + time.strftime("%A",NextDate) + ": " + Presenter + " - " + Title
@@ -180,8 +180,8 @@ for Entry in List :
 # presented cannot be "Open"
 SQLOut = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors,Room 
                 FROM Schedule
-                WHERE date(Date) >= date('now','localtime')
-                AND date(Date) <= date('now','localtime','+1 day')
+                WHERE date(Date) >= date('now','localtime','+12 hours')
+                AND date(Date) <= date('now','localtime','+1 day','+12 hours')
                 AND EmailAnnouncement IS NULL
                 AND Presenter != 'Open'
                 AND Email != ''
