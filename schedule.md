@@ -160,7 +160,7 @@ Elderly workers in developing countries face certain concerns in their retiremen
 
 How do labor market opportunities for men and women affect fertility decisions, and do impacts differ by employment type? I study how jobs in the formal sector, in manufacturing, and at export-assembly plants (maquiladoras) in Mexico shape childbirth, selection into fertility, and the timing of births. I adopt two complementary identification strategies. The first strategy exploits exogenous shocks to local demand for male versus female labor using a shift-share index, and the second uses establishment-level data from the universe of maquiladoras to construct an instrumental variable based on large expansions and contractions in plant employment. Results show that men's employment has large, positive effects on fertility, whereas women's employment has negligible impacts.
 
-## July 27 (Slot 1) - Open
+## July 27 (Slot 1) - Ben Meiselman
 
 *Location:* Lorch 301
 
@@ -188,9 +188,7 @@ How do labor market opportunities for men and women affect fertility decisions, 
 
 This project seeks to contribute to the literature studying the causal effect of poverty on economic decision-making. Previous studies have found evidence that when individuals are poor, they are more present-biased and their performance in a cognitive test is worse than when their liquidity constraint is alleviated. These results emerge from analyzing short-term variations in income but so far, there is no evidence of how permanent changes in income affect economic decision-making. We propose a design in which the permanent change in flow income is given by the transition from college to the labor market. By following students, who range from lower to higher income backgrounds, about to graduate in a university in Colombia, we are able to assess whether economic decision-making changes along the transition from college to the labor market. 
 
-## August 05 - Eleanor Wilking
-
-### Tax Incidence with Heterogeneous Firm Evasion: Evidence from Airbnb Remittance Agreements
+## August 05 - Open
 
 *Location:* Lorch 301
 
