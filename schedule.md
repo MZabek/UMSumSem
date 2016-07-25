@@ -168,13 +168,9 @@ How do labor market opportunities for men and women affect fertility decisions, 
 
 *Location:* Lorch 301
 
-## July 29 - Alan Griffith
-
-### My JMP (title under revision)
+## July 29 - Open
 
 *Location:* Lorch 301
-
-(updating, will send later)
 
 ## August 01 - Austin Davis
 
