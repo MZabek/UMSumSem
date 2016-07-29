@@ -188,7 +188,11 @@ How do labor market opportunities for men and women affect fertility decisions, 
 
 This project seeks to contribute to the literature studying the causal effect of poverty on economic decision-making. Previous studies have found evidence that when individuals are poor, they are more present-biased and their performance in a cognitive test is worse than when their liquidity constraint is alleviated. These results emerge from analyzing short-term variations in income but so far, there is no evidence of how permanent changes in income affect economic decision-making. We propose a design in which the permanent change in flow income is given by the transition from college to the labor market. By following students, who range from lower to higher income backgrounds, about to graduate in a university in Colombia, we are able to assess whether economic decision-making changes along the transition from college to the labor market. 
 
-## August 05 - Open
+## August 05 (Slot 1) - Steve Hou
+
+*Location:* Lorch 301
+
+## August 05 (Slot 2) - Prachi Jain
 
 *Location:* Lorch 301
 
