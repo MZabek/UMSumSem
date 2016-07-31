@@ -279,9 +279,7 @@ model of firm-hiring, and of worker decisions to study and choose occupations in
 
 *Location:* Lorch 301
 
-## September 02 - Nicolas Morales
-
-### Understanding the role of employers in high skilled immigration
+## September 02 - Open
 
 *Location:* Lorch 301
 
