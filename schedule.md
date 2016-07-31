@@ -196,7 +196,13 @@ This project seeks to contribute to the literature studying the causal effect of
 
 ## August 05 (Slot 2) - Prachi Jain
 
+### Household Bargaining in Kenya
+
+*Joint work with:* Jessica Hoel
+
 *Location:* Lorch 301
+
+There is important heterogeneity in how spouses respond to asymmetric information, with implications for which model of household decision-making best fits the household. I will present the design and results from the pilot of a new laboratory game that can identify household types.  Differences in household structure might have important implications for the take-up and welfare of RCTs that affect information within the household, which we will examine in the full study.
 
 ## August 08 - Morgan Henderson
 
