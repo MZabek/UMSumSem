@@ -178,6 +178,8 @@ How do labor market opportunities for men and women affect fertility decisions, 
 
 *Location:* Lorch 301
 
+I investigate the role of regulation and economic growth in shifting Brazil's sugarcane industry from a dirty, manual harvest to a cleaner, mechanical harvest.  I use worker- and establishment-level data to test the regulation via complementary regression discontinuity and difference-in-difference approaches.  Estimates indicate that regulation is, at best, a partial explanation for the rapid, widespread change in harvesting practices.  Rising wages and increasing employment suggest that economic growth may have played an important role; instrumental variables estimates imply that increasing wages are sufficient to explain the adoption of green technology.
+
 ## August 03 - Catalina Franco
 
 ### The effect of a permanent change in income on economic decision making
