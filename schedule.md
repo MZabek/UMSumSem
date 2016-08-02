@@ -285,7 +285,7 @@ model of firm-hiring, and of worker decisions to study and choose occupations in
 
 *Location:* Lorch 301
 
-## September 02 - Open
+## September 02 - Jacob Bastian
 
 *Location:* Lorch 301
 
