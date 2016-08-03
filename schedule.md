@@ -192,7 +192,11 @@ This project seeks to contribute to the literature studying the causal effect of
 
 ## August 05 (Slot 1) - Steve Hou
 
+### How to Manage 13 Trillion Portfolio?
+
 *Location:* Lorch 301
+
+This paper proposes a general framework for thinking about US Treasury debt management. Using an approximate solution method, I obtain close-form solution for the optimal portfolio choice of the Treasury debt manager who faces real macroeconomic risks and uncertain bond returns described by a vector autoregression in returns and state variables. Empirical estimates show more realistic explanations of US Treasury maturity patterns. Furthermore, I examine the role of long term nominal government debt for risk management. 
 
 ## August 05 (Slot 2) - Prachi Jain
 
