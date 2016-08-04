@@ -166,11 +166,7 @@ print "Sending appropriate announcements (if any): "
 ##########
 # Determining who to send these to:
 # Whole email list: 
-SQLEmails = SQLCur.execute('''SELECT Email FROM EmailList;''')
-List = SQLEmails.fetchall()
-Recipients = []
-for Entry in List :
-    Recipients.append(Entry[0].encode('utf-8'))
+Recipients = ['umeconsumsem@googlegroups.com']
 
 
 ##########
