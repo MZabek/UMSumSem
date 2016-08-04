@@ -90,9 +90,12 @@ def MakeAnnouncement(NextTwo) :
 
         # Abstract if exists: 
         Abstract = ""
-        if Abstract1 != "" :
+        if Abstract1 != "" and Abstract2 != "" :
+            Abstract = "Abstract for \"" + Title1 + "\": " + Abstract1 + "\n\r" 
+            Abstract = Abstract + "\n\r" + "Abstract for \"" + Title2 + "\": " + Abstract2 + "\n\r" 
+        else if Abstract1 != "" :
             Abstract = "Abstract for \"" + Title1 + "\": " + Abstract1 + "\n\r"
-        if Abstract2 != "" :
+        else if Abstract2 != "" :
             Abstract = "Abstract for \"" + Title2 + "\": " + Abstract2 + "\n\r"
         
         
