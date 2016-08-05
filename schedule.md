@@ -238,7 +238,13 @@ In this paper I present a model in which both family ties and social security po
 
 ## August 12 - Ari Binder
 
+### A Lean-In Revolution? Evaluating recent increases in high-skilled mothers' labor supply
+
 *Location:* Lorch 301
+
+Documenting and explaining historical trends in married women's labor supply has increasingly occupied the attention of labor economists and an educated public, yet little is known about aggregate changes in this outcome over the last two decades.  Recent March CPS data reveal that the full-time participation rate of college-educated mothers with young children has increased by 38 percent since 2002, and median hours worked has gone up nearly 60 percent.  These are surprisingly large behavioral changes which do not extend at all to mothers without Bachelor's degrees.  Standard income and substitution effects do not appear sufficient to explain these recent divergent trends, nor do variables such as fertility behavior, divorce risk, and child care prices.  Potential alternative explanations including changes in workplace flexibility, increasing college debt burdens, and changes in preferences will be discussed.  An empirical strategy to measure the contribution of preference shifts, relying on inter-generational transmission, will be outlined.  Many Stata graphs will be shown.
+
+This work is very preliminary and I am seeking feedback on all parts of the above.
 
 ## August 15 - Michael Gelman
 
