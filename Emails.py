@@ -93,9 +93,9 @@ def MakeAnnouncement(NextTwo) :
         if Abstract1 != "" and Abstract2 != "" :
             Abstract = "Abstract for \"" + Title1 + "\": " + Abstract1 + "\n\r" 
             Abstract = Abstract + "\n\r" + "Abstract for \"" + Title2 + "\": " + Abstract2 + "\n\r" 
-        else if Abstract1 != "" :
+        elif Abstract1 != "" :
             Abstract = "Abstract for \"" + Title1 + "\": " + Abstract1 + "\n\r"
-        else if Abstract2 != "" :
+        elif Abstract2 != "" :
             Abstract = "Abstract for \"" + Title2 + "\": " + Abstract2 + "\n\r"
         
         
@@ -180,7 +180,7 @@ Recipients = ['umeconsumsem@googlegroups.com']
 SQLOut = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors,Room 
                 FROM Schedule
                 WHERE date(Date) >= date('now','localtime','+12 hours')
-                AND date(Date) <= date('now','localtime','+1 day','+12 hours')
+                AND date(Date) <= date('now','localtime','+1 day','+1 hours')
                 AND EmailAnnouncement IS NULL
                 AND Presenter != 'Open'
                 AND Email != ''
