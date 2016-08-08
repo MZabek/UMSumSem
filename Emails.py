@@ -45,7 +45,7 @@ def MakeAnnouncement(NextTwo) :
         # First body paragraph: 
         Paragraph1 = "Please join us this " + time.strftime("%A",NextDate) + ", " + time.strftime("%B",NextDate) + " " + time.strftime("%d",NextDate) + " to see " + Presenter + " present: " + Title 
         # Clause if joint authored
-        if CoAuthors != "" :
+        if CoAuthors != "" and CoAuthors is not None:
             JointClause = "This is joint work with " + CoAuthors + "."
         else :
             JointClause = ""
