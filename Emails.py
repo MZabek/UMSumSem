@@ -180,7 +180,7 @@ Recipients = ['umeconsumsem@googlegroups.com']
 SQLOut = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors,Room 
                 FROM Schedule
                 WHERE date(Date) >= date('now','localtime','+12 hours')
-                AND date(Date) <= date('now','localtime','+1 day','+1 hours')
+                AND date(Date) <= date('now','localtime','+1 day','+11 hours')
                 AND EmailAnnouncement IS NULL
                 AND Presenter != 'Open'
                 AND Email != ''
