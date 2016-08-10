@@ -234,7 +234,14 @@ In this paper I present a model in which both family ties and social security po
 
 ## August 11 - Julian Hsu
 
+### What is it Good for? Measure College Major Completion with Courses
+
 *Location:* Lorch 301
+
+I will have preliminary results - even if it means uninstalling PokemonGO from my phone. Formal abstract without result discussion follows:
+
+Although colleges provide students with many courses to learn about majors which have tremendous labor market outcomes, much of the literature has found students are not making fully informed major choices. To understand how students are taking courses to both learn about and complete different majors, I develop and estimate a structural dynamic course-taking model using administrative course transcript data. Tracking individual students’ progress
+to completing major requirements and allowing students to simultaneously take courses across majors, my model dramatically advances those in the college major choice literature.
 
 ## August 12 - Ari Binder
 
