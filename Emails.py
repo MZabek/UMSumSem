@@ -206,7 +206,7 @@ if len(NextTwo) > 0:
     print "------------------------------------------------------------"
     print "Sending the following announcement message: "
     print Msg.items()
-    print Msg.get_payload(decode=True).decode(Msg.get_content_charset())
+    print Msg.get_payload(decode=True).decode(Msg.get_content_charset(),"replace")
     print "----------------------------------------"
     ######################
     ### Sending message via UMSumSem email:
