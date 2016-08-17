@@ -287,7 +287,7 @@ We use a general equilibrium model to study how the US internet boom and concurr
 
 ## August 24 - DongIk Kang
 
-### The Price Elasticity of Demand and Monetary Policy Transmission
+### Optimal Monetary Policy with State Dependent Pricing
 
 *Location:* Lorch 301
 
