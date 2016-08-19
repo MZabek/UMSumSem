@@ -281,9 +281,11 @@ We use a general equilibrium model to study how the US internet boom and concurr
 
 ## August 22 - Aakash Mohpal
 
-### Local Institutions, Public Goods Provision and the Process of Urbanization
+### Local Public Institutions and the Provision of Public Goods: Evidence from India
 
 *Location:* Lorch 301
+
+In the mid-1990s, the government of India enacted decentralization reforms governing rules for the functioning of local public institutions. Villages were endowed with Panchayati Raj Institutions (PRIs) and towns with Urban Local Bodies (ULBs). PRIs had low tax collection responsibilities, and relied on federal and state transfers for funding. On the other hand, ULBs were mandated to provide critical public goods such as water, sanitation and roads, and also exercised greater taxation powers. Early results show that these decentralization reforms led to increase in public goods provision, provided both by the public sector and by crowding in of the private sector. 
 
 ## August 24 - DongIk Kang
 
