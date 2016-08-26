@@ -313,7 +313,11 @@ In the mid-1990s, the government of India enacted decentralization reforms gover
 
 ## September 02 - Jacob Bastian
 
+### The Rise of Working Mothers and the 1975 Earned Income Tax Creidt
+
 *Location:* Lorch 301
+
+The rise in female employment over the twentieth century radically changed the U.S. economy and the role of women in society. Time-series data show a rapid increase in the employment of mothers – relative to women without children – beginning in the mid-1970s. In the first systematic study of the 1975 introduction of the Earned Income Tax Credit (EITC), I show that this program led to a 4-percentage-point (or 7.5 percent) rise in maternal employment – representing about one million mothers – and conclude that the 1975 EITC can help explain why the U.S. has such a high fraction of working mothers despite few childcare subsidies or parental leave policies. In a second section, I test whether this large influx of mothers into the labor force affected gender-role attitudes and find that states with larger predicted EITC responses – due to pre-1975 demographic and occupational traits – had larger post-1975 increases in attitudes approving of women working. Results do not appear to be driven by pre-1975 attitudes, changes in demographics, or general trends in social norms. As a robustness check I also find attitude changes due to increased female employment during World War II. This is one of the first studies to look at determinants of social attitudes.
 
 ## September 05 - Sarah Johnston
 
