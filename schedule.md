@@ -305,9 +305,7 @@ In the mid-1990s, the government of India enacted decentralization reforms gover
 
 *Location:* Lorch 301
 
-## August 31 - Feiya Shao
-
-### Health Shocks and Retirement Timing: An empirical survey approach
+## August 31 - Open
 
 *Location:* Lorch 301
 
