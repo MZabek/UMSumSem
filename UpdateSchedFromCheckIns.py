@@ -225,7 +225,7 @@ def main():
                     # Looking through all fields and updating if relevant new info:
                     for Field in NewData :
                         if NewData[Field] != '' and Field != 'Timestamp' and Field != 'Date' :
-                            SQLCur.execute('''UPDATE Schedule SET %s='%s',LastUpdated=datetime('now') WHERE Date=='%s' AND Number==%d;''' % (Field,NewData[Field],MatchedDate,MatchedNumber))
+                            SQLCur.execute('''UPDATE Schedule SET %s='%s',LastUpdated=datetime('now','localtime') WHERE Date=='%s' AND Number==%d;''' % (Field,NewData[Field],MatchedDate,MatchedNumber))
                             print('        Updated: ',Field)
                     SQLCon.commit()
                     print('    New data committed')
