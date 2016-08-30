@@ -305,9 +305,13 @@ In the mid-1990s, the government of India enacted decentralization reforms gover
 
 *Location:* Lorch 301
 
-## August 31 - Danny Schaffa
+## August 31 - Daniel Schaffa
+
+### If you show me yours
 
 *Location:* Lorch 301
+
+Under Internal Revenue Code, Section 6103, most of the information contained in corporate tax returns is not publicly available. This paper investigates what corporations would do if they had access to other corporations’ returns and what investors would do if they had access to corporate returns. The analysis suggests that corporate tax preparation and sheltering technology would become more widely available as firms learned from each other’s returns. This would shift investment away from firms that have relatively good tax avoidance technology and toward firms that are relatively more productive. Tax rates would likely need to rise in order to maintain government revenue, but the increase in productivity would be welfare improving. The additional information that investors gain would improve investors’ estimates of the returns and risks of investing in each corporation, which would also be welfare improving. 
 
 ## September 02 - Jacob Bastian
 
