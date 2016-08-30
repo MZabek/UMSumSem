@@ -305,7 +305,7 @@ In the mid-1990s, the government of India enacted decentralization reforms gover
 
 *Location:* Lorch 301
 
-## August 31 - Open
+## August 31 - Danny Schaffa
 
 *Location:* Lorch 301
 
