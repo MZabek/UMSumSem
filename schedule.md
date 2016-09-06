@@ -327,9 +327,3 @@ The rise in female employment over the twentieth century radically changed the U
 
 *Location:* Lorch 301
 
-## September 07 - Adam Dearing
-
-### Retail Price Discrimination under Double Marginalization: A Welfare Analysis
-
-*Location:* Lorch 301
-
