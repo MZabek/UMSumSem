@@ -11,8 +11,15 @@ import re
 import os
 
 #SQL Database connection:
-sqlconn = sqlite3.connect('SumSemData.db')
+sqlconn = sqlite3.connect('../Database/SumSemData.db')
 c = sqlconn.cursor()
+
+# Making folders for website:
+if not os.path.exists('../Website/'):
+    os.makedirs('../Website/')
+if not os.path.exists('../Website/_texts/'):
+    os.makedirs('../Website/_texts/')
+
 
 ################################################################################
 # Full schedule:
@@ -26,7 +33,7 @@ MDSchedule.write('---\n')
 
 # Getting entries from database
 print "Making full schedule with the following dates:"
-CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,Room,SlotType,Link FROM Schedule ORDER BY Date ASC, Number ASC;''')
+CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,SlotType,Link FROM Schedule ORDER BY Date ASC, Number ASC;''')
 for CalEntry in CalEntries.fetchall() :
 
     #Stripping out year from date:
@@ -44,7 +51,7 @@ for CalEntry in CalEntries.fetchall() :
     MDSchedule.write('## ')
     MDSchedule.write(Date)
     # Slot, if needed
-    if CalEntry[7] and CalEntry[7] == 'Half (40 minutes)' :
+    if CalEntry[6] and CalEntry[6] == 'Half (40 minutes)' :
         MDSchedule.write(' (Slot ')
         MDSchedule.write(str(CalEntry[1]))
         MDSchedule.write(')')
@@ -60,19 +67,12 @@ for CalEntry in CalEntries.fetchall() :
         MDSchedule.write('\n\n')
         MDSchedule.write('*Joint work with:* ')
         MDSchedule.write(CalEntry[4].encode('utf8'))
-    # Location
-    if CalEntry[6] : 
-        MDSchedule.write('\n\n')
-        MDSchedule.write('*Location:* ')
-        MDSchedule.write(CalEntry[6].encode('utf8'))
-        if CalEntry[6] != "Lorch 301" :
-            MDSchedule.write('\n\n**Note the change in location!**')
     # Abstract
     if CalEntry[5] and CalEntry[5] != 'TBD' :
         MDSchedule.write('\n\n')
         MDSchedule.write(CalEntry[5].encode('utf8'))
     # Link
-    if CalEntry[8] and CalEntry[8] != 'TBD' :
+    if CalEntry[7] and CalEntry[7] != 'TBD' :
         MDSchedule.write('\n\n')
         MDSchedule.write('[More information]('+CalEntry[8].encode('utf8')+')')
     MDSchedule.write('\n\n')
@@ -84,7 +84,7 @@ MDSchedule.close()
 # Specific entries for upcoming events
 
 # Getting entries
-CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,Room,SlotType,Link FROM Schedule WHERE date(Date) >= date('now','localtime','+12 hours') AND date(Date) <= date('now','localtime','+14 days','+12 hours') ORDER BY date(Date) ASC, Number ASC;''')
+CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,SlotType,Link FROM Schedule WHERE date(Date) >= date('now','localtime','+12 hours') AND date(Date) <= date('now','localtime','+30 days','+12 hours') ORDER BY date(Date) ASC, Number ASC;''')
 EntryNum = 0
 TargetDir = '../Website/_texts/'
 
@@ -134,7 +134,7 @@ for CalEntry in CalEntries.fetchall() :
 
     # Writing text to file:
     # Slot, if needed
-    if CalEntry[7] and CalEntry[7] == 'Half (40 minutes)' :
+    if CalEntry[6] and CalEntry[6] == 'Half (40 minutes)' :
         MDEntry.write('## ')
         MDEntry.write(' (Slot ')
         MDEntry.write(str(CalEntry[1]))
@@ -144,19 +144,12 @@ for CalEntry in CalEntries.fetchall() :
         MDEntry.write('\n\n')
         MDEntry.write('*Joint work with:* ')
         MDEntry.write(CalEntry[4].encode('utf8'))
-    # Location
-    if CalEntry[6] : 
-        MDEntry.write('\n\n')
-        MDEntry.write('*Location:* ')
-        MDEntry.write(CalEntry[6].encode('utf8'))
-        if CalEntry[6] != "Lorch 301" :
-            MDEntry.write('\n\n**Note the change in location!**')
     # Abstract
     if CalEntry[5] and CalEntry[5] != 'TBD' :
         MDEntry.write('\n\n')
         MDEntry.write(CalEntry[5].encode('utf8'))
     # Link
-    if CalEntry[8] and CalEntry[8] != 'TBD' :
+    if CalEntry[7] and CalEntry[7] != 'TBD' :
         MDEntry.write('\n\n')
         MDEntry.write('[More information](')
         MDEntry.write(CalEntry[8].encode('utf8'))

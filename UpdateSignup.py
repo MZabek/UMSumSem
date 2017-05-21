@@ -1,46 +1,87 @@
-# Program that updates the dataset
+# Program to make SQLite database from signup forms
+# Mike Zabek
+# Original: May, 2015
+# Updated for the 2017 season
 
 import unicodecsv as csv
 import sqlite3
 import os
+import re
 
 ########################################
 # SQL Dataset:
 print 'Opening database...'
-sqlconn = sqlite3.connect('SumSemData.db')
+sqlconn = sqlite3.connect('../Database/SumSemData.db')
 c = sqlconn.cursor()
 
-## Creating new table, if needed:
-#print 'Creating new table...'
+## Creating brand new tables for signup and email:
 c.execute('''DROP TABLE IF EXISTS Signup;''')
 c.execute('''DROP TABLE IF EXISTS EmailList;''')
-
-# Schema (important):
-c.execute('''CREATE TABLE IF NOT EXISTS Signup (Timestamp text NOT NULL, Username text NOT NULL, Title text, Presenter text, CoAuthors text, SlotType text, JobTalk text, Abstract text, Availability text, Comments text, PRIMARY KEY(Username, Timestamp))''')
-c.execute('''CREATE TABLE IF NOT EXISTS EmailList (Timestamp text, Email text NOT NULL, PRIMARY KEY(Email))''')
+# MODIFY: Schema (important):
+c.execute('''CREATE TABLE IF NOT EXISTS Signup (SignupID INTEGER PRIMARY KEY, Timestamp text NOT NULL, Username text NOT NULL, Title text, Presenter text, CoAuthors text, SlotType text, JobTalk text, Abstract text, PreferredDates text, WorkableDates text, Comments text, InsertedTimestamp datetime DEFAULT CURRENT_TIMESTAMP)''')
+c.execute('''CREATE TABLE IF NOT EXISTS EmailList (SignupTimestamp text,  InsertedTimestamp datetime DEFAULT CURRENT_TIMESTAMP, Email text NOT NULL PRIMARY KEY)''')
 
 ########################################
 # Pulling in CSV of form responses:
 # Note that this is dependent on the setup of the file
 print 'Opening CSV main signup file...'
-with open('../Forms/SignupForm (Responses) - Form Responses 1.csv', 'rbU') as file:
+with open('../Forms/2017 SignupForm.csv', 'rbU') as file:
     entries = csv.reader(file, delimiter=',',quotechar='"')
 
     # Inserting rows past the first one
     entrynum = 0 
     for entry in entries:
         if entrynum == 0 : 
+            print "--------------------------------------------------------------------------------"
             print 'Beginning to read entries...'
             print 'First row:'
             print '|'.join(entry)
+
+            # Identifying questions (row headers):
+            questions = entry
+            print questions
         else :
-            # Inserting into dataset:
-            c.execute('''INSERT OR REPLACE INTO Signup(Timestamp,Username,Title,CoAuthors,JobTalk,Abstract,SlotType,Availability,Comments,Presenter) VALUES (?,?,?,?,?,?,?,?,?,?)''', entry)
-            c.execute('''INSERT OR REPLACE INTO EmailList(Timestamp,Email) VALUES (?,?)''', (entry[0],entry[1]))
+            #print 'Other row:'
+            #print '|'.join(entry)
+
+            # Making dictionary of questions and answers (to parse things)
+            this_answer =  dict(zip(questions, entry))
+
+
+            ## MODIFY: Making up avaiability list (comma separated list of specific dates):
+            # NOTE: This is horribly inefficieint, but it is done very few times
+            # Will populate list of preferred_dates and workable_dates, then turn into a string
+            preferred_datel = [] 
+            workable_datel = [] 
+            for question in questions:
+                # MODIFY: Looking through question list, to find date questions and see if preferred or workable
+                if re.search("^Dates that work \[", question):
+                    tempdatevalue = re.sub("^Dates that work \[","", question)
+                    datevalue = re.sub("]$","", tempdatevalue)
+                    if this_answer[question] == "Preferred":
+                        preferred_datel.append(datevalue)
+                    if this_answer[question] == "Workable":
+                        workable_datel.append(datevalue)
+
+            # Making a comma separated string of dates that work
+            preferred_dates = ';'.join(preferred_datel)
+            workable_dates = ';'.join(workable_datel)
+
+            print "--------------------------------------------------------------------------------"
+            print "Entry with preferred and workable dates:"
+            print this_answer['Your name']
+            print this_answer
+            print preferred_dates
+            print workable_dates
+
+
+            ## MODIFY:  Inserting into dataset:
+            c.execute('''INSERT OR REPLACE INTO Signup(Timestamp,Username,Presenter,Title,Abstract,CoAuthors,SlotType,JobTalk,PreferredDates,WorkableDates,Comments) VALUES (?,?,?,?,?,?,?,?,?,?,?)''', (this_answer['Timestamp'],this_answer['Username'],this_answer['Your name'],this_answer['Title of your presentation'],this_answer['Abstract (if available)'],this_answer['Other authors of the paper (not the presenter)'],this_answer['Would you like a standard or a half slot?'],this_answer['Is this a practice job talk?'],preferred_dates,workable_dates,this_answer['Comments for the organizers']))
+            c.execute('''INSERT OR REPLACE INTO EmailList(SignupTimestamp,Email) VALUES (?,?)''', (this_answer['Timestamp'],this_answer['Username']))
         entrynum += 1
 
 print 'Opening CSV email signup file...'
-with open('../Forms/Email signup (Responses) - Form Responses 1.csv', 'rbU') as file:
+with open('../Forms/2017 Email signup.csv', 'rbU') as file:
     entries = csv.reader(file, delimiter=',',quotechar='"')
 
     # Inserting rows past the first one
@@ -51,9 +92,16 @@ with open('../Forms/Email signup (Responses) - Form Responses 1.csv', 'rbU') as 
             print 'First row:'
             print '|'.join(entry)
         else :
+            print "--------------------------------------------------------------------------------"
+            print entry
             # Inserting into dataset:
-            c.execute('''INSERT OR REPLACE INTO EmailList(Timestamp,Email) VALUES (?,?)''', entry)
+            c.execute('''INSERT OR REPLACE INTO EmailList(SignupTimestamp,InsertedTimestamp,Email) VALUES (?,CURRENT_TIMESTAMP,?)''', entry)
         entrynum += 1
+
+
+
+
+
 ########################################
 # Committing and closing
 sqlconn.commit()
