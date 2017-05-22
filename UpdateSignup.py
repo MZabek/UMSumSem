@@ -10,6 +10,10 @@ import re
 
 ########################################
 # SQL Dataset:
+
+# Making folders for database
+if not os.path.exists('../Database/'):
+    os.makedirs('../Database/')
 print 'Opening database...'
 sqlconn = sqlite3.connect('../Database/SumSemData.db')
 c = sqlconn.cursor()

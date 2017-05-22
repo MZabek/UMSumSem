@@ -91,12 +91,12 @@ c = sqlconn.cursor()
 
 # Random seed:
 random.seed(20150599)
-Iterations = 1
+Iterations = 10000
 
 
 iter = 1
 MinLossFn = 10^6
-while iter in range (1,Iterations+1) and MinLossFn > -1 :
+while iter in range (1,Iterations+1) and MinLossFn > 0 :
     print "________________________________________________________________________________"
     print "Iteration: ",iter," of ",Iterations,"| Min:",MinLossFn
     # Cleaning up so fresh tables will be created:
