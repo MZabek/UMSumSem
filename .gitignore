@@ -2,9 +2,16 @@
 *.log
 *.db
 
+# Ignoring jekyll files
+*.sass-cache
+*.jekyll-metadata
+
 #Ignoring archive folders:
 /archive/*
 /EmailDrafts/*
+
+# Ignoring literal website
+WebsiteSetup/_site
 
 # Dont' pick up password
 password

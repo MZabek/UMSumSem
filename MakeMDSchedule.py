@@ -37,7 +37,7 @@ CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,
 for CalEntry in CalEntries.fetchall() :
 
     #Stripping out year from date:
-    Date = re.sub("2016-","",CalEntry[0])
+    Date = re.sub("20[12][0-9]-","",CalEntry[0])
     # Re-inserting months: 
     Date = re.sub("05-","May ",Date)
     Date = re.sub("06-","June ",Date)
