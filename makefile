@@ -23,7 +23,8 @@ UpdateSignup.log Allotment.log ./archive/SumSemDataAtAllotment.db : UpdateSignup
 	# Reading in from csv files:
 	python UpdateSignup.py > UpdateSignup.log
 	python Allotment.py > Allotment.log
-	cp SumSemData.db ./archive/SumSemDataAtAllotment.db
+	mkdir ../archive/ || true
+	cp ../Database/SumSemData.db ../archive/SumSemDataAtAllotment.db
 	# Making schedule for website:
 	python MakeMDSchedule.py > MakeMDSchedule.log
 	# Posting to website
