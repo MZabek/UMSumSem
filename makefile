@@ -10,7 +10,7 @@
 # Note that git has to be configured here to work without a password 
 # It will also ignore errors, since these will occur when there are no changes
 # to the repository and commits/pushes occur... 
-../Website/schedule.md MakeMDSchedule.log : SumSemData.db MakeMDSchedule.py 
+./WebsiteSetup/schedule.md MakeMDSchedule.log : ../Database/SumSemData.db MakeMDSchedule.py 
 	# Making schedule for website:echo "Making schedule:"
 	echo "Making schedule"
 	date > MakeMDSchedule.log
@@ -28,11 +28,8 @@ UpdateSignup.log Allotment.log ./archive/SumSemDataAtAllotment.db : UpdateSignup
 	# Making schedule for website:
 	python MakeMDSchedule.py > MakeMDSchedule.log
 	# Posting to website
-	BUNDLE_GEMFILE=../Website/Gemfile bundle exec jekyll build
-	rm -r _site/
-	GIT_DIR=../Website/.git GIT_WORK_TREE=../Website git add --all
-	GIT_DIR=../Website/.git GIT_WORK_TREE=../Website git commit -m "Intitial allocation"
-	GIT_DIR=../Website/.git GIT_WORK_TREE=../Website git push origin gh-pages
+	cd WebsiteSetup
+	jekyll build
 	# At this point you write a nice email message to the people who were not allocated slots
 	# And a general email message to everyone...
 

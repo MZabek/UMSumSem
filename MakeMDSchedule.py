@@ -2,7 +2,7 @@
 # Mike Zabek
 # Original: May 17, 2016
 # Takes the SumSemData.db Scheudle table and creates: 
-#   ../Website/schedule.md and ../Website/_texts/____.md
+#   ./WebsiteSetup/schedule.md and ./WebsiteSetup/_texts/____.md
 #   These are things that will be on the website
 
 import sqlite3
@@ -15,17 +15,17 @@ sqlconn = sqlite3.connect('../Database/SumSemData.db')
 c = sqlconn.cursor()
 
 # Making folders for website:
-if not os.path.exists('../Website/'):
-    os.makedirs('../Website/')
-if not os.path.exists('../Website/_texts/'):
-    os.makedirs('../Website/_texts/')
+if not os.path.exists('./WebsiteSetup/'):
+    os.makedirs('./WebsiteSetup/')
+if not os.path.exists('./WebsiteSetup/_posts/'):
+    os.makedirs('./WebsiteSetup/_posts/')
 
 
 ################################################################################
 # Full schedule:
 
 # Opening
-MDSchedule = open('../Website/schedule.md','w')
+MDSchedule = open('./WebsiteSetup/schedule.md','w')
 MDSchedule.write('---\n')
 MDSchedule.write('layout: page\n')
 MDSchedule.write('title: Full schedule\n')
@@ -84,9 +84,8 @@ MDSchedule.close()
 # Specific entries for upcoming events
 
 # Getting entries
-CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,SlotType,Link FROM Schedule WHERE date(Date) >= date('now','localtime','+12 hours') AND date(Date) <= date('now','localtime','+30 days','+12 hours') ORDER BY date(Date) ASC, Number ASC;''')
-EntryNum = 0
-TargetDir = '../Website/_texts/'
+CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,SlotType,Link FROM Schedule WHERE date(Date) >= date('now','localtime','+12 hours') AND date(Date) <= date('now','localtime','+120 days','+12 hours') ORDER BY date(Date) ASC, Number ASC;''')
+TargetDir = './WebsiteSetup/_posts/'
 
 # Removing all files in the directory:
 print "Removing the following files:"
@@ -98,17 +97,19 @@ for f in filelist:
 
 print "Creating the following files: "
 for CalEntry in CalEntries.fetchall() :
-    EntryNum = EntryNum + 1
-
     # Filename to save as: 
+    # Date and presenter
     SaveAs = TargetDir
-    SaveAs +=str(EntryNum).zfill(4)
+    SaveAs +=str(CalEntry[0])
+    SaveAs +='-'
+    Name = CalEntry[2].replace(' ','-')
+    SaveAs +=str(Name)
     SaveAs +='.md'
     print SaveAs 
 
 
     #Stripping out year from date:
-    Date = re.sub("2016-","",CalEntry[0])
+    Date = re.sub("2017-","",CalEntry[0])
     # Re-inserting months: 
     Date = re.sub("05-","May ",Date)
     Date = re.sub("06-","June ",Date)
@@ -120,7 +121,6 @@ for CalEntry in CalEntries.fetchall() :
     Title = CalEntry[2]
     if CalEntry[3] and CalEntry[3] != 'TBD' and CalEntry[3] != 'title tk' and CalEntry[3] != 'Presentation TBD' and CalEntry[3] != 'My JMP (title under revision)':
         Title = Title + " - " + re.sub(":"," -",CalEntry[3])
-    Title = Title +  " (" + Date + ")"
 
     # Opening and writing header:
     MDEntry = open(SaveAs,'w')

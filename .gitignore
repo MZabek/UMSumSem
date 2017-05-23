@@ -11,7 +11,8 @@
 /EmailDrafts/*
 
 # Ignoring literal website
-WebsiteSetup/_site
+/WebsiteSetup/_site/
+/WebsiteSetup/_posts/
 
 # Dont' pick up password
 password
