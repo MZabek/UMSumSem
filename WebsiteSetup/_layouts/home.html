@@ -1,0 +1,31 @@
+---
+layout: default
+---
+
+<div class="home">
+
+    <p> The University of Michgian (PhD student) Summer Seminar in Economics meets in Lorch 275D (the MITRE conference room) from 11:30 am to 1 pm. </p>
+
+    <p> We have some really cool economics to talk about, presented by economics PhD students at the University of Michigan, so we hope you will come. </p>
+
+
+  <h1 class="page-heading">Upcoming seminars</h1>
+  
+  {{ content }}
+
+  <ul class="post-list">
+    {% for post in site.posts reversed %}
+      <li>
+        {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
+        <span class="post-meta">{{ post.date | date: date_format }}</span>
+
+        <h2>
+          <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+        </h2>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
+
+</div>

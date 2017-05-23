@@ -1,0 +1,25 @@
+
+# Site settings
+title:               Summer Seminar
+tagline:             'The University of Michigan summer seminar in economics'
+description:         'Info about the University of Michigan Summer Seminar in Economics.'
+url:                 'seminar.mikezabek.com'
+baseurl:             ''
+future: true
+
+# About/contact
+author:    Managed by Mike Zabek and Ari Binder
+email:    UMSumSem@gmail.com
+github_username:  mzabek
+
+# Tracking code
+google_analytics: UA-78956281-1 
+
+# Build settings
+markdown: kramdown
+theme: minima
+gems:
+  - jekyll-feed
+exclude:
+  - Gemfile
+  - Gemfile.lock
