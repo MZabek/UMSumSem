@@ -3,12 +3,16 @@
 # Original: May 17, 2015
 
 import sqlite3
+import regex as re
 import random
-import re
 import sys
 import codecs
+
+# Setting piping encoding to unicode
 sys.stdout = codecs.getwriter('utf8')(sys.stdout)
 
+
+########################################
 # Function to allocate people, based on current listing of allocations 
 #       Algorithm - If half, put in first available half slot on list, then make half slot from list
 #                 - If fill, put in first available full slot in the list  
@@ -29,10 +33,9 @@ def AllocatePerson(entry,c,TableName):
     # Listing of dates to check in order for half then full
     CurrPossDates = entry[2]
     ## checking each possible date, in order to see if there is a half slot avaiable
-    if entry[1] == "Half (40 minutes)":
+    if entry[1] == u'Half (40 minutes)':
         date_checked = 0
         while Allotted == False and date_checked < len(CurrPossDates) :
-            # Taking out the first date in the remaining list:
             check_date = CurrPossDates[date_checked]
 
             # Checking if free half slot is acceptable:
@@ -75,6 +78,13 @@ def AllocatePerson(entry,c,TableName):
         CalDate = re.sub("st$|th$|nd|rd$$","",CalDate)
         CalDate = re.sub(r'-(\d)$',r'-0\1',CalDate)
 
+        # Checking types are as expected:
+        assert type(entry[0]) == int;
+        assert type(AllocatedDate) == unicode;
+        assert type(entry[1]) == unicode;
+        assert type(Number) == int;
+        assert type(CalDate) == unicode;
+
         c.execute('''INSERT INTO %s (SignupID,Date,SlotType,Number,CalDate) VALUES (?,?,?,?,?);''' % (TableName), (entry[0],AllocatedDate,entry[1],Number,CalDate))
 
 
@@ -86,6 +96,7 @@ def AllocatePerson(entry,c,TableName):
 ####################
 #SQL Dataset connection:
 sqlconn = sqlite3.connect('../Database/SumSemData.db')
+sqlconn.text_factory = unicode
 c = sqlconn.cursor()
 
 
@@ -131,6 +142,12 @@ while iter in range (1,Iterations+1) and MinLossFn > 0 :
         #print available_dates 
 
         # Caling AllocatePerson 
+
+        # Ensuring I made everything unicode:
+        assert type(entry[0]) == int
+        assert type(entry[1]) == unicode
+        for date in available_dates :
+            assert type(date) == unicode
         AllocatePerson((entry[0],entry[1],available_dates),c,'TempAllotment')
 
     ########################################
@@ -180,13 +197,14 @@ while iter in range (1,Iterations+1) and MinLossFn > 0 :
 
 ########################################
 # Done with allocation
+print "--------------------------------------------------------------------------------"
+print "Finished searching for allocations"
 print "Minimum of loss function: ",MinLossFn
+print "Decided upon allocation:"
 
 # Committing changes
 sqlconn.commit()
 
-print "--------------------------------------------------------------------------------"
-print "Decided upon allocation:"
 AllottedList = c.execute('''SELECT Username,JobTalk,Date FROM Signup LEFT OUTER JOIN Allotment USING (SignupID) ORDER BY CalDate;''')
 for Entry in AllottedList.fetchall() :
     print Entry[2],"Username: ",Entry[0],"Job talk: ",Entry[1]

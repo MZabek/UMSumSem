@@ -5,11 +5,17 @@
 #   ./WebsiteSetup/schedule.md and ./WebsiteSetup/_texts/____.md
 #   These are things that will be on the website
 
+import regex as re
 import sqlite3
 import sys
-import re
 import os
+import codecs
 
+# Setting piping encoding to unicode
+sys.stdout = codecs.getwriter('utf8')(sys.stdout)
+
+
+########################################
 #SQL Database connection:
 sqlconn = sqlite3.connect('../Database/SumSemData.db')
 c = sqlconn.cursor()
@@ -25,7 +31,7 @@ if not os.path.exists('./WebsiteSetup/_posts/'):
 # Full schedule:
 
 # Opening
-MDSchedule = open('./WebsiteSetup/schedule.md','w')
+MDSchedule = codecs.open('./WebsiteSetup/schedule.md','w','utf-8')
 MDSchedule.write('---\n')
 MDSchedule.write('layout: page\n')
 MDSchedule.write('title: Full schedule\n')
@@ -36,6 +42,10 @@ print "Making full schedule with the following dates:"
 CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,SlotType,Link FROM Schedule ORDER BY Date ASC, Number ASC;''')
 for CalEntry in CalEntries.fetchall() :
 
+    # Checking that stuff is unicode, integer, or empty:
+    for info in CalEntry :
+        assert (type(info) == unicode ) | (type(info) == int) | (info == None)
+
     #Stripping out year from date:
     Date = re.sub("20[12][0-9]-","",CalEntry[0])
     # Re-inserting months: 
@@ -45,6 +55,7 @@ for CalEntry in CalEntries.fetchall() :
     Date = re.sub("08-","August ",Date)
     Date = re.sub("09-","September ",Date)
     print Date
+    assert type(Date) == unicode
 
     # Writing text to file:
     # Date
@@ -57,24 +68,24 @@ for CalEntry in CalEntries.fetchall() :
         MDSchedule.write(')')
     # Presenter
     MDSchedule.write(' - ')
-    MDSchedule.write(CalEntry[2].encode('utf8'))
+    MDSchedule.write(CalEntry[2])
     # Title
     if CalEntry[3] and CalEntry[3] != 'TBD' :
         MDSchedule.write('\n\n### ')
-        MDSchedule.write(CalEntry[3].encode('utf8'))
+        MDSchedule.write(CalEntry[3])
     # Co Authors
     if CalEntry[4] and CalEntry[4] != '' and CalEntry[4] != 'N/A' and CalEntry[4] != None :
         MDSchedule.write('\n\n')
         MDSchedule.write('*Joint work with:* ')
-        MDSchedule.write(CalEntry[4].encode('utf8'))
+        MDSchedule.write(CalEntry[4])
     # Abstract
     if CalEntry[5] and CalEntry[5] != 'TBD' :
         MDSchedule.write('\n\n')
-        MDSchedule.write(CalEntry[5].encode('utf8'))
+        MDSchedule.write(CalEntry[5])
     # Link
     if CalEntry[7] and CalEntry[7] != 'TBD' :
         MDSchedule.write('\n\n')
-        MDSchedule.write('[More information]('+CalEntry[8].encode('utf8')+')')
+        MDSchedule.write('[More information]('+CalEntry[8]+')')
     MDSchedule.write('\n\n')
 
 # Closing and saving:
@@ -84,8 +95,12 @@ MDSchedule.close()
 # Specific entries for upcoming events
 
 # Getting entries
-CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,SlotType,Link FROM Schedule WHERE date(Date) >= date('now','localtime','+12 hours') AND date(Date) <= date('now','localtime','+120 days','+12 hours') ORDER BY date(Date) ASC, Number ASC;''')
-TargetDir = './WebsiteSetup/_posts/'
+CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,SlotType,Link 
+                        FROM Schedule 
+                        WHERE date(Date) >= date('now','localtime','+12 hours') 
+                            AND date(Date) <= date('now','localtime','+120 days','+12 hours') 
+                        ORDER BY date(Date) ASC, Number ASC;''')
+TargetDir = u'./WebsiteSetup/_posts/'
 
 # Removing all files in the directory:
 print "Removing the following files:"
@@ -97,15 +112,23 @@ for f in filelist:
 
 print "Creating the following files: "
 for CalEntry in CalEntries.fetchall() :
+    
+    # Checking that stuff is unicode, integer, or empty:
+    for info in CalEntry :
+        assert (type(info) == unicode ) | (type(info) == int) | (info == None)
+
     # Filename to save as: 
     # Date and presenter
+    print TargetDir
     SaveAs = TargetDir
-    SaveAs +=str(CalEntry[0])
+    SaveAs +=CalEntry[0]
     SaveAs +='-'
     Name = CalEntry[2].replace(' ','-')
-    SaveAs +=str(Name)
+    SaveAs +=Name
     SaveAs +='.md'
-    print SaveAs 
+    # Outpiut of save is unicode
+    assert type(SaveAs) == unicode
+    print SaveAs
 
 
     #Stripping out year from date:
@@ -123,11 +146,11 @@ for CalEntry in CalEntries.fetchall() :
         Title = Title + " - " + re.sub(":"," -",CalEntry[3])
 
     # Opening and writing header:
-    MDEntry = open(SaveAs,'w')
+    MDEntry = codecs.open(SaveAs,'w','utf-8')
     MDEntry.write('---\n')
     MDEntry.write('layout: post\n')
     MDEntry.write('title: ')
-    MDEntry.write(Title.encode('utf8'))
+    MDEntry.write(Title)
     MDEntry.write('\n')
 
     MDEntry.write('---\n')
@@ -143,16 +166,16 @@ for CalEntry in CalEntries.fetchall() :
     if CalEntry[4] and CalEntry[4] != '' and CalEntry[4] != 'N/A' :
         MDEntry.write('\n\n')
         MDEntry.write('*Joint work with:* ')
-        MDEntry.write(CalEntry[4].encode('utf8'))
+        MDEntry.write(CalEntry[4])
     # Abstract
     if CalEntry[5] and CalEntry[5] != 'TBD' :
         MDEntry.write('\n\n')
-        MDEntry.write(CalEntry[5].encode('utf8'))
+        MDEntry.write(CalEntry[5])
     # Link
     if CalEntry[7] and CalEntry[7] != 'TBD' :
         MDEntry.write('\n\n')
         MDEntry.write('[More information](')
-        MDEntry.write(CalEntry[8].encode('utf8'))
+        MDEntry.write(CalEntry[8])
         MDEntry.write(')')
     MDEntry.write('\n\n')
     
