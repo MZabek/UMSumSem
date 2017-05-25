@@ -115,79 +115,143 @@ while iter in range (1,Iterations+1) and MinLossFn > 0 :
 
     #########
     # Pull of list of entries, sorted by priority
-    # First entry for each person:
-    SignupPull = c.execute('''SELECT SignupID,SlotType,PreferredDates,WorkableDates,JobTalk
-                                        FROM Signup
-                                        ORDER BY JobTalk DESC,  SlotType ASC, random();''')
-    SignupList = SignupPull.fetchall()
+    
+    ## Creating cursors to pulls of each group:
+    # Job talk people with only one entry
+    OneJMPSignup = c.execute('''SELECT SignupID,SlotType,PreferredDates,WorkableDates,JobTalk
+                                FROM Signup GROUP BY Username 
+                                HAVING COUNT(SignupID) = 1 AND JobTalk = "Yes";''').fetchall()
+    # Not job talk people with only one entry
+    OneNJMPSignup = c.execute('''SELECT SignupID,SlotType,PreferredDates,WorkableDates,JobTalk 
+                                FROM Signup GROUP BY Username 
+                                HAVING COUNT(SignupID) = 1 AND JobTalk = "No";''').fetchall()
+
+    # People with two entries and job talk, taking Job talk:
+    FirstWTwoJMPSignup = c.execute('''SELECT SignupID,SlotType,PreferredDates,WorkableDates,JobTalk 
+                                FROM Signup 
+                                WHERE Username IN 
+                                    (SELECT Username 
+                                        FROM Signup GROUP BY Username 
+                                        HAVING COUNT(SignupID) >= 2 
+                                        AND MAX(JobTalk) = "Yes") 
+                                    AND JobTalk = "Yes";''').fetchall()
+    FirstWTwoNoJMPSignup = c.execute('''SELECT SignupID,SlotType,PreferredDates,WorkableDates,JobTalk 
+                                    FROM Signup 
+                                    WHERE SignupID 
+                                    IN (SELECT MIN(SignupID) FROM Signup 
+                                            WHERE Username IN 
+                                            (SELECT Username FROM Signup GROUP BY Username 
+                                            HAVING COUNT(SignupID) >= 2 
+                                            AND MAX(JobTalk) = "No") 
+                                        GROUP BY Username);''').fetchall() 
+    # Remaining entries for people
+    SecondWTwoJMPSignup = c.execute('''SELECT SignupID,SlotType,PreferredDates,WorkableDates,JobTalk 
+                                FROM Signup 
+                                WHERE Username IN 
+                                    (SELECT Username 
+                                        FROM Signup GROUP BY Username 
+                                        HAVING COUNT(SignupID) >= 2 
+                                        AND MAX(JobTalk) = "Yes") 
+                                    AND NOT JobTalk = "Yes";''').fetchall()
+    SecondWTwoNoJMPSignup = c.execute('''SELECT SignupID,SlotType,PreferredDates,WorkableDates,JobTalk 
+                                    FROM Signup 
+                                    WHERE SignupID NOT IN 
+                                            (SELECT MIN(SignupID) FROM Signup 
+                                            WHERE Username IN 
+                                                (SELECT Username FROM Signup GROUP BY Username 
+                                                HAVING COUNT(SignupID) >= 2 
+                                                AND MAX(JobTalk) = "No") 
+                                            GROUP BY Username)
+                                        AND Username IN 
+                                            (SELECT Username FROM Signup GROUP BY Username 
+                                            HAVING COUNT(SignupID) >= 2 
+                                            AND MAX(JobTalk) = "No")
+                                         ;''').fetchall()
+    # Priority lists
+    TopPriority = OneJMPSignup + FirstWTwoJMPSignup
+    MiddlePriority = OneNJMPSignup + FirstWTwoNoJMPSignup
+    BottomPriority = SecondWTwoJMPSignup + SecondWTwoNoJMPSignup
+
+    # Randomizing each and putting together
+    random.shuffle(TopPriority)
+    random.shuffle(MiddlePriority)
+    random.shuffle(BottomPriority)
+    SignupList = TopPriority + MiddlePriority + BottomPriority
 
     # Allocating based on the list:
-    for entry in SignupList:
+    for to_assign in SignupList:
 
         ## Making the workable dates into a list:
         # Note: Here a date is just a unique string... 
         # And I have a really inellegant way of taking out empty strings
-        preferred_datel = entry[2].split(";")
+        preferred_datel = to_assign[2].split(";")
         while '' in preferred_datel:
             preferred_datel.remove('')
         random.shuffle(preferred_datel)
 
-        workable_datel = entry[3].split(";")
+        workable_datel = to_assign[3].split(";")
         while '' in workable_datel:
             workable_datel.remove('')
         random.shuffle(workable_datel)
         
         available_dates = preferred_datel + workable_datel
-        #print entry
+        #print to_assign
         #print available_dates 
 
         # Caling AllocatePerson 
 
         # Ensuring I made everything unicode:
-        assert type(entry[0]) == int
-        assert type(entry[1]) == unicode
+        assert type(to_assign[0]) == int
+        assert type(to_assign[1]) == unicode
         for date in available_dates :
             assert type(date) == unicode
-        AllocatePerson((entry[0],entry[1],available_dates),c,'TempAllotment')
+        AllocatePerson((to_assign[0],to_assign[1],available_dates),c,'TempAllotment')
 
     ########################################
-    # Showing result and assigning loss fn:
+    # Shwing result and assigning loss fn:
     # Note: The LossFn is haphazard --  Goes up with people not allocated any, with 1.01 weight to job candidates
     #                                   Then adds in 0.0001 if not putting in additional seminars...
     #                                   This is an inelegant 
     #                                   It has not been optimized to avoid double counting
     print "Allocation results:"
 
-    Result =  c.execute('''SELECT Signup.Username,Signup.SlotType,Date,Signup.JobTalk,PreferredDates,WorkableDates FROM Signup 
+    ResultByPerson =  c.execute('''SELECT Username,MAX(Date),MAX(JobTalk) FROM Signup 
                                         LEFT OUTER JOIN TempAllotment USING (SignupID) 
-                                        GROUP BY Username
-                                        ORDER BY Signup.JobTalk DESC,  Signup.SlotType ASC, random();''')
+                                        GROUP BY Username;''')
     NumJMPNotAssigned = 0
     NumPplNotAssigned = 0
-    for entry in Result.fetchall() :
-        if entry[3] == None :
-            print "Not assigned username: ",entry[1],"|Slots allowed: ",entry[5].count(',')+1
+    for entry in ResultByPerson.fetchall() :
+        if entry[1] == None :
+            print "Not assigned username: ",entry[0],"| Jobtalk? ",entry[2]
 
-            # Number of not assigned requests (maximizing number of slots used):
+            # Number of not assigned people:
             NumPplNotAssigned = NumPplNotAssigned + 1
             # Tiebreaker for job market presentations:
-            if entry[4] == 'Yes' :
+            if entry[2] == 'Yes' :
                 NumJMPNotAssigned = NumJMPNotAssigned + 1
 
     # Total slots not assigned
-    NumReqNotAssigned = len(c.execute('''SELECT Username 
+    ReqNotAssigned = c.execute('''SELECT Username,SignupID 
                                         FROM Signup 
                                         LEFT OUTER JOIN TempAllotment USING (SignupID) 
-                                        WHERE TempAllotment.Date IS NULL;''').fetchall())
+                                        WHERE Date IS NULL;''').fetchall()
+    NumReqNotAssigned = len(ReqNotAssigned)
 
-    # Final algorithm:
-    LossFn = NumPplNotAssigned + 0.01*NumJMPNotAssigned + 0.0001*NumReqNotAssigned
+    StartDate = c.execute('''SELECT MIN(CalDate) FROM TempAllotment;''').fetchone()[0]
+    # How to caompare the quality of an allocation:
+    LossFn = NumPplNotAssigned + NumJMPNotAssigned + 0.0001*NumReqNotAssigned
+    print "Start date: ",StartDate 
+    print "Job market talks not assigned: ",NumJMPNotAssigned
+    print "Total people not assigned: ",NumPplNotAssigned
+    print "Requests not assigned: ",ReqNotAssigned
     print "Loss function value: ",LossFn
 
-    # Determining if this is the ``best'' allotment yet: 
-    if LossFn < MinLossFn :
+    # Determining if this is the ``best'' allotment yet:
+    MaxStartDate = u'1900-01-01'
+    if LossFn < MinLossFn or (LossFn <= MinLossFn and StartDate > MaxStartDate) :
         # If so, setting as new benchmark
         MinLossFn = LossFn
+        MaxStartDate = StartDate
         c.execute('''DROP TABLE IF EXISTS Allotment;''')
         c.execute('''ALTER TABLE TempAllotment RENAME TO Allotment;''')
     c.execute('''DROP TABLE IF EXISTS TempAllotment;''')
