@@ -19,7 +19,7 @@
 # The sign up and allotment: 
 # Note: This should only be created once, at the official allotment date
 # This was 6/22/2016 for the 2016 season
-Allotment : UpdateSignup.py  Allotment.py ../Forms/2017\ SignupForm.csv ../Forms/2017\ Email\ signup.csv
+ProductionAllotment : UpdateSignup.py  Allotment.py ../Forms/2017\ SignupForm.csv ../Forms/2017\ Email\ signup.csv
 	# Reading in from csv files:
 	python UpdateSignup.py > UpdateSignup.log
 	python Allotment.py > Allotment.log
@@ -33,6 +33,17 @@ Allotment : UpdateSignup.py  Allotment.py ../Forms/2017\ SignupForm.csv ../Forms
 	aws s3 sync WebsiteSetup/_site/ s3://seminar.mikezabek.com/
 	# At this point you write a nice email message to the people who were not allocated slots
 	# And a general email message to everyone...
+
+TestAllotment : UpdateSignup.py  Allotment.py ../Forms/2017\ SignupForm.csv ../Forms/2017\ Email\ signup.csv
+	# Reading in from csv files:
+	python UpdateSignup.py > UpdateSignup.log
+	python Allotment.py > Allotment.log
+	mkdir ../archive/ || true
+	# Making schedule for website:
+	python MakeMDSchedule.py > MakeMDSchedule.log
+
+	# Building and posting website:
+	cd WebsiteSetup; jekyll build 
 
 # Cleaning the directory
 #.PHONY : clean
