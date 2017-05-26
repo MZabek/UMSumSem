@@ -106,11 +106,12 @@ Iterations = 10000
 
 
 iter = 1
-MinLossFn = 10^6
 # TODO: This could be parallelized
+MinLossFn = 10^6
+MaxStartDate = u'1900-01-01'
 while iter in range (1,Iterations+1) and MinLossFn > 0 :
     print "________________________________________________________________________________"
-    print "Iteration: ",iter," of ",Iterations,"| Min:",MinLossFn
+    print "Iteration: ",iter," of ",Iterations,"| Min loss fn:",MinLossFn,"| Max start date: ",MaxStartDate
     # Cleaning up so fresh tables will be created:
     c.execute('''DROP TABLE IF EXISTS TempAllotment''')
 
@@ -252,7 +253,6 @@ while iter in range (1,Iterations+1) and MinLossFn > 0 :
     print "Loss function value: ",LossFn
 
     # Determining if this is the ``best'' allotment yet:
-    MaxStartDate = u'1900-01-01'
     if LossFn < MinLossFn or (LossFn <= MinLossFn and StartDate > MaxStartDate) :
         # If so, setting as new benchmark
         MinLossFn = LossFn
