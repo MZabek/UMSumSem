@@ -107,6 +107,7 @@ Iterations = 10000
 
 iter = 1
 MinLossFn = 10^6
+# TODO: This could be parallelized
 while iter in range (1,Iterations+1) and MinLossFn > 0 :
     print "________________________________________________________________________________"
     print "Iteration: ",iter," of ",Iterations,"| Min:",MinLossFn
@@ -115,6 +116,8 @@ while iter in range (1,Iterations+1) and MinLossFn > 0 :
 
     #########
     # Pull of list of entries, sorted by priority
+    # TODO: May be better to assign a priority field to people, and could simplify evaluating
+    #       how well the allotment process did
     
     ## Creating cursors to pulls of each group:
     # Job talk people with only one entry
@@ -179,6 +182,8 @@ while iter in range (1,Iterations+1) and MinLossFn > 0 :
     SignupList = TopPriority + MiddlePriority + BottomPriority
 
     # Allocating based on the list:
+    # TODO: It would probably be (a lot) faster to do all of this is memory 
+    #       as opposed to writing to disk
     for to_assign in SignupList:
 
         ## Making the workable dates into a list:
