@@ -6,25 +6,34 @@
 import os
 import sqlite3
 import time
-from email.mime.text import MIMEText 
+import datetime
+from email.mime.text import MIMEText  
+from email.header import Header
+from email.header import decode_header
 import smtplib
 import codecs
+import sys
 
 ########## Functions ##########
 
 
 # Function to compose announcement emails:
-# Input: NextTwo - SQL fetch all composed of: Date,Number,Title,Presenter,Abstract,CoAuthors,Room
+# Input: NextTwo - List of up to two lists: Date,Number,Title,Presenter,Abstract,CoAuthors,Email,SlotType
 #           Note: Confusingly, Slot and Number are the same thing, number is in the schema but slot is facing the public
-# Output: Tupple with: 1. Subject 2. Body of message
+# Output: A properly encoded MIME object (this is the message)
 def MakeAnnouncement(NextTwo) :
+
+    # Validating these are the same date
+    if len(NextTwo) >= 2 :
+        assert NextTwo[0][0] == NextTwo[1][0]
+        assert len(NextTwo) == 2
     ####################
     # Intro paragraphs:
 
     # Date of next presentation:
     NextDate = time.strptime(NextTwo[0][0], "%Y-%m-%d")
-    # Room is assumed the same: 
-    Room = NextTwo[0][6].encode('utf-8')
+    # TODO: Make this not hard coded
+    Room = u'Lorch 275D'
 
     ##########
     # If a sole seminar:
@@ -35,89 +44,101 @@ def MakeAnnouncement(NextTwo) :
         Presenter = NextTwo[0][3]
         Abstract = NextTwo[0][4]
         CoAuthors = NextTwo[0][5]
-        Room = NextTwo[0][6]
-        if Room != "Lorch 301" :
-            Room = Room + ' (Note the room change!)'
 
         # Subject
-        Subject = "Summer seminar this " + time.strftime("%A",NextDate) + ": " + Presenter + " - " + Title
+        Subject = time.strftime("%A",NextDate) + u': ' + Presenter + ' - ' + Title
         
         # First body paragraph: 
-        Paragraph1 = "Please join us this " + time.strftime("%A",NextDate) + ", " + time.strftime("%B",NextDate) + " " + time.strftime("%d",NextDate) + " to see " + Presenter + " present: " + Title 
+        Paragraph1 = u'Please join us this ' + time.strftime('%A',NextDate) + u', ' + time.strftime('%B',NextDate) + u' ' + time.strftime('%d',NextDate) + u' to see ' + Presenter + u' present: ' + Title + '.'
         # Clause if joint authored
-        if CoAuthors != "" and CoAuthors is not None:
-            JointClause = ". This is joint work with " + CoAuthors + "."
+        if CoAuthors != '' and CoAuthors is not None:
+            JointClause = u' This is joint work with ' + CoAuthors + '.'
         else :
-            JointClause = ""
+            JointClause = ''
         Paragraph1 = Paragraph1 + JointClause
 
         # Abstract (if exists)
-        if Abstract != "" :
-            Abstract = "Abstract: " + Abstract + "\n\r"
+        if Abstract != '' :
+            Abstract = 'Abstract: ' + Abstract + '\r\n'
     ##########
     # If joint: 
     else:
 
         # Things to announce for each:
-        Title1 = NextTwo[0][2].encode('utf-8')
-        Presenter1 = NextTwo[0][3].encode('utf-8')
-        Abstract1 = NextTwo[0][4].encode('utf-8')
-        CoAuthors1 = NextTwo[0][5].encode('utf-8')
+        Title1 = NextTwo[0][2]
+        Presenter1 = NextTwo[0][3]
+        Abstract1 = NextTwo[0][4]
+        CoAuthors1 = NextTwo[0][5]
         
-        Title2 = NextTwo[1][2].encode('utf-8')
-        Presenter2 = NextTwo[1][3].encode('utf-8')
-        Abstract2 = NextTwo[1][4].encode('utf-8')
-        CoAuthors2 = NextTwo[1][5].encode('utf-8')
+        Title2 = NextTwo[1][2]
+        Presenter2 = NextTwo[1][3]
+        Abstract2 = NextTwo[1][4]
+        CoAuthors2 = NextTwo[1][5]
 
+        print type(Presenter1)
+        print type(Presenter2)
         # Subject
-        Subject = "Two summer seminars on " + time.strftime("%A",NextDate) + ": " + Presenter1 + " and " + Presenter2
+        Subject = u'Two seminars on ' + time.strftime('%A',NextDate) + u': ' + Presenter1 + u' and ' + Presenter2
 
         # First body paragraph: 
-        Paragraph1 = "This " + time.strftime("%A",NextDate) + ", " + time.strftime("%B",NextDate) + " " + time.strftime("%d",NextDate) + " we will have two presentations in summer seminar. First, " + Presenter1 + " will present: " + Title1 + ". Then, once the commotion dies down, " + Presenter2 + " will present: " + Title2 + "."
+        Paragraph1 = 'This ' + time.strftime('%A',NextDate) + ', ' + time.strftime('%B',NextDate) + ' ' + time.strftime('%d',NextDate) + ' we will have two presentations in summer seminar. First, ' + Presenter1 + ' will present: ' + Title1 + '. Then, once the commotion dies down, ' + Presenter2 + ' will present: ' + Title2 + '.'
 
         # Clause if joint authored
-        if CoAuthors1 != "" and CoAuthors2 == "" :
-            JointClause = "Note that the first presentation is joint work with " + CoAuthors1 + "."
-        elif CoAuthors1 != "" and CoAuthors2 == "" :
-            JointClause = "Note that the second presentation is joint work with " + CoAuthors2 + "."
-        elif CoAuthors1 != "" and CoAuthors2 != "" :
-            JointClause = "Note that the first presentation is joint work with " + CoAuthors1 + " and the second is joint with " + CoAuthors2 + "."
+        if CoAuthors1 != '' and CoAuthors2 == '' :
+            JointClause = 'Note that the first presentation is joint work with ' + CoAuthors1 + '.'
+        elif CoAuthors1 != '' and CoAuthors2 == '' :
+            JointClause = 'Note that the second presentation is joint work with ' + CoAuthors2 + '.'
+        elif CoAuthors1 != '' and CoAuthors2 != '' :
+            JointClause = 'Note that the first presentation is joint work with ' + CoAuthors1 + ' and the second is joint with ' + CoAuthors2 + '.'
         else :
-            JointClause = ""
+            JointClause = ''
 
         # Gathering first paragraph together:
         Paragraph1 = Paragraph1 + JointClause
 
         # Abstract if exists: 
-        Abstract = ""
-        if Abstract1 != "" and Abstract2 != "" :
-            Abstract = "Abstract for \"" + Title1 + "\": " + Abstract1 + "\n\r" 
-            Abstract = Abstract + "\n\r" + "Abstract for \"" + Title2 + "\": " + Abstract2 + "\n\r" 
-        elif Abstract1 != "" :
-            Abstract = "Abstract for \"" + Title1 + "\": " + Abstract1 + "\n\r"
-        elif Abstract2 != "" :
-            Abstract = "Abstract for \"" + Title2 + "\": " + Abstract2 + "\n\r"
+        Abstract = ''
+        if Abstract1 != '' and Abstract2 != '' :
+            Abstract = 'Abstract for \'' + Title1 + '\': ' + Abstract1 + '\n\r' 
+            Abstract = Abstract + '\n\r' + 'Abstract for \'' + Title2 + '\': ' + Abstract2 + '\n\r' 
+        elif Abstract1 != '' :
+            Abstract = 'Abstract for \'' + Title1 + '\': ' + Abstract1 + '\n\r'
+        elif Abstract2 != '' :
+            Abstract = 'Abstract for \'' + Title2 + '\': ' + Abstract2 + '\n\r'
         
         
 
     # Paragraph 2 is common to all seminars: 
-    Paragraph2 = "We will meet at 11:30 am in " + Room + ". You can see the full schedule including more info about these presentations and other upcoming seminars at http://mzabek.github.io/UMSumSem/." 
+    Paragraph2 = "We will meet at 11:30 am in " + Room + ". You can see the full schedule including more info about these presentations and other upcoming seminars at http://seminar.mikezabek.com." 
 
     ##########
     # Assembling message text: 
-    MessageText = Paragraph1 + "\n\r" + Paragraph2 + "\n\r" + "Best,\rMike and Ari\n\r" + Abstract 
+    MessageText = Paragraph1 + "\n\r" + Paragraph2 + "\n\r\n\r" + "Best,\n\rMike and Ari" + "\n\r\n\r" + Abstract 
 
+    ##########
+    # Making into MIME object
+    assert type(Subject) == unicode
+    assert type(MessageText) == unicode
 
-    return (Subject,MessageText)
+    # Setting up message (MIME) object:
+    Msg = MIMEText(MessageText, 'plain', 'utf-8')
+    Msg['From'] = Header(u'UMSumSem <UMSumSem@gmail.com>','utf-8')
+    Msg['Subject'] = Header(Subject,'utf-8')
+    Msg['To'] = Header(u'umeconsumsem@googlegroups.com','utf-8')
+    # PRODUCTION: Where to send this: 
+    #Msg['To'] = Header(u'UM,'utf-8')
+
+    return (Msg)
 
 # This is the text of the message we will send to people (not including the subject)
-# Input: None
+# Input: List of: Date,Number,Title,Presenter,Abstract,CoAuthors,Email,SlotType
+#           Note: Confusingly, Slot and Number are the same thing, number is in the schema but slot is facing the public
 # Output: String containing the check in message, which is hard coded
-def MakeCheckInMessage() :
-    # Draft of message:
-    MessageMainText = """Hi,
+def MakeCheckInMessage(RawInfo) :
+    ## Draft of message:
+    MessageMainText = u'''Hi,
 
-This is a just a quick message to ask if you would like to update any information for your summer seminar presentation. Please take a look at the information below. If there is anything you would like to update, you can go do that at the following address. You can also add new information, like a link to the full paper. If you leave a field blank on that site (without spaces) then we'll stick with the old information. Note that you will have to be logged into google (possibly in a separate browser window) via your @umich.edu account for this to work. 
+This is a just a quick message to ask if you would like to update any information for your summer seminar presentation. Please take a look at the information below. If there is anything you would like to update, you can go do that at the following address. You can also add new information, like an abstract. If you leave a field blank on that site (without spaces) then we'll stick with the old information.  
 
 http://goo.gl/forms/VVKiGwkBlbz3NObV2 
 
@@ -131,120 +152,13 @@ Best,
 Mike and Ari
 
 P.S. If you would like to cancel your presentation, you can, but we would like for you to let us know sooner rather than later. Send us an email (at this address).
-P.S.S. If you are having trouble with the form, you can use the old, slightly less reliable, version that doesn't require you be logged in via your umich email: http://goo.gl/forms/QLBVCSh4BQmkf3p62
 
-"""
-    return MessageMainText
-########## End Functions ##########
+'''
 
-
-
-
-
-
-
-
-
-########################################
-# Setting up connections to SQL and email account:
-
-#SQL Dataset:
-SQLCon = sqlite3.connect('SumSemData.db')
-SQLCur = SQLCon.cursor()
-
-# Setting up email account:
-EmailSMTP = smtplib.SMTP('smtp.gmail.com:587')
-EmailSMTP.starttls()
-#Reading in password from file (this is not very secure)
-with open('password','r') as f :
-    print "Setting up email login for UMSumSem:"
-    EmailSMTP.login('UMSumSem',f.readline())
-
-
-########################################
-# Seminar announcements: 
-
-print "Sending appropriate announcements (if any): "
-
-##########
-# Determining who to send these to:
-# Whole email list: 
-Recipients = ['umeconsumsem@googlegroups.com']
-
-
-##########
-# Which seminars to announce: 
-# Outputting up to two seminars that are today or tomorrow: 
-# Note that they need to be assigned to an email address and the 
-# presented cannot be "Open"
-SQLOut = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors,Room 
-                FROM Schedule
-                WHERE datetime(Date,'+12 hours') >= datetime('now','localtime')
-                AND datetime(Date,'+12 hours') <= datetime('now','localtime','+1 days')
-                AND EmailAnnouncement IS NULL
-                AND Presenter != 'Open'
-                AND Email != ''
-                AND Email IS NOT NULL
-                ORDER BY date(Date) ASC
-                Limit 2;''')
-NextTwo =  SQLOut.fetchall()
-
-
-# Sending email message if needed:
-if len(NextTwo) > 0:
-    # Calling function to compose email subject and body as tupple:
-    EmailSubstance = MakeAnnouncement(NextTwo)
-
-    # Setting up message (MIME) object:
-    Msg = MIMEText(EmailSubstance[1].encode('utf-8'), 'plain', 'utf-8')
-    Msg['From'] = 'UMSumSem <UMSumSem@gmail.com>'
-    Msg['To'] = ', '.join(Recipients)
-    Msg['Subject'] = EmailSubstance[0]
-
-
-
-    print "------------------------------------------------------------"
-    print "Sending the following announcement message: "
-    print Msg.items()
-    print Msg.get_payload(decode=True).decode(Msg.get_content_charset(),"replace")
-    print "----------------------------------------"
-    ######################
-    ### Sending message via UMSumSem email:
-    try :
-        # Updating SQL based on successful sending of the email
-        SQLCur.execute('''UPDATE Schedule SET EmailAnnouncement = datetime('now') WHERE Date == '%s';''' % (NextTwo[0][0],))
-        SQLCon.commit()
-        SQLCur.execute('''SELECT Date,EmailAnnouncement FROM Schedule WHERE Date == '%s';''' % (NextTwo[0][0],))
-        print(SQLCur.fetchall())
-        # Sending the email
-        print "Whom the message should be sent to:"
-        print Msg['To']
-        EmailSMTP.sendmail('UMSumSem@gmail.com',Recipients,Msg.as_string())
-        print "Announcement sent and SQL updated!"
-    except : 
-        print "ERROR! Ether email not sent or SQL not updated!"
-else : 
-    print "No announcements needed (according to the SQL statement)"
-
-##########################################
-### Asking for updated information:
-print "Asking for updated information from people (if any): "
-
-# Info for seminars that are between (inclusive) today and two weeks from now
-# and which I have not asked about yet. 
-SQLToAsk = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors,Email,SlotType,CheckIn,Link 
-                FROM Schedule
-                WHERE date(Date) >= date('now','localtime')
-                AND date(Date) <= date('now','localtime','+7 day')
-                AND Email != ''
-                AND Email IS NOT NULL
-                AND CheckIn IS NULL;''')
-for ToAsk in SQLToAsk.fetchall():
-
-    # Things to work with:
-    Presentation = {'Date' : ToAsk[0]}
+    ## Current info, written as a dict
+    Presentation = {'Date' : RawInfo[0]}
     # Loops through filling the dict, ignoring index errors... 
-    for Field in ['Title','Presenter','Abstract','CoAuthors','Email','SlotType','Slot','Link'] :
+    for Field in ['Title','Presenter','Abstract','CoAuthors','Email','SlotType','Slot'] :
       if Field=='Slot' :
         entry = 1
       elif Field=='Title' :
@@ -259,19 +173,17 @@ for ToAsk in SQLToAsk.fetchall():
         entry = 6
       elif Field=='SlotType' :
         entry = 7
-      elif Field=='Link' :
-        entry = 8
       else  :
         entry = None
 
       # Code to put in either text, number, or empty string if some type of empty:
       try :
-        if ToAsk[entry] is None:
+        if RawInfo[entry] is None:
           Presentation[Field] = ''
-        elif isinstance(ToAsk[entry],int) :
-          Presentation[Field] = str(ToAsk[entry])
+        elif isinstance(RawInfo[entry],int) :
+          Presentation[Field] = str(RawInfo[entry])
         else :
-          Presentation[Field] = ToAsk[entry]
+          Presentation[Field] = RawInfo[entry]
       except IndexError :
         Presentation[Field] = ''
 
@@ -284,40 +196,305 @@ for ToAsk in SQLToAsk.fetchall():
             Info+=': '
             Info+=Presentation[PieceOfInfo]
 
-    MessageText = MakeCheckInMessage() + Info
-
-
-    # Assembling the email:
+    MessageText = MessageMainText + Info;
+    # Setting up message (MIME) object:
     Msg = MIMEText(MessageText, 'plain', 'utf-8')
-    Msg['Subject'] = 'Checking up about your presentation on ' + time.strftime("%m/%d",time.strptime(Presentation['Date'], "%Y-%m-%d"))
-    Msg['From'] = 'UMSumSem <UMSumSem@gmail.com>'
-    Msg['To'] = Presentation['Email']
+    Msg['From'] = Header(u'UMSumSem <UMSumSem@gmail.com>','utf-8')
+    Msg['Subject'] = Header(u'Checking up about your summer seminar presentation','utf-8')
+    Msg['To'] = Header(Presentation['Email'],'utf-8')
+
+    return (Msg)
+
+# Updates based on announcement...
+def UpdateListAnnounced(Date,SQLCon) :
+    print Date
+    SQLCur = SQLCon.cursor()
+    SQLCur.execute('''UPDATE Schedule
+                    SET AnnouncementDate = datetime('now')
+                    WHERE Date = ?;''', 
+                    (Date,))
+    SQLCon.commit()
+    SQLCur.close()
+    print "Announcment added to Schedule for Date: ",Date
 
 
-    print "Check up message: "
-    print Msg.items()
-    print Msg.get_payload(decode=True).decode('utf-8')
+# Updates based on check ins...
+def UpdateListCheckedIn(ScheduleID,SQLCon) :
+    SQLCur = SQLCon.cursor()
+    SQLCur.execute('''UPDATE Schedule
+                    SET CheckInDate = datetime('now')
+                    WHERE ScheduleID = ?;''', 
+                    (ScheduleID,))
+    SQLCon.commit()
+    SQLCur.close()
+    print "Check in added to Schedule for SchedID: ",ScheduleID
 
-    print "Exporting to file"
-    FileOut = 'EmailDrafts/Ask' + time.strftime('%y%m%d') + '.txt'
-    # Note: writing normal python decoded from utf-8 even though this theoretically can support unicode... can't get it to work
-    with codecs.open(FileOut,mode='a+b',encoding='utf-8') as MsgFile:
-        MsgFile.write('\r################################################################################')
-        MsgFile.write('\rCheck up message: ')
-        MsgFile.write('\r')
-        MsgFile.write(str(Msg.items()))
-        MsgFile.write('\r')
-        MsgFile.write(Msg.get_payload(decode=True).decode('utf-8'))
-                
-    print "Sending:"
-    try: 
-        EmailSMTP.sendmail('UmSumSem@gmail.com',Presentation['Email'],Msg.as_string())
-        SQLCur.execute('''UPDATE Schedule SET CheckIn = datetime('now','localtime') WHERE Date == '%s' AND Number == %r;''' % (ToAsk[0],ToAsk[1]))
-    except : 
-        print "Error with sending message or updating dataset!"
 
-### Closing connections:
-SQLCon.commit()
-SQLCur.close()
-EmailSMTP.close()
+# Displays a message... 
+def DisplayMessage(Msg):
+        print "------------------------------------------------------------"
+        print "Message: "
+        print Msg.items()
+        print 'Subject: ',decode_header(Msg['Subject'])
+        print 'From: ',decode_header(Msg['From'])
+        print 'To: ',decode_header(Msg['To'])
+        print Msg.get_payload(decode=True)
+        print "------------------------------------------------------------"
 
+# This is a wrapper to call the bottom two programs and append the results together
+def MakeAllMessages(CurrentDate,SQLCur) :
+        # Announcements
+        TimeBeforeToAnnounce = datetime.timedelta(days=2)
+        EarliestToAnnounce = CurrentDate + TimeBeforeToAnnounce
+        AnnouncementDateRange = (CurrentDate,EarliestToAnnounce)
+        Announcements = DefineAnnouncements(AnnouncementDateRange,SQLCur)
+
+        # Check ins
+        TimeBeforeToCheckIn = datetime.timedelta(days=12)
+        EarliestToCheckIn = AnnouncementDateRange[0] + TimeBeforeToCheckIn
+        CheckInDateRange = (AnnouncementDateRange[0],EarliestToCheckIn) 
+        CheckIns = DefineCheckIns(CheckInDateRange,SQLCur)
+
+        # Showing all, together
+        print "----------------------------------------"
+        print "Announcement messages and check in messages ready to go:"
+        EmailsToSend = Announcements + CheckIns
+        for Email in EmailsToSend :
+            DisplayMessage(Email['msg'])
+
+        return(EmailsToSend)
+
+########################################
+# DefineAnnouncments - Setting announcement messages:
+# Input: AnnouncementDateRange - Two dates defining first and last dates of semianrs to announce
+# Output: Announcements - list with zero or one dict of one or two seminars to announce:
+#           Sub entries are:
+#                   1. msg - The email message itself, encoded as utf-8 for all fields
+#                   2. date - The date fo the seminars
+#                   3. type - 'Announcement'
+#                   4. id - Set to -1 
+def DefineAnnouncements(AnnouncementDateRange,SQLCur):
+    ##########
+    # Outputting up to two seminars that are today or tomorrow: 
+    # Note that they need to be assigned to an email address and the 
+    # presented cannot be "Open"
+    print "----------------------------------------"
+    print "Writing appropriate announcements (if any) for: ",AnnouncementDateRange
+    print "----------------------------------------"
+
+    # TODO: Time zone?
+    # Fetching entries in the window, that are asigned to someone, where there has not already been an announcment
+    SQLOut = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors,Email,SlotType,ScheduleID
+                    FROM Schedule
+                    WHERE datetime(Date) >= ?
+                    AND datetime(Date) <= ?
+                    AND AnnouncementDate IS NULL
+                    AND Presenter != 'Open'
+                    AND Email != ''
+                    AND Email IS NOT NULL
+                    ORDER BY date(Date) ASC
+                    Limit 2;''', 
+                    AnnouncementDateRange)
+    ToAnnounce =  SQLOut.fetchall()
+    # Restricts to the first date taken out 
+    if len(ToAnnounce) == 2 :
+        if ToAnnounce[0][0] != ToAnnounce[1][0] :
+            del ToAnnounce[1]
+    print "Announcing : "
+    for Entry in ToAnnounce :
+        print Entry[6],' on ',Entry[0]
+
+    # Making up email message, if needed
+    if len(ToAnnounce) > 0 :
+        # Calling function to compose email subject and body as tupple:
+        Msg = MakeAnnouncement(ToAnnounce)
+        
+        # Printing it
+        print "Announcement message: "
+        Announcement = [{'date':ToAnnounce[0][0],'id':-1,'msg':Msg,'type':'Announcement'}]
+        print Announcement[0]
+        DisplayMessage(Announcement[0]['msg'])
+    else :
+        # If no seminars, return an empty list
+        Announcement = []
+
+    return(Announcement)
+
+########################################
+# DefineCheckIns setting check in messages:
+# Input: AnnouncementDateRange - Two dates defining first and last dates of semianrs to announce
+# Output: Announcements - dict of one or two seminars to announce:
+#           Sub entries are:
+#                   1. msg - The email message itself, encoded as utf-8 for all fields
+#                   2. date - The date fo the seminars
+#                   3. type - 'Announcement'
+#                   4. id - Set to -1 
+def DefineCheckIns(CheckInDateRange,SQLCur):
+    ## Check in messages:
+    CheckIns = []
+
+    ##########
+    # Listing of people to check in with, along with info to update... 
+    print "----------------------------------------"
+    print "Writing check in messages for the following dates: ",CheckInDateRange
+    print "----------------------------------------"
+    # Valid entries, in the date range, where we have no tchecked in
+    # TODO: Time zone?
+    SQLToCheck = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors,Email,SlotType,ScheduleID
+                    FROM Schedule
+                    WHERE datetime(Date) >= ?
+                    AND datetime(Date) <= ?
+                    AND AnnouncementDate IS NULL
+                    AND Email != ''
+                    AND Email IS NOT NULL
+                    AND CheckInDate IS NULL
+                    ORDER BY date(Date) ASC
+                    Limit 2;''', 
+                    CheckInDateRange)
+    ToCheckInWith =  SQLToCheck.fetchall()
+    print "Checking in with: "
+    for Entry in ToCheckInWith :
+        print Entry[6],' on ',Entry[0]
+    
+    for Entry in ToCheckInWith :
+        AskMsg = MakeCheckInMessage(Entry)
+        CheckInEmail = {'id':Entry[8],'date':Entry[0],'msg':AskMsg,'type':'CheckIn'}
+        print CheckInEmail
+        CheckIns.append(CheckInEmail)
+    return(CheckIns)
+
+########################################
+# This sends the specified emails:
+# I.e. Taking EmailsToSend and sending them, using smtp on the gmail account
+#       Also reqiuires a password, etc. 
+def SendEmails(EmailsToSend,SQLCon) :
+    if len(EmailsToSend) > 0 :
+        print "\n\r\n\r\n\r"
+        print "--------------------------------------------------------------------------------"
+        print "Sending email messages: "
+        print "--------------------------------------------------------------------------------"
+
+        # Setting up email account:
+        # Note: If there are a lot of email messages (More than 20 or so), this may need to be done more than once
+        try : 
+            EmailSMTP = smtplib.SMTP('smtp.gmail.com:587')
+            EmailSMTP.starttls()
+            # Reading in password from file (this is not very secure)
+            with open('../Forms/password','r') as f :
+                print "Setting up email login for UMSumSem:"
+                EmailSMTP.login('UMSumSem',f.readline())
+            EmailSetup = True
+        except :
+            EmailSetup = False
+            print "WARNING: Error with email setup, not sending messages"
+
+        if EmailSetup == True :
+            # Sending the emails
+            print "Sending messages"
+            for Email in EmailsToSend :
+                # Things that will be sent:
+                Msg = Email['msg']
+                Subject = decode_header(Msg['Subject'])[0][0]
+                From = decode_header(Msg['From'])[0][0]
+                To = decode_header(Msg['To'])[0][0]
+
+                # Trying to sedn them
+                print Subject,"|From:",From,"|To:",To
+                try: 
+                    EmailSMTP.sendmail(From,To,Msg.as_string())
+                    print 'Message sent!'
+                    EmailSent = True
+                except: 
+                    EmailSent = False
+                    print 'WARNING: Error sending. Subject: ',decode_header(Msg['Subject']),"|To",decode_header(Msg['To'])[0][0]
+
+                # Updating the dataset to say that they are sent:
+                # TODO: What if one fails and not another?
+                if EmailSent == True :
+                    if Email['type'] == "Announcement" :
+                        UpdateListAnnounced(Email['date'],SQLCon)
+                    elif Email['type'] == "CheckIn" :
+                        UpdateListCheckedIn(Email['id'],SQLCon)
+                    print 'SQL updated!'
+            EmailSMTP.quit()
+            print "Email connection closed"
+
+########## End Functions ##########
+
+
+
+
+################################################################################
+# This is basically the program to do all of this stuff:
+
+
+######################################## 
+# TESTING: This loops through future dates to see that thigns work properly
+def test():
+    print '********************************************************************************'
+    print '* Performing checks'
+    print '********************************************************************************'
+    StartTime = datetime.datetime(2017,6,11)
+    for FutureDays in range(90) :
+        print "-------------------- Testing iteration --------------------"
+        # Current date, for testing
+        DeltaTime = datetime.timedelta(days=FutureDays)
+        CurrentDate = StartTime + DeltaTime
+
+        #SQL Dataset:
+        SQLCon = sqlite3.connect('../Database/Testing/17AllotmentSumSemData.db')
+    
+        ## Getting announcements and check ins
+        SQLCur = SQLCon.cursor()
+        EmailsToSend = MakeAllMessages(CurrentDate,SQLCur)
+        SQLCur.close()
+
+        # Making sure they are sent to the test address:
+        for Email in EmailsToSend:
+            Email['msg'].replace_header('To',Header(u'zabek@protonmail.com','utf-8'))  
+
+
+        ## Sending emails
+        # Ensuring emails are sent to the testing address
+        if len(EmailsToSend) > 0 :
+            for Email in EmailsToSend:
+                assert decode_header(Email['msg']['To'])[0][0] == 'zabek@protonmail.com' 
+                assert len(decode_header(Email['msg']['To'])) == 1
+        SendEmails(EmailsToSend,SQLCon)
+
+
+# Call of the program, for actually sending emails... 
+def production():
+    print '********************************************************************************'
+    print '* Sending out real emails'
+    print '********************************************************************************'
+    # Current date:
+    CurrentDate = datetime.datetime.today()
+    ######################################## 
+    #SQL Dataset:
+    SQLCon = sqlite3.connect('../Database/SumSemData.db')
+
+    ## Getting announcements and check ins
+    SQLCur = SQLCon.cursor()
+    EmailsToSend = MakeAllMessages(CurrentDate,SQLCur)
+    SQLCur.close()
+
+    ## Sending emails
+    SendEmails(EmailsToSend,SQLCon)
+
+
+
+# Main function, will default to testing unless passed PRODUCTION as first argument
+def main():
+    print "********************************************************************************"
+    print "* Begun email update program "
+    if len(sys.argv) > 1 and sys.argv[1] == "PRODUCTION" :
+        production()
+    else :
+        test()
+    print "********************************************************************************"
+    print "File completed"
+    print "********************************************************************************"
+
+if __name__ == '__main__':
+    main()

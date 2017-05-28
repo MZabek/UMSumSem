@@ -1,25 +1,27 @@
-# build the presentation, including moving files to where they should be
-
-
-
 # Main setup
 #.PHONY : all
 
+# Sending out emails for the day
+ProductionEmails : Emails.py ../Database/SumSemData.db
+	python Emails.py PRODUCTION
+
+# Testing the email program
+TestEmails : Emails.py
+	python Emails.py
+
+# Building and posting website (note, only done once, no --watch):
+MakeWebsite : ./WebsiteSetup/schedule.md
+	cd WebsiteSetup; JEKYLL_ENV=production jekyll build 
+
+PostWebsite : 
+	aws s3 sync WebsiteSetup/_site/ s3://seminar.mikezabek.com/ --delete
 	
-# Update the website/schedule: 
-# Note that git has to be configured here to work without a password 
-# It will also ignore errors, since these will occur when there are no changes
-# to the repository and commits/pushes occur... 
+# Update the schedule: 
 ./WebsiteSetup/schedule.md MakeMDSchedule.log : ../Database/SumSemData.db MakeMDSchedule.py 
 	# Making schedule for website:echo "Making schedule:"
 	echo "Making schedule"
 	date > MakeMDSchedule.log
 	python MakeMDSchedule.py >> MakeMDSchedule.log
-
-Website : 
-	# Building and posting website:
-	cd WebsiteSetup; JEKYLL_ENV=production jekyll build 
-	aws s3 sync WebsiteSetup/_site/ s3://seminar.mikezabek.com/ --delete
 
 # The sign up and allotment: 
 # Note: This should only be created once, at the official allotment date
@@ -39,6 +41,7 @@ ProductionAllotment : UpdateSignup.py  Allotment.py ../Forms/2017\ SignupForm.cs
 	# At this point you write a nice email message to the people who were not allocated slots
 	# And a general email message to everyone...
 
+# This makes the allotment document, builds the website, but doesn't actually post it
 TestAllotment : UpdateSignup.py  Allotment.py ../Forms/2017\ SignupForm.csv ../Forms/2017\ Email\ signup.csv
 	# Reading in from csv files:
 	python UpdateSignup.py > UpdateSignup.log
@@ -53,6 +56,7 @@ TestAllotment : UpdateSignup.py  Allotment.py ../Forms/2017\ SignupForm.csv ../F
 # Cleaning the directory
 #.PHONY : clean
 #clean : 
-#	rm SumSemData.db
+#	rm ../Database/SumSemData.db
 #	rm *.log
+#	rm -r WebsiteSetup/_site/
 #
