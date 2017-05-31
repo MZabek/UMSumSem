@@ -138,15 +138,17 @@ def MakeCheckInMessage(RawInfo) :
     ## Draft of message:
     MessageMainText = u'''Hi,
 
-This is a just a quick message to ask if you would like to update any information for your summer seminar presentation. Please take a look at the information below. If there is anything you would like to update, you can go do that at the following address. You can also add new information, like an abstract. If you leave a field blank on that site (without spaces) then we'll stick with the old information.  
+This is a just a quick message about updating your summer seminar information. We listed what we have at the end of this email. If there is anything you would like to update, you can go do that at the following address. If you leave a field blank on that site (without spaces) then we'll stick with the old information.  
 
-http://goo.gl/forms/VVKiGwkBlbz3NObV2 
+https://goo.gl/forms/8e1vTI1B8MWjQwev1
 
-You should see the new information up on the website within a day or two. It will also be in the email announcement that we send. 
+Note that when you fill out the form, it's important you include the "IDNumber" that we list below. That will make it eay for us to update your data quickly. 
+
+You should see the new information up on the website within a few hours, and definitely within a day or two. The info will also be in the email announcement that we send. Let us know if it takes more than two days for your info to update. 
 
 If you know of people, like faculty, that you would like to attend, we encourage you to reach out to them. We will send one announcement the day before your seminar. It will only go to the summer seminar mailing list, though, so most faculty members won't receive it and some students might not either. Even if people get our messages we have found that personal messages are often more effective than our advertising. 
 
-In any case, we're looking forward to your presentation!
+We are looking forward to your presentation!
 
 Best,
 Mike and Ari
@@ -155,45 +157,28 @@ P.S. If you would like to cancel your presentation, you can, but we would like f
 
 '''
 
+
     ## Current info, written as a dict
-    Presentation = {'Date' : RawInfo[0]}
-    # Loops through filling the dict, ignoring index errors... 
-    for Field in ['Title','Presenter','Abstract','CoAuthors','Email','SlotType','Slot'] :
-      if Field=='Slot' :
-        entry = 1
-      elif Field=='Title' :
-        entry = 2
-      elif Field=='Presenter' :
-        entry = 3
-      elif Field=='Abstract' :
-        entry = 4
-      elif Field=='CoAuthors' :
-        entry = 5
-      elif Field=='Email' :
-        entry = 6
-      elif Field=='SlotType' :
-        entry = 7
-      else  :
-        entry = None
+    Presentation = {'IDNumber' : RawInfo[8],'Date' : RawInfo[0],'PresentationNumber':RawInfo[1],'Presenter': RawInfo[3],'CoAuthors':RawInfo[5],'Title': RawInfo[2],'Abstract':RawInfo[4],'StandardOrHalf':RawInfo[7],'Email':RawInfo[6]}
 
-      # Code to put in either text, number, or empty string if some type of empty:
+    # Code to standardize things as strings for display
+    for Field in Presentation :
       try :
-        if RawInfo[entry] is None:
-          Presentation[Field] = ''
-        elif isinstance(RawInfo[entry],int) :
-          Presentation[Field] = str(RawInfo[entry])
+        if Presentation[Field] is None:
+           Presentation[Field] = u''
+        elif isinstance(Presentation[Field],int) :
+          Presentation[Field] = str(Presentation[Field])
         else :
-          Presentation[Field] = RawInfo[entry]
+          Presentation[Field] = Presentation[Field]
       except IndexError :
-        Presentation[Field] = ''
+        Presentation[Field] = u''
 
-
-    Info = "Here is the info we are currently advertising on the website:"
-    for PieceOfInfo in Presentation :
+    Info = "Here is the info we are currently advertising:"
+    for PieceOfInfo in  ['IDNumber','Date','PresentationNumber','Presenter','CoAuthors','Title','Abstract','StandardOrHalf','Email'] :
         if PieceOfInfo != 'Email' :
-            Info+='\r\n'
+            Info+=u'\r\n'
             Info+=PieceOfInfo
-            Info+=': '
+            Info+=u': '
             Info+=Presentation[PieceOfInfo]
 
     MessageText = MessageMainText + Info;
@@ -376,17 +361,13 @@ def SendEmails(EmailsToSend,SQLCon) :
 
         # Setting up email account:
         # Note: If there are a lot of email messages (More than 20 or so), this may need to be done more than once
-        try : 
-            EmailSMTP = smtplib.SMTP('smtp.gmail.com:587')
-            EmailSMTP.starttls()
-            # Reading in password from file (this is not very secure)
-            with open('../Forms/password','r') as f :
-                print "Setting up email login for UMSumSem:"
-                EmailSMTP.login('UMSumSem',f.readline())
-            EmailSetup = True
-        except :
-            EmailSetup = False
-            print "WARNING: Error with email setup, not sending messages"
+        EmailSMTP = smtplib.SMTP('smtp.gmail.com:587')
+        EmailSMTP.starttls()
+        # Reading in password from file (this is not very secure)
+        with open('../Forms/password','r') as f :
+            print "Setting up email login for UMSumSem:"
+            EmailSMTP.login('UMSumSem',f.readline())
+        EmailSetup = True
 
         if EmailSetup == True :
             # Sending the emails
@@ -434,8 +415,8 @@ def test():
     print '********************************************************************************'
     print '* Performing checks'
     print '********************************************************************************'
-    StartTime = datetime.datetime(2017,6,11)
-    for FutureDays in range(90) :
+    StartTime = datetime.datetime(2017,5,31)
+    for FutureDays in range(2) :
         print "-------------------- Testing iteration --------------------"
         # Current date, for testing
         DeltaTime = datetime.timedelta(days=FutureDays)
