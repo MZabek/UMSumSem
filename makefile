@@ -3,11 +3,11 @@
 
 # Sending out emails for the day
 ProductionEmails : Emails.py ../Database/SumSemData.db
-	python Emails.py PRODUCTION
+	python Emails.py PRODUCTION >> ProductionEmails.log
 
 # Testing the email program
 TestEmails : Emails.py
-	python Emails.py
+	python Emails.py > TestEmails.log
 
 # Building and posting website (note, only done once, no --watch):
 MakeWebsite : ./WebsiteSetup/schedule.md
