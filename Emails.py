@@ -361,13 +361,17 @@ def SendEmails(EmailsToSend,SQLCon) :
 
         # Setting up email account:
         # Note: If there are a lot of email messages (More than 20 or so), this may need to be done more than once
-        EmailSMTP = smtplib.SMTP('smtp.gmail.com:587')
-        EmailSMTP.starttls()
-        # Reading in password from file (this is not very secure)
-        with open('../Forms/password','r') as f :
-            print "Setting up email login for UMSumSem:"
-            EmailSMTP.login('UMSumSem',f.readline())
-        EmailSetup = True
+        try: 
+            EmailSMTP = smtplib.SMTP('smtp.gmail.com:587')
+            EmailSMTP.starttls()
+            # Reading in password from file (this is not very secure)
+            with open('../Forms/password','r') as f :
+                print "Setting up email login for UMSumSem:"
+                EmailSMTP.login('UMSumSem',f.readline())
+            EmailSetup = True
+        except : 
+            print "Error with establishing email connection"
+            EmailSetup = False
 
         if EmailSetup == True :
             # Sending the emails
