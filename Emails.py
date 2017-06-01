@@ -173,7 +173,7 @@ P.S. If you would like to cancel your presentation, you can, but we would like f
       except IndexError :
         Presentation[Field] = u''
 
-    Info = "Here is the info we are currently advertising:"
+    Info = "Here is the IDNumber and the info we are currently advertising:"
     for PieceOfInfo in  ['IDNumber','Date','PresentationNumber','Presenter','CoAuthors','Title','Abstract','StandardOrHalf','Email'] :
         if PieceOfInfo != 'Email' :
             Info+=u'\r\n'
