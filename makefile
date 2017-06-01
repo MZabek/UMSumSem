@@ -21,7 +21,7 @@ PostWebsite :
 	aws s3 sync WebsiteSetup/_site/ s3://seminar.mikezabek.com/ --delete
 	
 # Update the schedule: 
-./WebsiteSetup/schedule.md MakeMDSchedule.log : ../Database/SumSemData.db MakeMDSchedule.py 
+Schedule : ../Database/SumSemData.db MakeMDSchedule.py 
 	# Making schedule for website:echo "Making schedule:"
 	echo "Making schedule"
 	date > MakeMDSchedule.log
