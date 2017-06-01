@@ -162,11 +162,11 @@ def main():
                                     SET Presenter=? 
                                     WHERE ScheduleID==?
                                 ;''', (ToEnter['Presenter'],ToEnter['What is the IDNumber?']))
-            if 'CoAuthors' in ToEnter and ToEnter['CoAuthors'] != '':
+            if 'CoAuthors' in ToEnter and ToEnter['Co-authors'] != '':
                 SQLCur.execute('''UPDATE Schedule 
                                     SET CoAuthors=?
                                     WHERE ScheduleID==?
-                                ;''', (ToEnter['CoAuthors'],ToEnter['What is the IDNumber?']))
+                                ;''', (ToEnter['Co-authors'],ToEnter['What is the IDNumber?']))
             SQLCon.commit()
             print('Finished updating with no errors')
         elif len(FetchedEntries) == 0 :
