@@ -135,6 +135,7 @@ def main():
         except KeyError:
             print('No date was entered (probably fine)')
 
+        print(ToEnter)
         print(ToEnter['Timestamp'],'|',ToEnter['What is the IDNumber?'])
 
         ## Finding the entry to update:
@@ -143,30 +144,36 @@ def main():
                                     WHERE ScheduleID ==?;''', (ToEnter['What is the IDNumber?'],))
         FetchedEntries = Entries.fetchall()
         print('This is the entry to be updated:')
-        print(FetchedEntries[0][0])
+        print(FetchedEntries[0])
 
         # Updating the dataset, if one match and entery was not cancelled after its appearance on the sheet:
-        if len(FetchedEntries) == 1  and FetchedEntries[0][2] is not None and time.strptime(ToEnter['Timestamp'],"%m/%d/%Y %H:%M:%S") < time.strptime(FetchedEntries[0][2],"%Y-%m-%d %H:%M:%S") :
-            if 'Title:' in ToEnter and ToEnter['Title'] != '':
+        print(FetchedEntries[0][2])
+        print(FetchedEntries)
+        if len(FetchedEntries) == 1  and FetchedEntries[0][2] is None or time.strptime(ToEnter['Timestamp'],"%m/%d/%Y %H:%M:%S") > time.strptime(FetchedEntries[0][2],"%Y-%m-%d %H:%M:%S") :
+            if 'Title' in ToEnter and ToEnter['Title'] != '':
                 SQLCur.execute('''UPDATE Schedule 
                                     SET Title=? 
                                     WHERE ScheduleID ==?
                                 ;''', (ToEnter['Title'],ToEnter['What is the IDNumber?']))
+                print('Title|',ToEnter['Title'])
             if 'Abstract' in ToEnter and ToEnter['Abstract'] != '':
                 SQLCur.execute('''UPDATE Schedule 
                                     SET Abstract=?
                                     WHERE ScheduleID ==?
                                 ;''', (ToEnter['Abstract'],ToEnter['What is the IDNumber?']))
+                print('Abstract|',ToEnter['Abstract'])
             if 'Presenter' in ToEnter and ToEnter['Presenter'] != '':
                 SQLCur.execute('''UPDATE Schedule 
                                     SET Presenter=? 
                                     WHERE ScheduleID==?
                                 ;''', (ToEnter['Presenter'],ToEnter['What is the IDNumber?']))
-            if 'CoAuthors' in ToEnter and ToEnter['Co-authors'] != '':
+                print('Presenter|',ToEnter['Presenter'])
+            if 'Co-authors' in ToEnter and ToEnter['Co-authors'] != '':
                 SQLCur.execute('''UPDATE Schedule 
                                     SET CoAuthors=?
                                     WHERE ScheduleID==?
                                 ;''', (ToEnter['Co-authors'],ToEnter['What is the IDNumber?']))
+                print('Co-authors|',ToEnter['Co-authors'])
             SQLCon.commit()
             print('Finished updating with no errors')
         elif len(FetchedEntries) == 0 :
@@ -175,7 +182,7 @@ def main():
         elif len(FetchedEntries) > 1 :
             print("ERROR: More than one entry found in database")
             print("ERROR: Check this identifying information: %s " % (ToEnter['What is the IDNumber?']))
-        elif FetchedEntries[0][2] is not None and not time.strptime(ToEnter['Timestamp'],"%m/%d/%Y %H:%M:%S") < time.strptime(FetchedEntries[0][2],"%Y-%m-%d %H:%M:%S") :
+        elif FetchedEntries[0][2] is not None and time.strptime(ToEnter['Timestamp'],"%m/%d/%Y %H:%M:%S") <= time.strptime(FetchedEntries[0][2],"%Y-%m-%d %H:%M:%S") :
             print('WARNING: this seminar was subsequently cancelled')
 
 
