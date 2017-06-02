@@ -130,8 +130,8 @@ def main():
         # Converting month and day:
         try :
             MonthAndDay = ToEnter['What day is your seminar scheduled for?'].split('/')
-            DateString = '''%04d-%02d-%02d''' % (int(Year),int(MonthAndDay[0]),int(MonthAndDay[1]))
-            ToEnter['DateString'] = DateString
+            DateUString = u'''%04d-%02d-%02d''' % (int(Year),int(MonthAndDay[0]),int(MonthAndDay[1]))
+            ToEnter['DateUString'] = DateUString
         except KeyError:
             print('No date was entered (probably fine)')
 
@@ -143,46 +143,55 @@ def main():
                                     FROM Schedule 
                                     WHERE ScheduleID ==?;''', (ToEnter['What is the IDNumber?'],))
         FetchedEntries = Entries.fetchall()
-        print('This is the entry to be updated:')
-        print(FetchedEntries[0])
 
         # Updating the dataset, if one match and entery was not cancelled after its appearance on the sheet:
-        print(FetchedEntries[0][2])
-        print(FetchedEntries)
-        if len(FetchedEntries) == 1  and FetchedEntries[0][2] is None or time.strptime(ToEnter['Timestamp'],"%m/%d/%Y %H:%M:%S") > time.strptime(FetchedEntries[0][2],"%Y-%m-%d %H:%M:%S") :
+        if len(FetchedEntries) == 1  and FetchedEntries[0][2] is None or time.strptime(ToEnter['Timestamp'],'%m/%d/%Y %H:%M:%S') > time.strptime(FetchedEntries[0][2],'%Y-%m-%d %H:%M:%S') :
+            # Printing info about what was found
+            print('This is the entry to be updated:')
+            print(FetchedEntries[0][0])
+            
+            # Validating that everything is the correct type
+            for Entry in FetchedEntries[0] :
+                if Entry :
+                    assert type(Entry) == unicode or type(Entry) == int
+            for Field in ToEnter :
+                if ToEnter[Field] :
+                    assert type(ToEnter[Field]) == unicode or type(ToEnter[Field]) == int
+
+            # Writing entries
             if 'Title' in ToEnter and ToEnter['Title'] != '':
                 SQLCur.execute('''UPDATE Schedule 
                                     SET Title=? 
                                     WHERE ScheduleID ==?
                                 ;''', (ToEnter['Title'],ToEnter['What is the IDNumber?']))
-                print('Title|',ToEnter['Title'])
+                print(u'Title|',ToEnter['Title'])
             if 'Abstract' in ToEnter and ToEnter['Abstract'] != '':
                 SQLCur.execute('''UPDATE Schedule 
                                     SET Abstract=?
                                     WHERE ScheduleID ==?
                                 ;''', (ToEnter['Abstract'],ToEnter['What is the IDNumber?']))
-                print('Abstract|',ToEnter['Abstract'])
+                print(u'Abstract|',ToEnter['Abstract'])
             if 'Presenter' in ToEnter and ToEnter['Presenter'] != '':
                 SQLCur.execute('''UPDATE Schedule 
                                     SET Presenter=? 
                                     WHERE ScheduleID==?
                                 ;''', (ToEnter['Presenter'],ToEnter['What is the IDNumber?']))
-                print('Presenter|',ToEnter['Presenter'])
+                print(u'Presenter|',ToEnter['Presenter'])
             if 'Co-authors' in ToEnter and ToEnter['Co-authors'] != '':
                 SQLCur.execute('''UPDATE Schedule 
                                     SET CoAuthors=?
                                     WHERE ScheduleID==?
                                 ;''', (ToEnter['Co-authors'],ToEnter['What is the IDNumber?']))
-                print('Co-authors|',ToEnter['Co-authors'])
+                print(u'Co-authors|',ToEnter['Co-authors'])
             SQLCon.commit()
             print('Finished updating with no errors')
         elif len(FetchedEntries) == 0 :
-            print("WARNING: This identifying information not found in database: %s" % (ToEnter['What is the IDNumber?']))
-            print("This may be due to a valid cancellation")
+            print('WARNING: This identifying information not found in database: %s' % (ToEnter['What is the IDNumber?']))
+            print('This may be due to a valid cancellation')
         elif len(FetchedEntries) > 1 :
-            print("ERROR: More than one entry found in database")
-            print("ERROR: Check this identifying information: %s " % (ToEnter['What is the IDNumber?']))
-        elif FetchedEntries[0][2] is not None and time.strptime(ToEnter['Timestamp'],"%m/%d/%Y %H:%M:%S") <= time.strptime(FetchedEntries[0][2],"%Y-%m-%d %H:%M:%S") :
+            print('ERROR: More than one entry found in database')
+            print('ERROR: Check this identifying information: %s ' % (ToEnter['What is the IDNumber?']))
+        elif FetchedEntries[0][2] is not None and time.strptime(ToEnter['Timestamp'],'%m/%d/%Y %H:%M:%S') <= time.strptime(FetchedEntries[0][2],'%Y-%m-%d %H:%M:%S') :
             print('WARNING: this seminar was subsequently cancelled')
 
 
@@ -225,22 +234,22 @@ def main():
 
         # Converting month and day:
         MonthAndDay = ToEnter['Date'].split('/')
-        DateString = '''%04d-%02d-%02d''' % (int(Year),int(MonthAndDay[0]),int(MonthAndDay[1]))
-        ToEnter['DateString'] = DateString
+        DateUString = u'''%04d-%02d-%02d''' % (int(Year),int(MonthAndDay[0]),int(MonthAndDay[1]))
+        ToEnter['DateUString'] = DateUString
 
         ## Finding the relevant entry
         # Finding the Entry
-        print('Finding:',ToEnter['Email'],DateString,ToEnter['Slot'])
+        print('Finding:',ToEnter['Email'],ToEnter['DateUString'],ToEnter['Slot'])
         SQLCur.execute('''SELECT Email,Date,Number,CancellationDate
                             FROM Schedule 
                             WHERE Date==? AND Number==?
-                        ;''', (ToEnter['DateString'],ToEnter['Slot']))
+                        ;''', (ToEnter['DateUString'],ToEnter['Slot']))
         Entries = SQLCur.fetchall()
         print('This is what I found:',Entries)
 
 
         ## Updating if not already updated and checking for errors in SQL
-        if len(Entries) == 1 and Entries[0][3] is not None and time.strptime(ToEnter['Timestamp'],"%m/%d/%Y %H:%M:%S") < time.strptime(Entries[0][3],"%Y-%m-%d %H:%M:%S"):
+        if len(Entries) == 1 and Entries[0][3] is not None and time.strptime(ToEnter['Timestamp'],'%m/%d/%Y %H:%M:%S') < time.strptime(Entries[0][3],'%Y-%m-%d %H:%M:%S'):
             print('Already updated: timestamp is older than CancellationDate in the database')
         elif len(Entries) == 0 :
             print('Entry not found, perhaps it was already cancelled')
@@ -250,7 +259,7 @@ def main():
                                     LastEmail=Email,
                                     Title=NULL,Abstract=NULL,CoAuthors=NULL,AnnouncementDate=NULL,CheckInDate=NULL 
                                 WHERE Email==? AND Date==? AND Number==?
-                            ;''', (ToEnter['New email'],ToEnter['New presenter'],ToEnter['Email'],ToEnter['DateString'],ToEnter['Slot']))
+                            ;''', (ToEnter['New email'],ToEnter['New presenter'],ToEnter['Email'],ToEnter['DateUString'],ToEnter['Slot']))
             SQLCon.commit()
             print('Entry switched to New presenter, %s' % (ToEnter['New email'],))
         elif len(Entries) == 1 and ToEnter['Re-allocate the slot?'] == 'Post as open' :
@@ -260,13 +269,13 @@ def main():
                                                 Title=NULL,Abstract=NULL,CoAuthors=NULL,
                                                 AnnouncementDate=NULL,CheckInDate=NULL 
                                             WHERE Email==? AND Date==? AND Number==?
-                            ;''', (ToEnter['Email'],ToEnter['DateString'],ToEnter['Slot'])) 
+                            ;''', (ToEnter['Email'],ToEnter['DateUString'],ToEnter['Slot'])) 
             SQLCon.commit()
             print('Entry switched to open')
         elif len(Entries) == 1 and ToEnter['Re-allocate the slot?'] == 'Delete the entry' :
             SQLCur.execute('''DELETE FROM Schedule 
                                     WHERE Email==? AND Date==? AND Number==?
-                            ;''', (ToEnter['Email'],ToEnter['DateString'],ToEnter['Slot'])) 
+                            ;''', (ToEnter['Email'],ToEnter['DateUString'],ToEnter['Slot'])) 
             SQLCon.commit()
             print('Entry deleted')
         elif len(Entries) > 1 :
