@@ -3,7 +3,7 @@
 
 # Update the database with new info
 UpdateInfo : UpdateInfo.py
-	python UpdateInfo.py
+	python UpdateInfo.py >> UpdateInfo.log
 
 # Sending out emails for the day
 ProductionEmails : Emails.py ../Database/SumSemData.db
