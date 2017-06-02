@@ -10,6 +10,7 @@
   - Needed google-api-
   - Needed to configure cron jobs to have the appropriate profile when running them
     - E.g. source /user/ec2-user/.bash_profile before each cron task
+  - Also need kitchen to deal with unicode irregularities (I should have just done thigns in python 3)
 2. Instance size -- t2.micro was throttled for the allocation call, and was slow
   - Tried running on c4.large, and was about 10x faster (the same setup, via Amazon Machine Image) 
   - Likely can use c4.large for allocation, then t2.nano for maintenance

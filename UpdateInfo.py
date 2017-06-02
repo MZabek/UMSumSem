@@ -18,12 +18,18 @@ import sqlite3
 import time
 import re
 import datetime
+import sys
+from kitchen.text.converters import getwriter
+
 
 from apiclient import discovery
 import oauth2client
 from oauth2client import client
 from oauth2client import tools
 
+# Suggested fix for printing unicode strings in terminal...
+UTF8Writer = getwriter('utf8')
+sys.stdout = UTF8Writer(sys.stdout)
 
 try:
     import argparse
