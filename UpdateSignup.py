@@ -10,11 +10,12 @@ import unicodecsv as csv
 import regex as re
 import sqlite3
 import os
-
-# Setting piping encoding to unicode
 import sys
-import codecs
-sys.stdout = codecs.getwriter('utf8')(sys.stdout)
+from kitchen.text.converters import getwriter
+
+# Suggested fix for printing unicode strings in terminal...
+UTF8Writer = getwriter('utf8')
+sys.stdout = UTF8Writer(sys.stdout)
 
 ########################################
 # SQL Dataset:

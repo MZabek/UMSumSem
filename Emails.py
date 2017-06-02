@@ -13,6 +13,11 @@ from email.header import decode_header
 import smtplib
 import codecs
 import sys
+from kitchen.text.converters import getwriter
+
+# Suggested fix for printing unicode strings in terminal...
+UTF8Writer = getwriter('utf8')
+sys.stdout = UTF8Writer(sys.stdout)
 
 ########## Functions ##########
 

@@ -10,9 +10,11 @@ import sqlite3
 import sys
 import os
 import codecs
+from kitchen.text.converters import getwriter
 
-# Setting piping encoding to unicode
-sys.stdout = codecs.getwriter('utf8')(sys.stdout)
+# Suggested fix for printing unicode strings in terminal...
+UTF8Writer = getwriter('utf8')
+sys.stdout = UTF8Writer(sys.stdout)
 
 
 ########################################
