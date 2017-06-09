@@ -20,6 +20,8 @@ sys.stdout = UTF8Writer(sys.stdout)
 ########################################
 #SQL Database connection:
 sqlconn = sqlite3.connect('../Database/SumSemData.db')
+# Testing
+#sqlconn = sqlite3.connect('../Database/Testing/17AllotmentSumSemData.db')
 c = sqlconn.cursor()
 
 # Making folders for website:
@@ -41,8 +43,19 @@ MDSchedule.write('---\n')
 
 # Getting entries from database
 print "Making full schedule with the following dates:"
-CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,SlotType,Link FROM Schedule ORDER BY Date ASC, Number ASC;''')
+CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,SlotType,Link 
+                            FROM Schedule ORDER BY Date ASC, Number ASC;''')
 for CalEntry in CalEntries.fetchall() :
+
+    # Getting room number, if in reservation section
+    RoomList = c.execute('''SELECT Room 
+                                FROM RoomReservations WHERE Date=?;''',
+                                (CalEntry[0],)).fetchall()
+    if RoomList :
+        print RoomList[0]
+        Room = RoomList[0][0]
+    else :
+        Room = None
 
     # Checking that stuff is unicode, integer, or empty:
     for info in CalEntry :
@@ -75,6 +88,11 @@ for CalEntry in CalEntries.fetchall() :
     if CalEntry[3] and CalEntry[3] != 'TBD' :
         MDSchedule.write('\n\n### ')
         MDSchedule.write(CalEntry[3])
+    # Room, if specified
+    if Room and Room != '' :
+        MDSchedule.write('\n\n')
+        MDSchedule.write('#### ')
+        MDSchedule.write(Room)
     # Co Authors
     if CalEntry[4] and CalEntry[4] != '' and CalEntry[4] != 'N/A' and CalEntry[4] != None :
         MDSchedule.write('\n\n')
@@ -97,6 +115,7 @@ MDSchedule.close()
 # Specific entries for upcoming events
 
 # Getting entries
+
 CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,SlotType,Link 
                         FROM Schedule 
                         WHERE date(Date) >= date('now','localtime','+12 hours') 
@@ -118,6 +137,17 @@ for CalEntry in CalEntries.fetchall() :
     # Checking that stuff is unicode, integer, or empty:
     for info in CalEntry :
         assert (type(info) == unicode ) | (type(info) == int) | (info == None)
+
+    # Getting room number, if in reservation section
+    RoomList = c.execute('''SELECT Room 
+                                FROM RoomReservations WHERE Date=?;''',
+                                (CalEntry[0],)).fetchall()
+    if RoomList :
+        print RoomList[0]
+        Room = RoomList[0][0]
+    else :
+        Room = None
+
 
     # Filename to save as: 
     # Date and presenter
@@ -158,10 +188,14 @@ for CalEntry in CalEntries.fetchall() :
     MDEntry.write('---\n')
 
     # Writing text to file:
+    # Room number
+    if Room and Room != '':
+        MDEntry.write('#### ')
+        MDEntry.write(Room)
     # Slot, if needed
     if CalEntry[6] and CalEntry[6] == 'Half (40 minutes)' :
-        MDEntry.write('## ')
-        MDEntry.write(' (Slot ')
+        MDEntry.write('\n\n')
+        MDEntry.write('#### (Slot ')
         MDEntry.write(str(CalEntry[1]))
         MDEntry.write(')')
     # Co Authors

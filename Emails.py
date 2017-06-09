@@ -25,8 +25,9 @@ sys.stdout = UTF8Writer(sys.stdout)
 # Function to compose announcement emails:
 # Input: NextTwo - List of up to two lists: Date,Number,Title,Presenter,Abstract,CoAuthors,Email,SlotType
 #           Note: Confusingly, Slot and Number are the same thing, number is in the schema but slot is facing the public
+#        Room - A unicode string with the room number
 # Output: A properly encoded MIME object (this is the message)
-def MakeAnnouncement(NextTwo) :
+def MakeAnnouncement(NextTwo,Room) :
 
     # Validating these are the same date
     if len(NextTwo) >= 2 :
@@ -37,8 +38,9 @@ def MakeAnnouncement(NextTwo) :
 
     # Date of next presentation:
     NextDate = time.strptime(NextTwo[0][0], "%Y-%m-%d")
-    # TODO: Make this not hard coded
-    Room = u'Lorch 275D'
+    # Default for room 
+    if Room is None or Room == u'' :
+        Room = u'Lorch 201'
 
     ##########
     # If a sole seminar:
@@ -147,7 +149,7 @@ This is a just a quick message about updating your summer seminar information. W
 
 https://goo.gl/forms/8e1vTI1B8MWjQwev1
 
-Note that when you fill out the form, it's important you include the "IDNumber" that we list below. That will make it eay for us to update your data quickly. 
+Note that when you fill out the form, it's important you include the "IDNumber" that we list below. That will make it easy for us to update your data quickly. 
 
 You should see the new information up on the website within a few hours, and definitely within a day or two. The info will also be in the email announcement that we send. Let us know if it takes more than two days for your info to update. 
 
@@ -296,8 +298,18 @@ def DefineAnnouncements(AnnouncementDateRange,SQLCur):
 
     # Making up email message, if needed
     if len(ToAnnounce) > 0 :
+        # Getting room, if in reservation section
+        RoomList = SQLCur.execute('''SELECT Room 
+                                    FROM RoomReservations WHERE Date=?;''',
+                                    (ToAnnounce[0][0],)).fetchall()
+        if RoomList :
+            print RoomList[0]
+            Room = RoomList[0][0]
+        else :
+            Room = None
+
         # Calling function to compose email subject and body as tupple:
-        Msg = MakeAnnouncement(ToAnnounce)
+        Msg = MakeAnnouncement(ToAnnounce,Room)
         
         # Printing it
         print "Announcement message: "
@@ -424,8 +436,8 @@ def test():
     print '********************************************************************************'
     print '* Performing checks'
     print '********************************************************************************'
-    StartTime = datetime.datetime(2017,5,31)
-    for FutureDays in range(2) :
+    StartTime = datetime.datetime(2017,6,9)
+    for FutureDays in range(10) :
         print "-------------------- Testing iteration --------------------"
         # Current date, for testing
         DeltaTime = datetime.timedelta(days=FutureDays)
