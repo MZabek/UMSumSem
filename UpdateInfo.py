@@ -270,7 +270,7 @@ def main():
             print('Entry switched to New presenter, %s' % (ToEnter['New email'],))
         elif len(Entries) == 1 and ToEnter['Re-allocate the slot?'] == 'Post as open' :
             SQLCur.execute('''UPDATE Schedule SET Email=NULL,Presenter='Open',Title=NULL,Abstract=NULL,
-                                                CoAuthors=NULL,Cancellation=datetime('now'),
+                                                CoAuthors=NULL,CancellationDate=datetime('now'),
                                                 LastEmail=Email,Link=NULL,
                                                 Title=NULL,Abstract=NULL,CoAuthors=NULL,
                                                 AnnouncementDate=NULL,CheckInDate=NULL 

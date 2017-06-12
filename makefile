@@ -4,6 +4,7 @@
 # Update the database with new info
 UpdateInfo : UpdateInfo.py
 	python UpdateInfo.py >> UpdateInfo.log
+	python RoomReservations.py >> RoomReservations.log
 
 # Sending out emails for the day
 ProductionEmails : Emails.py ../Database/SumSemData.db

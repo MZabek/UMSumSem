@@ -236,13 +236,13 @@ def DisplayMessage(Msg):
 # This is a wrapper to call the bottom two programs and append the results together
 def MakeAllMessages(CurrentDate,SQLCur) :
         # Announcements
-        TimeBeforeToAnnounce = datetime.timedelta(days=2)
+        TimeBeforeToAnnounce = datetime.timedelta(days=1)
         EarliestToAnnounce = CurrentDate + TimeBeforeToAnnounce
         AnnouncementDateRange = (CurrentDate,EarliestToAnnounce)
         Announcements = DefineAnnouncements(AnnouncementDateRange,SQLCur)
 
         # Check ins
-        TimeBeforeToCheckIn = datetime.timedelta(days=12)
+        TimeBeforeToCheckIn = datetime.timedelta(days=11)
         EarliestToCheckIn = AnnouncementDateRange[0] + TimeBeforeToCheckIn
         CheckInDateRange = (AnnouncementDateRange[0],EarliestToCheckIn) 
         CheckIns = DefineCheckIns(CheckInDateRange,SQLCur)
