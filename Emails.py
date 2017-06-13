@@ -236,13 +236,13 @@ def DisplayMessage(Msg):
 # This is a wrapper to call the bottom two programs and append the results together
 def MakeAllMessages(CurrentDate,SQLCur) :
         # Announcements
-        TimeBeforeToAnnounce = datetime.timedelta(days=1,hours=11)
+        TimeBeforeToAnnounce = datetime.timedelta(days=1,hours=22,minutes=30)
         EarliestToAnnounce = CurrentDate + TimeBeforeToAnnounce
         AnnouncementDateRange = (CurrentDate,EarliestToAnnounce)
         Announcements = DefineAnnouncements(AnnouncementDateRange,SQLCur)
 
         # Check ins
-        TimeBeforeToCheckIn = datetime.timedelta(days=11,hours=11)
+        TimeBeforeToCheckIn = datetime.timedelta(days=11,hours=22,minutes=30)
         EarliestToCheckIn = AnnouncementDateRange[0] + TimeBeforeToCheckIn
         CheckInDateRange = (AnnouncementDateRange[0],EarliestToCheckIn) 
         CheckIns = DefineCheckIns(CheckInDateRange,SQLCur)
@@ -262,7 +262,7 @@ def MakeAllMessages(CurrentDate,SQLCur) :
 # Output: Announcements - list with zero or one dict of one or two seminars to announce:
 #           Sub entries are:
 #                   1. msg - The email message itself, encoded as utf-8 for all fields
-#                   2. date - The date fo the seminars
+#                   2. date - The date of the seminars
 #                   3. type - 'Announcement'
 #                   4. id - Set to -1 
 def DefineAnnouncements(AnnouncementDateRange,SQLCur):
@@ -274,12 +274,11 @@ def DefineAnnouncements(AnnouncementDateRange,SQLCur):
     print "Writing appropriate announcements (if any) for: ",AnnouncementDateRange
     print "----------------------------------------"
 
-    # TODO: Time zone?
     # Fetching entries in the window, that are asigned to someone, where there has not already been an announcment
     SQLOut = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors,Email,SlotType,ScheduleID
                     FROM Schedule
-                    WHERE datetime(Date) >= ?
-                    AND datetime(Date) <= ?
+                    WHERE datetime(Date,'localtime','+11 hours','+30 minutes') >= ?
+                    AND datetime(Date,'localtime','+11 hours','+30 minutes') <= ?
                     AND AnnouncementDate IS NULL
                     AND Presenter != 'Open'
                     AND Email != ''
@@ -341,11 +340,10 @@ def DefineCheckIns(CheckInDateRange,SQLCur):
     print "Writing check in messages for the following dates: ",CheckInDateRange
     print "----------------------------------------"
     # Valid entries, in the date range, where we have no tchecked in
-    # TODO: Time zone?
     SQLToCheck = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors,Email,SlotType,ScheduleID
                     FROM Schedule
-                    WHERE datetime(Date) >= ?
-                    AND datetime(Date) <= ?
+                    WHERE datetime(Date,'localtime','+11 hours','+30 minutes') >= ?
+                    AND datetime(Date,'localtime','+11 hours','+30 minutes') <= ?
                     AND AnnouncementDate IS NULL
                     AND Email != ''
                     AND Email IS NOT NULL
