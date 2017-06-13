@@ -13,6 +13,7 @@
 # Ignoring literal website
 /WebsiteSetup/_site/
 /WebsiteSetup/_posts/
+/WebsiteSetup/schedule.md
 
 # Dont' pick up password
 password
