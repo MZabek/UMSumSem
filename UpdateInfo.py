@@ -248,8 +248,8 @@ def main():
         print('Finding:',ToEnter['Email'],ToEnter['DateUString'],ToEnter['Slot'])
         SQLCur.execute('''SELECT Email,Date,Number,CancellationDate
                             FROM Schedule 
-                            WHERE Date==? AND Number==?
-                        ;''', (ToEnter['DateUString'],ToEnter['Slot']))
+                            WHERE Email == ? AND Date==? AND Number==?
+                        ;''', (ToEnter['Email'],ToEnter['DateUString'],ToEnter['Slot']))
         Entries = SQLCur.fetchall()
         print('This is what I found:',Entries)
 
@@ -269,7 +269,7 @@ def main():
             SQLCon.commit()
             print('Entry switched to New presenter, %s' % (ToEnter['New email'],))
         elif len(Entries) == 1 and ToEnter['Re-allocate the slot?'] == 'Post as open' :
-            SQLCur.execute('''UPDATE Schedule SET Email=NULL,Presenter='Open',Title=NULL,Abstract=NULL,
+            SQLCur.execute('''UPDATE Schedule SET Email='umsumsem@gmail.com',Presenter='Open',Title=NULL,Abstract=NULL,
                                                 CoAuthors=NULL,CancellationDate=datetime('now'),
                                                 LastEmail=Email,Link=NULL,
                                                 Title=NULL,Abstract=NULL,CoAuthors=NULL,
