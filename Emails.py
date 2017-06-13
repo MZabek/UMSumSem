@@ -434,15 +434,15 @@ def test():
     print '********************************************************************************'
     print '* Performing checks'
     print '********************************************************************************'
-    StartTime = datetime.datetime(2017,6,9)
-    for FutureDays in range(10) :
+    StartTime = datetime.datetime(2017,6,13)
+    for FutureDays in range(5) :
         print "-------------------- Testing iteration --------------------"
         # Current date, for testing
         DeltaTime = datetime.timedelta(days=FutureDays)
         CurrentDate = StartTime + DeltaTime
 
         #SQL Dataset:
-        SQLCon = sqlite3.connect('../Database/Testing/17AllotmentSumSemData.db')
+        SQLCon = sqlite3.connect('../Database/Testing/SumSemData20170613.db')
     
         ## Getting announcements and check ins
         SQLCur = SQLCon.cursor()
