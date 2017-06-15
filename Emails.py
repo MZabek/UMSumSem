@@ -277,8 +277,8 @@ def DefineAnnouncements(AnnouncementDateRange,SQLCur):
     # Fetching entries in the window, that are asigned to someone, where there has not already been an announcment
     SQLOut = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors,Email,SlotType,ScheduleID
                     FROM Schedule
-                    WHERE datetime(Date,'localtime','+11 hours','+30 minutes') >= ?
-                    AND datetime(Date,'localtime','+11 hours','+30 minutes') <= ?
+                    WHERE datetime(Date,'+11 hours','+30 minutes') >= ?
+                    AND datetime(Date,'+11 hours','+30 minutes') <= ?
                     AND AnnouncementDate IS NULL
                     AND Presenter != 'Open'
                     AND Email != ''
@@ -342,8 +342,8 @@ def DefineCheckIns(CheckInDateRange,SQLCur):
     # Valid entries, in the date range, where we have no tchecked in
     SQLToCheck = SQLCur.execute('''SELECT Date,Number,Title,Presenter,Abstract,CoAuthors,Email,SlotType,ScheduleID
                     FROM Schedule
-                    WHERE datetime(Date,'localtime','+11 hours','+30 minutes') >= ?
-                    AND datetime(Date,'localtime','+11 hours','+30 minutes') <= ?
+                    WHERE datetime(Date,'+11 hours','+30 minutes') >= ?
+                    AND datetime(Date,'+11 hours','+30 minutes') <= ?
                     AND AnnouncementDate IS NULL
                     AND Email != ''
                     AND Email IS NOT NULL
@@ -434,33 +434,34 @@ def test():
     print '********************************************************************************'
     print '* Performing checks'
     print '********************************************************************************'
-    StartTime = datetime.datetime(2017,6,13)
-    for FutureDays in range(5) :
-        print "-------------------- Testing iteration --------------------"
-        # Current date, for testing
-        DeltaTime = datetime.timedelta(days=FutureDays)
-        CurrentDate = StartTime + DeltaTime
+    StartTime = datetime.datetime(2017,6,14)
+    for FutureDays in range(2) :
+        for FutureHours in range(26) :
+            print "-------------------- Testing iteration --------------------"
+            # Current date, for testing
+            DeltaTime = datetime.timedelta(days=FutureDays,hours=FutureHours)
+            CurrentDate = StartTime + DeltaTime
 
-        #SQL Dataset:
-        SQLCon = sqlite3.connect('../Database/Testing/SumSemData20170613.db')
-    
-        ## Getting announcements and check ins
-        SQLCur = SQLCon.cursor()
-        EmailsToSend = MakeAllMessages(CurrentDate,SQLCur)
-        SQLCur.close()
+            #SQL Dataset:
+            SQLCon = sqlite3.connect('../Database/Testing/SumSemData20170614.db')
+        
+            ## Getting announcements and check ins
+            SQLCur = SQLCon.cursor()
+            EmailsToSend = MakeAllMessages(CurrentDate,SQLCur)
+            SQLCur.close()
 
-        # Making sure they are sent to the test address:
-        for Email in EmailsToSend:
-            Email['msg'].replace_header('To',Header(u'zabek@protonmail.com','utf-8'))  
-
-
-        ## Sending emails
-        # Ensuring emails are sent to the testing address
-        if len(EmailsToSend) > 0 :
+            # Making sure they are sent to the test address:
             for Email in EmailsToSend:
-                assert decode_header(Email['msg']['To'])[0][0] == 'zabek@protonmail.com' 
-                assert len(decode_header(Email['msg']['To'])) == 1
-        SendEmails(EmailsToSend,SQLCon)
+                Email['msg'].replace_header('To',Header(u'zabek@protonmail.com','utf-8'))  
+
+
+            ## Sending emails
+            # Ensuring emails are sent to the testing address
+            if len(EmailsToSend) > 0 :
+                for Email in EmailsToSend:
+                    assert decode_header(Email['msg']['To'])[0][0] == 'zabek@protonmail.com' 
+                    assert len(decode_header(Email['msg']['To'])) == 1
+            SendEmails(EmailsToSend,SQLCon)
 
 
 # Call of the program, for actually sending emails... 
