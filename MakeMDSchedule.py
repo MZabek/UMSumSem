@@ -118,8 +118,8 @@ MDSchedule.close()
 
 CalEntries = c.execute('''SELECT Date,Number,Presenter,Title,CoAuthors,Abstract,SlotType,Link 
                         FROM Schedule 
-                        WHERE date(Date) >= date('now','localtime','-13 hours') 
-                            AND date(Date) <= date('now','localtime','+120 days','-13 hours') 
+                        WHERE date(Date) >= date('now','-13 hours') 
+                            AND date(Date) <= date('now','+120 days','-13 hours') 
                         ORDER BY date(Date) ASC, Number ASC;''')
 TargetDir = u'./WebsiteSetup/_posts/'
 
