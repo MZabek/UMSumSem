@@ -65,8 +65,10 @@ def MakeAnnouncement(NextTwo,Room) :
         Paragraph1 = Paragraph1 + JointClause
 
         # Abstract (if exists)
-        if Abstract != '' :
+        if Abstract != '' and Abstract is not None:
             Abstract = 'Abstract: ' + Abstract + '\r\n'
+        else :
+            Abstract = ''
     ##########
     # If joint: 
     else:
@@ -434,7 +436,7 @@ def test():
     print '********************************************************************************'
     print '* Performing checks'
     print '********************************************************************************'
-    StartTime = datetime.datetime(2017,6,14)
+    StartTime = datetime.datetime(2017,6,19)
     for FutureDays in range(2) :
         for FutureHours in range(26) :
             print "-------------------- Testing iteration --------------------"
