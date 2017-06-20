@@ -252,6 +252,13 @@ def main():
                         ;''', (ToEnter['Email'],ToEnter['DateUString'],ToEnter['Slot']))
         Entries = SQLCur.fetchall()
         print('This is what I found:',Entries)
+        if len(Entries) == 0 :
+            SQLCur.execute('''SELECT Email,Date,Number,CancellationDate
+                                FROM Schedule 
+                                WHERE Email == 'umsumsem@gmail.com' AND Date==? AND Number==?
+                            ;''', (ToEnter['DateUString'],ToEnter['Slot']))
+            Entries = SQLCur.fetchall()
+            print('This is what I found with the umsumsem@gmail.com address:',Entries)
 
 
         ## Updating if not already updated and checking for errors in SQL
