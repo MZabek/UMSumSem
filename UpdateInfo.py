@@ -259,6 +259,9 @@ def main():
                             ;''', (ToEnter['DateUString'],ToEnter['Slot']))
             Entries = SQLCur.fetchall()
             print('This is what I found with the umsumsem@gmail.com address:',Entries)
+            # Setting the other email address to be the one to search for below
+            if len(Entries) == 1 :
+                ToEnter['Email'] = Entries[0][0]
 
 
         ## Updating if not already updated and checking for errors in SQL
