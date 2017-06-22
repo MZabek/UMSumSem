@@ -244,7 +244,7 @@ def MakeAllMessages(CurrentDate,SQLCur) :
         Announcements = DefineAnnouncements(AnnouncementDateRange,SQLCur)
 
         # Check ins
-        TimeBeforeToCheckIn = datetime.timedelta(days=11,hours=22,minutes=30)
+        TimeBeforeToCheckIn = datetime.timedelta(days=7)
         EarliestToCheckIn = AnnouncementDateRange[0] + TimeBeforeToCheckIn
         CheckInDateRange = (AnnouncementDateRange[0],EarliestToCheckIn) 
         CheckIns = DefineCheckIns(CheckInDateRange,SQLCur)
