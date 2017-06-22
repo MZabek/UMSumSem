@@ -284,7 +284,7 @@ def DefineAnnouncements(AnnouncementDateRange,SQLCur):
                     AND AnnouncementDate IS NULL
                     AND Presenter != 'Open'
                     AND Email != ''
-                    AND Email IS NOT NULL
+                    AND Email != 'umsumsem@gmail.com'
                     ORDER BY date(Date) ASC
                     Limit 2;''', 
                     AnnouncementDateRange)
@@ -348,7 +348,6 @@ def DefineCheckIns(CheckInDateRange,SQLCur):
                     AND datetime(Date,'+11 hours','+30 minutes') <= ?
                     AND AnnouncementDate IS NULL
                     AND Email != ''
-                    AND Email IS NOT NULL
                     AND CheckInDate IS NULL
                     ORDER BY date(Date) ASC
                     Limit 2;''', 
@@ -436,8 +435,8 @@ def test():
     print '********************************************************************************'
     print '* Performing checks'
     print '********************************************************************************'
-    StartTime = datetime.datetime(2017,6,19)
-    for FutureDays in range(2) :
+    StartTime = datetime.datetime(2017,6,22)
+    for FutureDays in range(7) :
         for FutureHours in range(26) :
             print "-------------------- Testing iteration --------------------"
             # Current date, for testing
@@ -445,7 +444,7 @@ def test():
             CurrentDate = StartTime + DeltaTime
 
             #SQL Dataset:
-            SQLCon = sqlite3.connect('../Database/Testing/SumSemData20170614.db')
+            SQLCon = sqlite3.connect('../Database/Testing/SumSemData20170622.db')
         
             ## Getting announcements and check ins
             SQLCur = SQLCon.cursor()
