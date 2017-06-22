@@ -181,8 +181,17 @@ for CalEntry in CalEntries.fetchall() :
     MDEntry = codecs.open(SaveAs,'w','utf-8')
     MDEntry.write('---\n')
     MDEntry.write('layout: post\n')
+
     MDEntry.write('title: ')
     MDEntry.write(Title)
+    MDEntry.write('\n')
+
+    MDEntry.write('date: ')
+    MDEntry.write(CalEntry[0])
+    if CalEntry[1] == 1 :
+        MDEntry.write(' 11:30:00')
+    elif CalEntry[1] == 2 :
+        MDEntry.write(' 12:15:00')
     MDEntry.write('\n')
 
     MDEntry.write('---\n')
