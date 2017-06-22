@@ -274,7 +274,7 @@ def main():
                                 WHERE Email==? AND Date==? AND Number==?
                             ;''', (ToEnter['New email'],ToEnter['New presenter'],ToEnter['Email'],ToEnter['DateUString'],ToEnter['Slot']))
             SQLCon.commit()
-            print('Entry switched to New presenter, %s' % (ToEnter['New email'],))
+            print('Entry switched to new presenter, %s' % (ToEnter['New email'],))
         elif len(Entries) == 1 and ToEnter['Re-allocate the slot?'] == 'Post as open' :
             SQLCur.execute('''UPDATE Schedule SET Email='umsumsem@gmail.com',Presenter='Open',Title=NULL,Abstract=NULL,
                                                 CoAuthors=NULL,CancellationDate=datetime('now'),
