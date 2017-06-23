@@ -21,7 +21,15 @@ import datetime
 import sys
 from kitchen.text.converters import getwriter
 
+# Stuff for sending emails
+from email.mime.text import MIMEText  
+from email.header import Header
+from email.header import decode_header
+import smtplib
+import codecs
 
+
+# Google integration
 from apiclient import discovery
 import oauth2client
 from oauth2client import client
@@ -75,6 +83,59 @@ def get_credentials():
         print('Storing credentials to ' + credential_path)
     return credentials
 
+# Writing an upate message, which is just the dict given, as a unicode string
+def MakeUpdateMessage(Info) :
+    UpdateMessage = u'This is the raw info used from the update: \n'
+    for key in Info :
+        UpdateMessage+= unicode(key) 
+        UpdateMessage+= ' : ' 
+        UpdateMessage+= unicode(Info[key])
+        UpdateMessage+= '\n' 
+
+    return UpdateMessage
+
+# Code to send an update message, with email setup
+def SendUpdateMessage(Recipient,Subject,MessageText) :
+    # Setting up message (MIME) object:
+    Msg = MIMEText(MessageText, 'plain', 'utf-8')
+    Msg['From'] = Header(u'UMSumSem <UMSumSem@gmail.com>','utf-8')
+    Msg['Subject'] = Header(Subject,'utf-8')
+    Msg['To'] = Header(Recipient,'utf-8')
+
+
+    # Setting up email connection
+    try: 
+        EmailSMTP = smtplib.SMTP('smtp.gmail.com:587')
+        EmailSMTP.starttls()
+        # Reading in password from file (this is not very secure)
+        with open('../Forms/password','r') as f :
+            print('Setting up email login for UMSumSem:')
+            EmailSMTP.login('UMSumSem',f.readline())
+        EmailSetup = True
+    except : 
+        print('Error with establishing email connection')
+        EmailSetup = False
+
+    # Sending the emails
+    if EmailSetup == True :
+        print('Sending message')
+        Subject = decode_header(Msg['Subject'])[0][0]
+        From = decode_header(Msg['From'])[0][0]
+        To = decode_header(Msg['To'])[0][0]
+
+        # Trying to send them
+        print(Subject,'|From:',From,'|To:',To)
+        try: 
+            EmailSMTP.sendmail(From,To,Msg.as_string())
+            print('Message sent!')
+            
+            EmailSent = True
+        except: 
+            EmailSent = False
+            print('WARNING: Error sending. Subject: ',decode_header(Msg['Subject']),"|To",decode_header(Msg['To'])[0][0])
+
+
+# Main program flow
 def main():
     print('\n\r\n\r')
     print('********************************************************************************')
@@ -87,7 +148,8 @@ def main():
     # Year for dates:
     Year = datetime.datetime.now().year
     #SQL Dataset:
-    # Testing SQLCon = sqlite3.connect('../Database/Testing/17AllotmentSumSemData.db')
+    # Testing 
+    #SQLCon = sqlite3.connect('../Database/Testing/17AllotmentSumSemData.db')
     # Production 
     SQLCon = sqlite3.connect('../Database/SumSemData.db')
     SQLCur = SQLCon.cursor()
@@ -278,6 +340,11 @@ def main():
                             ;''', (ToEnter['New email'],ToEnter['New presenter'],ToEnter['Email'],ToEnter['DateUString'],ToEnter['Slot']))
             SQLCon.commit()
             print('Entry switched to new presenter, %s' % (ToEnter['New email'],))
+
+            # Sending email to notify people
+            UpdateMessage = MakeUpdateMessage(ToEnter)
+            SendUpdateMessage(u'umsumsem@gmail.com','We switched a seminar presenter',UpdateMessage)
+
         elif len(Entries) == 1 and ToEnter['Re-allocate the slot?'] == 'Post as open' :
             SQLCur.execute('''UPDATE Schedule SET Email='umsumsem@gmail.com',Presenter='Open',Title=NULL,Abstract=NULL,
                                                 CoAuthors=NULL,CancellationDate=datetime('now'),
@@ -288,15 +355,33 @@ def main():
                             ;''', (ToEnter['Email'],ToEnter['DateUString'],ToEnter['Slot'])) 
             SQLCon.commit()
             print('Entry switched to open')
+
+            # Sending email to notify people
+            UpdateMessage = MakeUpdateMessage(ToEnter)
+            SendUpdateMessage(u'umsumsem@gmail.com','We switched a seminar to open',UpdateMessage)
         elif len(Entries) == 1 and ToEnter['Re-allocate the slot?'] == 'Delete the entry' :
             SQLCur.execute('''DELETE FROM Schedule 
                                     WHERE Email==? AND Date==? AND Number==?
                             ;''', (ToEnter['Email'],ToEnter['DateUString'],ToEnter['Slot'])) 
             SQLCon.commit()
             print('Entry deleted')
+
+            # Sending email to notify people
+            UpdateMessage = MakeUpdateMessage(ToEnter)
+            SendUpdateMessage(u'umsumsem@gmail.com','We deleted a seminar',UpdateMessage)
+
         elif len(Entries) > 1 :
+            # Sending email to notify people
+            UpdateMessage = MakeUpdateMessage(ToEnter)
+            SendUpdateMessage(u'umsumsem@gmail.com','ERROR: Multiple entries found when updating',UpdateMessage)
+
             print('ERROR: Multiple entries found')
         else :
+
+            # Sending email to notify people
+            UpdateMessage = MakeUpdateMessage(ToEnter)
+            SendUpdateMessage(u'umsumsem@gmail.com','ERROR: Something went wrong in the logic of the cancellation update!',UpdateMessage)
+
             print('ERROR: Something went wrong in the logic of the cancellation update!')
             
 
