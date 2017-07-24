@@ -94,11 +94,11 @@ def MakeAnnouncement(NextTwo,Room) :
 
         # Clause if joint authored
         if CoAuthors1 != '' and CoAuthors2 == '' :
-            JointClause = 'Note that the first presentation is joint work with ' + CoAuthors1 + '.'
+            JointClause = ' Note that the first presentation is joint work with ' + CoAuthors1 + '.'
         elif CoAuthors1 != '' and CoAuthors2 == '' :
-            JointClause = 'Note that the second presentation is joint work with ' + CoAuthors2 + '.'
+            JointClause = ' Note that the second presentation is joint work with ' + CoAuthors2 + '.'
         elif CoAuthors1 != '' and CoAuthors2 != '' :
-            JointClause = 'Note that the first presentation is joint work with ' + CoAuthors1 + ' and the second is joint with ' + CoAuthors2 + '.'
+            JointClause = ' Note that the first presentation is joint work with ' + CoAuthors1 + ' and the second is joint with ' + CoAuthors2 + '.'
         else :
             JointClause = ''
 
