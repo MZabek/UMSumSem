@@ -56,7 +56,10 @@ def MakeAnnouncement(NextTwo,Room) :
         Subject = time.strftime("%A",NextDate) + u': ' + Presenter + ' - ' + Title
         
         # First body paragraph: 
-        Paragraph1 = u'Please join us this ' + time.strftime('%A',NextDate) + u', ' + time.strftime('%B',NextDate) + u' ' + time.strftime('%d',NextDate) + u' to see ' + Presenter + u' present: ' + Title + '.'
+        if Title is not None and Title != '':
+            Paragraph1 = u'Please join us this ' + time.strftime('%A',NextDate) + u', ' + time.strftime('%B',NextDate) + u' ' + time.strftime('%d',NextDate) + u' to see ' + Presenter + u' present: ' + Title + '.'
+        else :
+            Paragraph1 = u'Please join us this ' + time.strftime('%A',NextDate) + u', ' + time.strftime('%B',NextDate) + u' ' + time.strftime('%d',NextDate) + u' when we will feature ' + Presenter + u' in summer seminar.'
         # Clause if joint authored
         if CoAuthors != '' and CoAuthors is not None:
             JointClause = u' This is joint work with ' + CoAuthors + '.'
@@ -90,14 +93,23 @@ def MakeAnnouncement(NextTwo,Room) :
         Subject = u'Two seminars on ' + time.strftime('%A',NextDate) + u': ' + Presenter1 + u' and ' + Presenter2
 
         # First body paragraph: 
-        Paragraph1 = 'This ' + time.strftime('%A',NextDate) + ', ' + time.strftime('%B',NextDate) + ' ' + time.strftime('%d',NextDate) + ' we will have two presentations in summer seminar. First, ' + Presenter1 + ' will present: ' + Title1 + '. Then, once the commotion dies down, ' + Presenter2 + ' will present: ' + Title2 + '.'
+        Paragraph1 = u'This ' + time.strftime('%A',NextDate) + u', ' + time.strftime('%B',NextDate) + u' ' + time.strftime('%d',NextDate) + u' we will have two presentations in summer seminar.'
+        if Title1 is not None and Title1 != '':
+            Paragraph1 = Paragraph1 + u' First, ' + Presenter1 + u' will present: ' + Title1 + u'.'
+        else:  
+            Paragraph1 =  Paragraph1 + u' First, we will see ' + Presenter1 + u'.'
+        if Title2 is not None and Title2 != '': 
+            Paragraph1 = Paragraph1 + u' Then, once the commotion dies down, ' + Presenter2 + u' will present: ' + Title2 + u'.'
+        else: 
+            Paragraph1 = Paragraph1 + u' Then, once the commotion dies down, we will see ' + Presenter2 + u'.'
+            
 
         # Clause if joint authored
-        if CoAuthors1 != '' and CoAuthors2 == '' :
-            JointClause = ' Note that the first presentation is joint work with ' + CoAuthors1 + '.'
-        elif CoAuthors1 != '' and CoAuthors2 == '' :
+        if (CoAuthors1 != '' and CoAuthors1 is not None)  and (CoAuthors2 == '' or CoAuthors2 is None) :
+            JointClause = u' Note that the first presentation is joint work with ' + CoAuthors1 + u'.'
+        elif (CoAuthors2 != '' and CoAuthors2 is not None)  and (CoAuthors1 == '' or CoAuthors1 is None) :
             JointClause = ' Note that the second presentation is joint work with ' + CoAuthors2 + '.'
-        elif CoAuthors1 != '' and CoAuthors2 != '' :
+        elif (CoAuthors1 != '' and CoAuthors1 is not None)  and (CoAuthors2 != '' and CoAuthors2 is not None) :
             JointClause = ' Note that the first presentation is joint work with ' + CoAuthors1 + ' and the second is joint with ' + CoAuthors2 + '.'
         else :
             JointClause = ''
@@ -107,12 +119,12 @@ def MakeAnnouncement(NextTwo,Room) :
 
         # Abstract if exists: 
         Abstract = ''
-        if Abstract1 != '' and Abstract2 != '' :
+        if (Abstract1 != '' and Abstract1 is not None) and (Abstract2 != '' and Abstract2 is not None) :
             Abstract = 'Abstract for \'' + Title1 + '\': ' + Abstract1 + '\n\r' 
             Abstract = Abstract + '\n\r' + 'Abstract for \'' + Title2 + '\': ' + Abstract2 + '\n\r' 
-        elif Abstract1 != '' :
+        elif (Abstract1 != '' and Abstract1 is not None) :
             Abstract = 'Abstract for \'' + Title1 + '\': ' + Abstract1 + '\n\r'
-        elif Abstract2 != '' :
+        elif Abstract2 != '' and Abstract2 is not None :
             Abstract = 'Abstract for \'' + Title2 + '\': ' + Abstract2 + '\n\r'
         
         
@@ -435,8 +447,8 @@ def test():
     print '********************************************************************************'
     print '* Performing checks'
     print '********************************************************************************'
-    StartTime = datetime.datetime(2017,6,22)
-    for FutureDays in range(7) :
+    StartTime = datetime.datetime(2017,8,9)
+    for FutureDays in range(2) :
         for FutureHours in range(26) :
             print "-------------------- Testing iteration --------------------"
             # Current date, for testing
@@ -444,7 +456,7 @@ def test():
             CurrentDate = StartTime + DeltaTime
 
             #SQL Dataset:
-            SQLCon = sqlite3.connect('../Database/Testing/SumSemData20170622.db')
+            SQLCon = sqlite3.connect('../Database/Testing/SumSemData20170808.db')
         
             ## Getting announcements and check ins
             SQLCur = SQLCon.cursor()
