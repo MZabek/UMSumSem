@@ -216,7 +216,7 @@ while iter in range (1,Iterations+1) and MinLossFn > 0 :
         AllocatePerson((to_assign[0],to_assign[1],available_dates),c,'TempAllotment')
 
     ########################################
-    # Shwing result and assigning loss fn:
+    # Showing result and assigning loss fn:
     # Note: The LossFn is haphazard --  Goes up with people not allocated any, with 1.01 weight to job candidates
     #                                   Then adds in 0.0001 if not putting in additional seminars...
     #                                   This is an inelegant 
