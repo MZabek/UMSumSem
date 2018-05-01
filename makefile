@@ -19,7 +19,7 @@ MakeWebsite : ./WebsiteSetup/schedule.md
 	cd WebsiteSetup; JEKYLL_ENV=production jekyll build --incremental 
 
 PostWebsite : 
-	aws s3 sync WebsiteSetup/_site/ s3://seminar.mikezabek.com/ --delete
+	aws s3 sync WebsiteSetup/_site/ s3://michigansummerseminar.com/ --delete
 	
 # Update the schedule: 
 Schedule : ../Database/SumSemData.db MakeMDSchedule.py 
@@ -42,7 +42,7 @@ ProductionAllotment : UpdateSignup.py  Allotment.py ../Forms/2017\ SignupForm.cs
 
 	# Building and posting website:
 	cd WebsiteSetup; JEKYLL_ENV=production jekyll build
-	aws s3 sync WebsiteSetup/_site/ s3://seminar.mikezabek.com/
+	aws s3 sync WebsiteSetup/_site/ s3://michigansummerseminar.com/
 	# At this point you write a nice email message to the people who were not allocated slots
 	# And a general email message to everyone...
 
